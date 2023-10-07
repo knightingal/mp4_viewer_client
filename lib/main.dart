@@ -58,6 +58,29 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => Mp4ListPageState();
 }
 
+class DirItem extends StatelessWidget {
+  final String title;
+
+  final void Function(String title) tapCallback;
+
+  const DirItem({
+    super.key,
+    required this.title,
+    required this.tapCallback,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        log("click $title");
+        tapCallback(title);
+      },
+      title: Text(title),
+    );
+  }
+}
+
 class Mp4ListPageState extends State<MyHomePage> {
   Future<List<String>> fetchDirs() async {
     final response =
@@ -76,11 +99,11 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   Future<List<String>> fetchSubDirs(String subDir) async {
     final response =
-    await http.get(Uri.parse("http://192.168.2.12:8082/mp4-dir/1/$subDir"));
+        await http.get(Uri.parse("http://192.168.2.12:8082/mp4-dir/1/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
-      jsonArray.map((dynamic e) => e as String).toList();
+          jsonArray.map((dynamic e) => e as String).toList();
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -97,6 +120,12 @@ class Mp4ListPageState extends State<MyHomePage> {
     futureDataList = fetchDirs();
   }
 
+  void itemTapCallback(String title) {
+    setState(() {
+      futureDataList = fetchSubDirs(title);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -109,27 +138,16 @@ class Mp4ListPageState extends State<MyHomePage> {
             future: futureDataList,
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                // return Text(snapshot.data![0]);
                 return ListView.builder(
                     itemCount: snapshot.data!.length,
-                    prototypeItem: ListTile(
-                      onTap: ()  {
-                        log("click ${snapshot.data!.first}");
-                        setState(() {
-                          futureDataList = fetchSubDirs(snapshot.data!.first);
-                        });
-                      },
-                      title: Text(snapshot.data!.first),
+                    prototypeItem: DirItem(
+                      title: snapshot.data!.first,
+                      tapCallback: itemTapCallback,
                     ),
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        onTap: () {
-                          log("click ${snapshot.data![index]}");
-                          setState(() {
-                            futureDataList = fetchSubDirs(snapshot.data![index]);
-                          });
-                        },
-                        title: Text(snapshot.data![index]),
+                      return DirItem(
+                        title: snapshot.data![index],
+                        tapCallback: itemTapCallback,
                       );
                     });
               } else {
