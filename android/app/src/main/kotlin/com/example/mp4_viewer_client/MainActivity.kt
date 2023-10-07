@@ -1,6 +1,35 @@
 package com.example.mp4_viewer_client
 
+import android.content.Intent
+import android.net.Uri
+import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.plugin.common.MethodChannel
 
 class MainActivity: FlutterActivity() {
+    private val CHANNEL = "flutter/startWeb"
+
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        super.configureFlutterEngine(flutterEngine)
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
+            call, result ->
+
+            if (call.method == "startWeb") {
+                val url: String? = call.arguments()
+                startWeb( url)
+            }
+        }
+    }
+
+    fun startWeb(url: String?) {
+        Log.d("CHANNEL", "" + url)
+        val intent = Intent()
+        intent.action = "android.intent.action.VIEW"
+        val uri = Uri.parse(url)
+        intent.data = uri
+        startActivity(intent)
+
+
+    }
 }

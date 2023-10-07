@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 void main() {
@@ -69,12 +70,15 @@ class DirItem extends StatelessWidget {
     required this.tapCallback,
   });
 
+  static const platform = MethodChannel('flutter/startWeb');
+
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
         log("click $title");
         tapCallback(title);
+        platform.invokeMethod("startWeb", "https://bing.com");
       },
       title: Text(title),
     );
