@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
         //
         // This works for code too, not just values: Most code changes can be
         // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
         useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -151,40 +151,51 @@ class Mp4ListPageState extends State<MyHomePage> {
     }
   }
 
+  Future<bool> _onWillPop() async {
+    if (parent.isEmpty) {
+      return true;
+    } else {
+      goBack();
+      return false;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        onPressed: goBack,
-        tooltip: 'Increment',
-        child: const Icon(Icons.arrow_back_sharp),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
-      body: Center(
-        child: FutureBuilder<List<String>>(
-            future: futureDataList,
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: snapshot.data!.length,
-                    prototypeItem: DirItem(
-                      title: snapshot.data!.first,
-                      tapCallback: itemTapCallback,
-                    ),
-                    itemBuilder: (context, index) {
-                      return DirItem(
-                        title: snapshot.data![index],
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(widget.title),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: goBack,
+          tooltip: 'Increment',
+          child: const Icon(Icons.arrow_back_sharp),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
+        body: Center(
+          child: FutureBuilder<List<String>>(
+              future: futureDataList,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      itemCount: snapshot.data!.length,
+                      prototypeItem: DirItem(
+                        title: snapshot.data!.first,
                         tapCallback: itemTapCallback,
-                      );
-                    });
-              } else {
-                return const Text("");
-              }
-            }),
+                      ),
+                      itemBuilder: (context, index) {
+                        return DirItem(
+                          title: snapshot.data![index],
+                          tapCallback: itemTapCallback,
+                        );
+                      });
+                } else {
+                  return const Text("");
+                }
+              }),
+        ),
       ),
     );
   }
