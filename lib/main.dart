@@ -137,6 +137,20 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   List<String> parent = [];
 
+  void goBack() {
+    parent.removeLast();
+    if (parent.isEmpty) {
+      setState(() {
+        futureDataList = fetchDirs();
+      });
+    } else {
+      var title = parent.last;
+      setState(() {
+        futureDataList = fetchSubDirs(title);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,6 +158,12 @@ class Mp4ListPageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
+
+      floatingActionButton: FloatingActionButton(
+        onPressed: goBack,
+        tooltip: 'Increment',
+        child: const Icon(Icons.arrow_back_sharp),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
       body: Center(
         child: FutureBuilder<List<String>>(
             future: futureDataList,
