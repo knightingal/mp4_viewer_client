@@ -70,15 +70,12 @@ class DirItem extends StatelessWidget {
     required this.tapCallback,
   });
 
-  static const platform = MethodChannel('flutter/startWeb');
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
         log("click $title");
         tapCallback(title);
-        platform.invokeMethod("startWeb", "https://bing.com");
       },
       title: Text(title),
     );
@@ -124,11 +121,21 @@ class Mp4ListPageState extends State<MyHomePage> {
     futureDataList = fetchDirs();
   }
 
+  static const platform = MethodChannel('flutter/startWeb');
+
   void itemTapCallback(String title) {
-    setState(() {
-      futureDataList = fetchSubDirs(title);
-    });
+    if (title.endsWith(".mp4")) {
+      platform.invokeMethod("startWeb",
+          "http://192.168.2.12:3002/%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD/${parent[0]}/$title");
+    } else {
+      parent.add(title);
+      setState(() {
+        futureDataList = fetchSubDirs(title);
+      });
+    }
   }
+
+  List<String> parent = [];
 
   @override
   Widget build(BuildContext context) {
