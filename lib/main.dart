@@ -126,13 +126,21 @@ class Mp4ListPageState extends State<MyHomePage> {
   void itemTapCallback(String title) {
     if (title.endsWith(".mp4")) {
       platform.invokeMethod("startWeb",
-          "http://192.168.2.12:3002/%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD/${parent[0]}/$title");
+          "http://192.168.2.12:3002/%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD/${getSubDir()}/$title");
     } else {
       parent.add(title);
       setState(() {
-        futureDataList = fetchSubDirs(title);
+        futureDataList = fetchSubDirs(getSubDir());
       });
     }
+  }
+
+  String getSubDir() {
+    String dir = "";
+    for (var value in parent) {
+      dir += "$value/";
+    }
+    return dir;
   }
 
   List<String> parent = [];
@@ -144,9 +152,9 @@ class Mp4ListPageState extends State<MyHomePage> {
         futureDataList = fetchDirs();
       });
     } else {
-      var title = parent.last;
+      // var title = parent.last;
       setState(() {
-        futureDataList = fetchSubDirs(title);
+        futureDataList = fetchSubDirs(getSubDir());
       });
     }
   }
