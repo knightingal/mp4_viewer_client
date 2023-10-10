@@ -82,7 +82,34 @@ class DirItem extends StatelessWidget {
   }
 }
 
+class DirConfig {
+  final int id;
+  final String baseDir;
+
+  const DirConfig({
+    required this.id,
+    required this.baseDir,
+  });
+
+  factory DirConfig.fromJson(Map<String, dynamic> json) {
+    return DirConfig(id: json["id"], baseDir: json["baseDir"]);
+  }
+}
+
 class Mp4ListPageState extends State<MyHomePage> {
+  Future<List<DirConfig>> fetchDirConfig() async {
+    final response =
+        await http.get(Uri.parse("http://192.168.2.12:8082/dir-config"));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonArray = jsonDecode(response.body);
+      List<DirConfig> dataList =
+          jsonArray.map((e) => DirConfig.fromJson(e)).toList();
+      return dataList;
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future<List<String>> fetchDirs() async {
     final response =
         await http.get(Uri.parse("http://192.168.2.12:8082/mp4-dir/1/"));
@@ -115,10 +142,15 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   late Future<List<String>> futureDataList;
 
+  List<DirConfig> dirConfigList = [];
+
   @override
   void initState() {
     super.initState();
     futureDataList = fetchDirs();
+    fetchDirConfig().then((value) => setState(() {
+          dirConfigList = value;
+        }));
   }
 
   static const platform = MethodChannel('flutter/startWeb');
@@ -175,7 +207,7 @@ class Mp4ListPageState extends State<MyHomePage> {
       child: Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
+          title: Text(dirConfigList.isEmpty ? "" : dirConfigList[0].baseDir),
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: goBack,
