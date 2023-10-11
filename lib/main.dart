@@ -82,28 +82,28 @@ class DirItem extends StatelessWidget {
   }
 }
 
-class DirConfig {
+class MountConfig {
   final int id;
   final String baseDir;
 
-  const DirConfig({
+  const MountConfig({
     required this.id,
     required this.baseDir,
   });
 
-  factory DirConfig.fromJson(Map<String, dynamic> json) {
-    return DirConfig(id: json["id"], baseDir: json["baseDir"]);
+  factory MountConfig.fromJson(Map<String, dynamic> json) {
+    return MountConfig(id: json["id"], baseDir: json["baseDir"]);
   }
 }
 
 class Mp4ListPageState extends State<MyHomePage> {
-  Future<List<DirConfig>> fetchDirConfig() async {
+  Future<List<MountConfig>> fetchMountConfig() async {
     final response =
-        await http.get(Uri.parse("http://192.168.2.12:8082/dir-config"));
+        await http.get(Uri.parse("http://192.168.2.12:8082/mount-config"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<DirConfig> dataList =
-          jsonArray.map((e) => DirConfig.fromJson(e)).toList();
+      List<MountConfig> dataList =
+          jsonArray.map((e) => MountConfig.fromJson(e)).toList();
       return dataList;
     } else {
       throw Exception('Failed to load album');
@@ -142,13 +142,15 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   late Future<List<String>> futureDataList;
 
-  List<DirConfig> dirConfigList = [];
+  List<MountConfig> dirConfigList = [];
+
+  int? selectedMount;
 
   @override
   void initState() {
     super.initState();
     futureDataList = fetchDirs();
-    fetchDirConfig().then((value) => setState(() {
+    fetchMountConfig().then((value) => setState(() {
           dirConfigList = value;
         }));
   }
@@ -202,6 +204,47 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget body;
+    if (selectedMount == null) {
+      if (dirConfigList.isEmpty) {
+        body = const Text("");
+      } else {
+        body = ListView.builder(
+          itemBuilder: (context, index) {
+            return DirItem(
+                title: dirConfigList[index].baseDir,
+                tapCallback: (String title) {});
+          },
+          prototypeItem: DirItem(
+            title: dirConfigList.first.baseDir,
+            tapCallback: (String title) {},
+          ),
+          itemCount: dirConfigList.length,
+        );
+      }
+    } else {
+      body = FutureBuilder<List<String>>(
+          future: futureDataList,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  itemCount: snapshot.data!.length,
+                  prototypeItem: DirItem(
+                    title: snapshot.data!.first,
+                    tapCallback: itemTapCallback,
+                  ),
+                  itemBuilder: (context, index) {
+                    return DirItem(
+                      title: snapshot.data![index],
+                      tapCallback: itemTapCallback,
+                    );
+                  });
+            } else {
+              return const Text("");
+            }
+          });
+    }
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
@@ -214,28 +257,7 @@ class Mp4ListPageState extends State<MyHomePage> {
           tooltip: 'Increment',
           child: const Icon(Icons.arrow_back_sharp),
         ), // This trailing comma makes auto-formatting nicer for build methods.
-        body: Center(
-          child: FutureBuilder<List<String>>(
-              future: futureDataList,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      prototypeItem: DirItem(
-                        title: snapshot.data!.first,
-                        tapCallback: itemTapCallback,
-                      ),
-                      itemBuilder: (context, index) {
-                        return DirItem(
-                          title: snapshot.data![index],
-                          tapCallback: itemTapCallback,
-                        );
-                      });
-                } else {
-                  return const Text("");
-                }
-              }),
-        ),
+        body: Center(child: body),
       ),
     );
   }
