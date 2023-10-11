@@ -144,7 +144,7 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   List<MountConfig> dirConfigList = [];
 
-  int? selectedMount;
+  int? selectedMount = 1;
 
   @override
   void initState() {
@@ -226,7 +226,7 @@ class Mp4ListPageState extends State<MyHomePage> {
       body = FutureBuilder<List<String>>(
           future: futureDataList,
           builder: (context, snapshot) {
-            if (snapshot.hasData) {
+            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   prototypeItem: DirItem(
