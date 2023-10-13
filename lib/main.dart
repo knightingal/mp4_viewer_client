@@ -62,10 +62,12 @@ class MyHomePage extends StatefulWidget {
 class DirItem extends StatelessWidget {
   final String title;
 
-  final void Function(String title) tapCallback;
+  final int index;
+  final void Function(int index, String title) tapCallback;
 
   const DirItem({
     super.key,
+    required this.index,
     required this.title,
     required this.tapCallback,
   });
@@ -75,7 +77,7 @@ class DirItem extends StatelessWidget {
     return ListTile(
       onTap: () {
         log("click $title");
-        tapCallback(title);
+        tapCallback(index, title);
       },
       title: Text(title),
     );
@@ -85,14 +87,17 @@ class DirItem extends StatelessWidget {
 class MountConfig {
   final int id;
   final String baseDir;
+  final String urlPrefix;
 
   const MountConfig({
     required this.id,
     required this.baseDir,
+    required this.urlPrefix,
   });
 
   factory MountConfig.fromJson(Map<String, dynamic> json) {
-    return MountConfig(id: json["id"], baseDir: json["baseDir"]);
+    return MountConfig(
+        id: json["id"], baseDir: json["baseDir"], urlPrefix: json["urlPrefix"]);
   }
 }
 
@@ -111,8 +116,8 @@ class Mp4ListPageState extends State<MyHomePage> {
   }
 
   Future<List<String>> fetchDirs() async {
-    final response =
-        await http.get(Uri.parse("http://192.168.2.12:8082/mp4-dir/1/"));
+    final response = await http.get(Uri.parse(
+        "http://192.168.2.12:8082/mp4-dir/${dirConfigList[selectedMount!].id}/"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -126,8 +131,8 @@ class Mp4ListPageState extends State<MyHomePage> {
   }
 
   Future<List<String>> fetchSubDirs(String subDir) async {
-    final response =
-        await http.get(Uri.parse("http://192.168.2.12:8082/mp4-dir/1/$subDir"));
+    final response = await http.get(Uri.parse(
+        "http://192.168.2.12:8082/mp4-dir/${dirConfigList[selectedMount!].id}/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -144,12 +149,12 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   List<MountConfig> dirConfigList = [];
 
-  int? selectedMount = 1;
+  int? selectedMount;
 
   @override
   void initState() {
     super.initState();
-    futureDataList = fetchDirs();
+    // futureDataList = fetchDirs();
     fetchMountConfig().then((value) => setState(() {
           dirConfigList = value;
         }));
@@ -157,7 +162,7 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-  void itemTapCallback(String title) {
+  void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       platform.invokeMethod("startWeb",
           "http://192.168.2.12:3002/%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD/${getSubDir()}/$title");
@@ -212,12 +217,24 @@ class Mp4ListPageState extends State<MyHomePage> {
         body = ListView.builder(
           itemBuilder: (context, index) {
             return DirItem(
+                index: index,
                 title: dirConfigList[index].baseDir,
-                tapCallback: (String title) {});
+                tapCallback: (int index, String title) {
+                  setState(() {
+                    selectedMount = index;
+                    futureDataList = fetchDirs();
+                  });
+                });
           },
           prototypeItem: DirItem(
+            index: 0,
             title: dirConfigList.first.baseDir,
-            tapCallback: (String title) {},
+            tapCallback: (int index, String title) {
+              setState(() {
+                selectedMount = index;
+                futureDataList = fetchDirs();
+              });
+            },
           ),
           itemCount: dirConfigList.length,
         );
@@ -230,11 +247,13 @@ class Mp4ListPageState extends State<MyHomePage> {
               return ListView.builder(
                   itemCount: snapshot.data!.length,
                   prototypeItem: DirItem(
+                    index: 0,
                     title: snapshot.data!.first,
                     tapCallback: itemTapCallback,
                   ),
                   itemBuilder: (context, index) {
                     return DirItem(
+                      index: index,
                       title: snapshot.data![index],
                       tapCallback: itemTapCallback,
                     );
