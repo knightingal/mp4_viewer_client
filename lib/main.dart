@@ -165,7 +165,7 @@ class Mp4ListPageState extends State<MyHomePage> {
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       platform.invokeMethod("startWeb",
-          "http://192.168.2.12:3002/%E8%BF%85%E9%9B%B7%E4%B8%8B%E8%BD%BD/${getSubDir()}/$title");
+          "http://192.168.2.12:3002/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
     } else {
       parent.add(title);
       setState(() {
@@ -185,22 +185,34 @@ class Mp4ListPageState extends State<MyHomePage> {
   List<String> parent = [];
 
   void goBack() {
-    parent.removeLast();
     if (parent.isEmpty) {
-      setState(() {
-        futureDataList = fetchDirs();
-      });
+      if (selectedMount != null) {
+        setState(() {
+          selectedMount = null;
+        });
+      }
     } else {
-      // var title = parent.last;
-      setState(() {
-        futureDataList = fetchSubDirs(getSubDir());
-      });
+      parent.removeLast();
+      if (parent.isEmpty) {
+        setState(() {
+          futureDataList = fetchDirs();
+        });
+      } else {
+        setState(() {
+          futureDataList = fetchSubDirs(getSubDir());
+        });
+      }
     }
   }
 
   Future<bool> _onWillPop() async {
     if (parent.isEmpty) {
-      return true;
+      if (selectedMount != null) {
+        goBack();
+        return false;
+      } else {
+        return true;
+      }
     } else {
       goBack();
       return false;
