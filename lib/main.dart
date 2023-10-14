@@ -14,6 +14,8 @@ import 'package:mp4_viewer_client/deeper/openmp4_web.dart';
 
 // @JS('JSON.stringify')
 // external String stringify(Object obj);
+String apiHost() => "http://192.168.2.12:8082";
+String gatewayHost() => "http://192.168.2.12:3002";
 
 void main() {
   runApp(const MyApp());
@@ -113,8 +115,7 @@ class MountConfig {
 
 class Mp4ListPageState extends State<MyHomePage> {
   Future<List<MountConfig>> fetchMountConfig() async {
-    final response =
-        await http.get(Uri.parse("http://192.168.2.12:8082/mount-config"));
+    final response = await http.get(Uri.parse("${apiHost()}/mount-config"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<MountConfig> dataList =
@@ -126,8 +127,8 @@ class Mp4ListPageState extends State<MyHomePage> {
   }
 
   Future<List<String>> fetchDirs() async {
-    final response = await http.get(Uri.parse(
-        "http://192.168.2.12:8082/mp4-dir/${dirConfigList[selectedMount!].id}/"));
+    final response = await http.get(
+        Uri.parse("${apiHost()}/mp4-dir/${dirConfigList[selectedMount!].id}/"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -142,7 +143,7 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   Future<List<String>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
-        "http://192.168.2.12:8082/mp4-dir/${dirConfigList[selectedMount!].id}/$subDir"));
+        "${apiHost()}/mp4-dir/${dirConfigList[selectedMount!].id}/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -174,15 +175,12 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      if (!kIsWeb) {
-        platform.invokeMethod("startWeb",
-            "http://192.168.2.12:3002/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
-      } else {
-        // js.context.callMethod("consolelog", ["hello"]);
-        // log(stringify(title));
-        // calljs();
+      if (kIsWeb) {
         windowopen(
-            "http://192.168.2.12:3002/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
+            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
+      } else {
+        platform.invokeMethod("startWeb",
+            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
       }
     } else {
       parent.add(title);
