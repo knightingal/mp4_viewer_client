@@ -1,9 +1,19 @@
+// @JS()
+// library stringify;
+
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+// import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
+import 'package:mp4_viewer_client/deeper/openmp4_web.dart';
+// import 'deeper/openmp4.dart';
+
+// @JS('JSON.stringify')
+// external String stringify(Object obj);
 
 void main() {
   runApp(const MyApp());
@@ -164,8 +174,16 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      platform.invokeMethod("startWeb",
-          "http://192.168.2.12:3002/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
+      if (!kIsWeb) {
+        platform.invokeMethod("startWeb",
+            "http://192.168.2.12:3002/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
+      } else {
+        // js.context.callMethod("consolelog", ["hello"]);
+        // log(stringify(title));
+        // calljs();
+        windowopen(
+            "http://192.168.2.12:3002/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
+      }
     } else {
       parent.add(title);
       setState(() {
