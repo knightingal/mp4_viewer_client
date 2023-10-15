@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/deeper/openmp4_web.dart';
 import 'package:mp4_viewer_client/video_player.dart';
 // import 'deeper/openmp4.dart';
 
@@ -176,13 +175,17 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      String videoUrl = "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title";
+      String videoUrl =
+          "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title";
       if (kIsWeb) {
         // windowopen(
         //     "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => VideoPlayerApp(videoUrl: videoUrl,)),
+          MaterialPageRoute(
+              builder: (context) => VideoPlayerApp(
+                    videoUrl: videoUrl,
+                  )),
         );
       } else {
         platform.invokeMethod("startWeb",
