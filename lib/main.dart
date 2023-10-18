@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(),
     );
   }
 }
@@ -70,6 +70,93 @@ class MyHomePage extends StatefulWidget {
   @override
   State<MyHomePage> createState() => Mp4ListPageState();
 }
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
+
+    return
+      Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: Text(""),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => {},
+          tooltip: 'Increment',
+          child: const Icon(Icons.arrow_back_sharp),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
+        body: const Center(child: MountConfigListPage()),
+      );
+  }
+
+}
+
+
+class MountConfigListPage extends StatefulWidget {
+  const MountConfigListPage({super.key});
+
+  @override
+  State<StatefulWidget> createState() {
+    return MountConfigListState();
+  }
+}
+
+class MountConfigListState extends State<MountConfigListPage> {
+
+  Future<List<MountConfig>> fetchMountConfig() async {
+    final response = await http.get(Uri.parse("${apiHost()}/mount-config"));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonArray = jsonDecode(response.body);
+      List<MountConfig> dataList =
+      jsonArray.map((e) => MountConfig.fromJson(e)).toList();
+      return dataList;
+    } else {
+      throw Exception('Failed to load album');
+    }
+  }
+
+  List<MountConfig> dirConfigList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // futureDataList = fetchDirs();
+    fetchMountConfig().then((value) => setState(() {
+      dirConfigList = value;
+    }));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Widget body;
+    if (dirConfigList.isEmpty) {
+      body = const Text("");
+    } else {
+      body = ListView.builder(
+        itemBuilder: (context, index) {
+          return DirItem(
+              index: index,
+              title: dirConfigList[index].baseDir,
+              tapCallback: (int index, String title) {});
+        },
+        prototypeItem: DirItem(
+          index: 0,
+          title: dirConfigList.first.baseDir,
+          tapCallback: (int index, String title) {},
+        ),
+        itemCount: dirConfigList.length,
+      );
+    }
+    return body;
+  }
+
+}
+
+
 
 class DirItem extends StatelessWidget {
   final String title;
