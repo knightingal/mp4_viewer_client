@@ -10,7 +10,7 @@ import 'package:flutter/services.dart';
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/video_player.dart';
-// import 'deeper/openmp4.dart';
+import 'deeper/openmp4.dart';
 
 // @JS('JSON.stringify')
 // external String stringify(Object obj);
@@ -176,7 +176,7 @@ class Mp4ListPageState extends State<MyHomePage> {
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       String videoUrl =
-          "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title";
+          "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title";
       if (kIsWeb) {
         // windowopen(
         //     "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
@@ -189,11 +189,22 @@ class Mp4ListPageState extends State<MyHomePage> {
         );
       } else {
         platform.invokeMethod("startWeb",
-            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
+            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
         // Navigator.push(
         //   context,
-        //   MaterialPageRoute(builder: (context) => const VideoPlayerApp()),
+        //   MaterialPageRoute(
+        //       builder: (context) => VideoPlayerApp(
+        //             videoUrl: videoUrl,
+        //           )),
         // );
+      }
+    } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
+      if (kIsWeb) {
+        windowopen(
+            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
+      } else {
+        platform.invokeMethod("startWeb",
+            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
       }
     } else {
       parent.add(title);
