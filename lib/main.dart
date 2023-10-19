@@ -188,15 +188,15 @@ class Mp4ListPageState extends State<MyHomePage> {
                   )),
         );
       } else {
-        platform.invokeMethod("startWeb",
-            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //       builder: (context) => VideoPlayerApp(
-        //             videoUrl: videoUrl,
-        //           )),
-        // );
+        // platform.invokeMethod("startWeb",
+        //     "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => VideoPlayerApp(
+                    videoUrl: videoUrl,
+                  )),
+        );
       }
     } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
       if (kIsWeb) {
