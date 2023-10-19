@@ -30,21 +30,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a blue toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.yellow),
         useMaterial3: true,
       ),
@@ -53,22 +38,13 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+class Mp4ListPage extends StatefulWidget {
+  const Mp4ListPage({super.key, required this.title});
 
   final String title;
 
   @override
-  State<MyHomePage> createState() => Mp4ListPageState();
+  State<Mp4ListPage> createState() => Mp4ListPageState();
 }
 
 class HomePage extends StatelessWidget {
@@ -76,25 +52,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-
-    return
-      Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(""),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => {},
-          tooltip: 'Increment',
-          child: const Icon(Icons.arrow_back_sharp),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
-        body: const Center(child: MountConfigListPage()),
-      );
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(""),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => {},
+        tooltip: 'Increment',
+        child: const Icon(Icons.arrow_back_sharp),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: const Center(child: MountConfigListPage()),
+    );
   }
-
 }
-
 
 class MountConfigListPage extends StatefulWidget {
   const MountConfigListPage({super.key});
@@ -105,14 +76,27 @@ class MountConfigListPage extends StatefulWidget {
   }
 }
 
-class MountConfigListState extends State<MountConfigListPage> {
+late List<MountConfig> gMountConfigList;
 
+int? selectedMountConfig;
+
+List<String> parent = [];
+
+String getSubDir() {
+  String dir = "";
+  for (var value in parent) {
+    dir += "$value/";
+  }
+  return dir;
+}
+
+class MountConfigListState extends State<MountConfigListPage> {
   Future<List<MountConfig>> fetchMountConfig() async {
     final response = await http.get(Uri.parse("${apiHost()}/mount-config"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<MountConfig> dataList =
-      jsonArray.map((e) => MountConfig.fromJson(e)).toList();
+          jsonArray.map((e) => MountConfig.fromJson(e)).toList();
       return dataList;
     } else {
       throw Exception('Failed to load album');
@@ -125,9 +109,12 @@ class MountConfigListState extends State<MountConfigListPage> {
   void initState() {
     super.initState();
     // futureDataList = fetchDirs();
-    fetchMountConfig().then((value) => setState(() {
-      dirConfigList = value;
-    }));
+    fetchMountConfig().then((value) {
+      gMountConfigList = value;
+      setState(() {
+        dirConfigList = value;
+      });
+    });
   }
 
   @override
@@ -141,22 +128,37 @@ class MountConfigListState extends State<MountConfigListPage> {
           return DirItem(
               index: index,
               title: dirConfigList[index].baseDir,
-              tapCallback: (int index, String title) {});
+              tapCallback: (int index, String title) {
+                selectedMountConfig = index;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Mp4ListPage(
+                            title: title,
+                          )),
+                );
+              });
         },
         prototypeItem: DirItem(
           index: 0,
           title: dirConfigList.first.baseDir,
-          tapCallback: (int index, String title) {},
+          tapCallback: (int index, String title) {
+            selectedMountConfig = index;
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Mp4ListPage(
+                        title: title,
+                      )),
+            );
+          },
         ),
         itemCount: dirConfigList.length,
       );
     }
     return body;
   }
-
 }
-
-
 
 class DirItem extends StatelessWidget {
   final String title;
@@ -200,22 +202,10 @@ class MountConfig {
   }
 }
 
-class Mp4ListPageState extends State<MyHomePage> {
-  Future<List<MountConfig>> fetchMountConfig() async {
-    final response = await http.get(Uri.parse("${apiHost()}/mount-config"));
-    if (response.statusCode == 200) {
-      List<dynamic> jsonArray = jsonDecode(response.body);
-      List<MountConfig> dataList =
-          jsonArray.map((e) => MountConfig.fromJson(e)).toList();
-      return dataList;
-    } else {
-      throw Exception('Failed to load album');
-    }
-  }
-
+class Mp4ListPageState extends State<Mp4ListPage> {
   Future<List<String>> fetchDirs() async {
-    final response = await http.get(
-        Uri.parse("${apiHost()}/mp4-dir/${dirConfigList[selectedMount!].id}/"));
+    final response = await http.get(Uri.parse(
+        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -230,7 +220,7 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   Future<List<String>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
-        "${apiHost()}/mp4-dir/${dirConfigList[selectedMount!].id}/$subDir"));
+        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -245,17 +235,14 @@ class Mp4ListPageState extends State<MyHomePage> {
 
   late Future<List<String>> futureDataList;
 
-  List<MountConfig> dirConfigList = [];
-
-  int? selectedMount;
-
   @override
   void initState() {
     super.initState();
-    // futureDataList = fetchDirs();
-    fetchMountConfig().then((value) => setState(() {
-          dirConfigList = value;
-        }));
+    if (parent.isEmpty) {
+      futureDataList = fetchDirs();
+    } else {
+      futureDataList = fetchSubDirs(getSubDir());
+    }
   }
 
   static const platform = MethodChannel('flutter/startWeb');
@@ -263,7 +250,7 @@ class Mp4ListPageState extends State<MyHomePage> {
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       String videoUrl =
-          "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title";
+          "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
       if (kIsWeb) {
         // windowopen(
         //     "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}/$title");
@@ -276,7 +263,7 @@ class Mp4ListPageState extends State<MyHomePage> {
         );
       } else {
         platform.invokeMethod("startWeb",
-            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
+            "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title");
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(
@@ -288,140 +275,76 @@ class Mp4ListPageState extends State<MyHomePage> {
     } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
       if (kIsWeb) {
         windowopen(
-            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
+            "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title");
       } else {
         platform.invokeMethod("startWeb",
-            "${gatewayHost()}/${dirConfigList[selectedMount!].urlPrefix}/${getSubDir()}$title");
+            "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title");
       }
     } else {
       parent.add(title);
-      setState(() {
-        futureDataList = fetchSubDirs(getSubDir());
-      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Mp4ListPage(
+                  title: widget.title,
+                )),
+      );
     }
   }
 
-  String getSubDir() {
-    String dir = "";
-    for (var value in parent) {
-      dir += "$value/";
-    }
-    return dir;
-  }
+  @override
+  void dispose() {
+    // Ensure disposing of the VideoPlayerController to free up resources.
 
-  List<String> parent = [];
-
-  void goBack() {
-    if (parent.isEmpty) {
-      if (selectedMount != null) {
-        setState(() {
-          selectedMount = null;
-        });
-      }
-    } else {
+    if (parent.isNotEmpty) {
       parent.removeLast();
-      if (parent.isEmpty) {
-        setState(() {
-          futureDataList = fetchDirs();
-        });
-      } else {
-        setState(() {
-          futureDataList = fetchSubDirs(getSubDir());
-        });
-      }
     }
-  }
-
-  Future<bool> _onWillPop() async {
-    if (parent.isEmpty) {
-      if (selectedMount != null) {
-        goBack();
-        return false;
-      } else {
-        return true;
-      }
-    } else {
-      goBack();
-      return false;
-    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     Widget body;
-    if (selectedMount == null) {
-      if (dirConfigList.isEmpty) {
-        body = const Text("");
-      } else {
-        body = ListView.builder(
-          itemBuilder: (context, index) {
-            return DirItem(
-                index: index,
-                title: dirConfigList[index].baseDir,
-                tapCallback: (int index, String title) {
-                  setState(() {
-                    selectedMount = index;
-                    futureDataList = fetchDirs();
-                  });
-                });
-          },
-          prototypeItem: DirItem(
-            index: 0,
-            title: dirConfigList.first.baseDir,
-            tapCallback: (int index, String title) {
-              setState(() {
-                selectedMount = index;
-                futureDataList = fetchDirs();
-              });
-            },
-          ),
-          itemCount: dirConfigList.length,
-        );
-      }
-    } else {
-      body = FutureBuilder<List<String>>(
-          future: futureDataList,
-          builder: (context, snapshot) {
-            if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-              return ListView.builder(
-                  itemCount: snapshot.data!.length,
-                  prototypeItem: DirItem(
-                    index: 0,
-                    title: snapshot.data!.first,
+    body = FutureBuilder<List<String>>(
+        future: futureDataList,
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            return ListView.builder(
+                itemCount: snapshot.data!.length,
+                prototypeItem: DirItem(
+                  index: 0,
+                  title: snapshot.data!.first,
+                  tapCallback: itemTapCallback,
+                ),
+                itemBuilder: (context, index) {
+                  return DirItem(
+                    index: index,
+                    title: snapshot.data![index],
                     tapCallback: itemTapCallback,
-                  ),
-                  itemBuilder: (context, index) {
-                    return DirItem(
-                      index: index,
-                      title: snapshot.data![index],
-                      tapCallback: itemTapCallback,
-                    );
-                  });
-            } else {
-              return const Text("");
-            }
-          });
-    }
+                  );
+                });
+          } else {
+            return const Text("");
+          }
+        });
 
-    return WillPopScope(
-      onWillPop: _onWillPop,
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(dirConfigList.isEmpty ? "" : dirConfigList[0].baseDir),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: goBack,
-          tooltip: 'Increment',
-          child: const Icon(Icons.arrow_back_sharp),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
-        body: Center(child: body),
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(""),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        tooltip: 'Increment',
+        child: const Icon(Icons.arrow_back_sharp),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+      body: Center(child: body),
     );
   }
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<Mp4ListPage> {
   int _counter = 0;
 
   void _incrementCounter() {
