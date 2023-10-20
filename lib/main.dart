@@ -2,7 +2,6 @@
 // library stringify;
 
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/video_player.dart';
 import 'deeper/openmp4.dart';
+import 'dir_item.dart';
+import 'global.dart';
 
 // @JS('JSON.stringify')
 // external String stringify(Object obj);
@@ -74,20 +75,6 @@ class MountConfigListPage extends StatefulWidget {
   State<StatefulWidget> createState() {
     return MountConfigListState();
   }
-}
-
-late List<MountConfig> gMountConfigList;
-
-int? selectedMountConfig;
-
-List<String> parent = [];
-
-String getSubDir() {
-  String dir = "";
-  for (var value in parent) {
-    dir += "$value/";
-  }
-  return dir;
 }
 
 class MountConfigListState extends State<MountConfigListPage> {
@@ -157,48 +144,6 @@ class MountConfigListState extends State<MountConfigListPage> {
       );
     }
     return body;
-  }
-}
-
-class DirItem extends StatelessWidget {
-  final String title;
-
-  final int index;
-  final void Function(int index, String title) tapCallback;
-
-  const DirItem({
-    super.key,
-    required this.index,
-    required this.title,
-    required this.tapCallback,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      onTap: () {
-        log("click $title");
-        tapCallback(index, title);
-      },
-      title: Text(title),
-    );
-  }
-}
-
-class MountConfig {
-  final int id;
-  final String baseDir;
-  final String urlPrefix;
-
-  const MountConfig({
-    required this.id,
-    required this.baseDir,
-    required this.urlPrefix,
-  });
-
-  factory MountConfig.fromJson(Map<String, dynamic> json) {
-    return MountConfig(
-        id: json["id"], baseDir: json["baseDir"], urlPrefix: json["urlPrefix"]);
   }
 }
 
