@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
+import 'package:mp4_viewer_client/image.dart';
 import 'package:mp4_viewer_client/video_player.dart';
 import 'deeper/openmp4.dart';
 import 'dir_item.dart';
@@ -205,15 +206,20 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       );
     } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
       if (kIsWeb) {
-        windowopen(
-            "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ImageWidget(
+                    url:
+                        "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title",
+                  )),
+        );
       } else {
         platform.invokeMethod("startWeb",
             "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title");
       }
     } else {
       parent.add(title);
-
       Navigator.push(
         context,
         MaterialPageRoute(
