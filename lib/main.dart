@@ -215,8 +215,14 @@ class Mp4ListPageState extends State<Mp4ListPage> {
                   )),
         );
       } else {
-        platform.invokeMethod("startWeb",
-            "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => ImageWidget(
+                    url:
+                        "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title",
+                  )),
+        );
       }
     } else {
       parent.add(title);
