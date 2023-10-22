@@ -12,7 +12,7 @@ class VideoPlayerApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Video Player Demo',
+      // title: 'Video Player Demo',
       home: VideoPlayerScreen(videoUrl: videoUrl),
     );
   }
@@ -20,6 +20,7 @@ class VideoPlayerApp extends StatelessWidget {
 
 class PlayerTimer extends StatefulWidget {
   final VideoPlayerController controller;
+
   const PlayerTimer({super.key, required this.controller});
 
   @override
@@ -32,6 +33,7 @@ class PlayerTimerState extends State<PlayerTimer>
     with SingleTickerProviderStateMixin {
   late final Ticker _ticker;
   Duration duration = const Duration();
+
   @override
   void initState() {
     super.initState();
@@ -115,47 +117,45 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Butterfly Video'),
-      ),
-      // Use a FutureBuilder to display a loading spinner while waiting for the
-      // VideoPlayerController to finish initializing.
       body: FutureBuilder(
         future: _initializeVideoPlayerFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
-            return AspectRatio(
-              key: globalKey,
-              aspectRatio: _controller.value.aspectRatio,
-              // Use the VideoPlayer widget to display the video.
-              child: Stack(
-                children: [
-                  VideoPlayer(_controller),
-                  Text(widget.videoUrl,
-                      style: const TextStyle(color: Color(0xFF00FF00))),
-                  PlayerTimer(controller: _controller),
-                  GestureDetector(
-                    onTapDown: (e) {
-                      RenderBox box = globalKey.currentContext!
-                          .findRenderObject() as RenderBox;
-                      // log("onTap");
-                      // log("position ${e.localPosition}");
-                      // log("box ${box.size}");
-                      var x = e.localPosition.dx;
-                      var xTotal = box.size.width;
-                      var per = x / xTotal;
-                      var seekToSec =
-                          (_controller.value.duration.inSeconds * per).toInt();
-                      _controller.seekTo(Duration(seconds: seekToSec));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(0),
-                      color: Colors.transparent,
-                    ),
-                  )
-                ],
+            return Center(
+              child: AspectRatio(
+                key: globalKey,
+                aspectRatio: _controller.value.aspectRatio,
+                // Use the VideoPlayer widget to display the video.
+                child: Stack(
+                  children: [
+                    VideoPlayer(_controller),
+                    Text(widget.videoUrl,
+                        style: const TextStyle(color: Color(0xFF00FF00))),
+                    PlayerTimer(controller: _controller),
+                    GestureDetector(
+                      onTapDown: (e) {
+                        RenderBox box = globalKey.currentContext!
+                            .findRenderObject() as RenderBox;
+                        // log("onTap");
+                        // log("position ${e.localPosition}");
+                        // log("box ${box.size}");
+                        var x = e.localPosition.dx;
+                        var xTotal = box.size.width;
+                        var per = x / xTotal;
+                        var seekToSec =
+                            (_controller.value.duration.inSeconds * per)
+                                .toInt();
+                        _controller.seekTo(Duration(seconds: seekToSec));
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.all(0),
+                        color: Colors.transparent,
+                      ),
+                    )
+                  ],
+                ),
               ),
             );
           } else {
