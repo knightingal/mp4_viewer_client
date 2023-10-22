@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class ImageWidget extends StatelessWidget {
-  ImageWidget({super.key, required this.url});
-  String url;
+class ImageViewer extends StatelessWidget {
+  const ImageViewer({super.key, required this.imageUrl});
+  final String imageUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +14,7 @@ class ImageWidget extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: Image.network(url),
+        body: Image.network(imageUrl),
       ),
     );
   }
