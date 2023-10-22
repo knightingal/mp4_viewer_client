@@ -6,9 +6,10 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/image.dart';
+import 'package:mp4_viewer_client/image_viewer.dart';
 import 'package:mp4_viewer_client/video_player.dart';
 import 'deeper/openmp4.dart';
 import 'dir_item.dart';
@@ -17,6 +18,7 @@ import 'global.dart';
 // @JS('JSON.stringify')
 // external String stringify(Object obj);
 String apiHost() => "http://192.168.2.12:8082";
+
 String gatewayHost() => "http://192.168.2.12:3002";
 
 void main() {
@@ -193,37 +195,27 @@ class Mp4ListPageState extends State<Mp4ListPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
+  String generateFileUrlByTitle(String title) =>
+      "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      String videoUrl =
-          "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+      // String videoUrl =
+      //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => VideoPlayerApp(
-                  videoUrl: videoUrl,
+                  videoUrl: generateFileUrlByTitle(title),
                 )),
       );
     } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
-      if (kIsWeb) {
-        Navigator.push(
+      Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ImageWidget(
-                    url:
-                        "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title",
-                  )),
-        );
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ImageWidget(
-                    url:
-                        "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title",
-                  )),
-        );
-      }
+            builder: (context) =>
+                ImageViewer(imageUrl: generateFileUrlByTitle(title)),
+          ));
     } else {
       parent.add(title);
       Navigator.push(
