@@ -97,6 +97,7 @@ android {
         targetSdkVersion flutter.targetSdkVersion
         versionCode parseVersionCode()
         versionName releaseTime() + "-" + commitNum()
+        multiDexEnabled true
     }
 
     buildTypes {
@@ -137,4 +138,12 @@ tasks.register('releaseUpload') {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.appcompat:appcompat:1.6.1'
+    implementation 'com.google.android.material:material:1.9.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation( "com.google.code.gson:gson:2.10.1")
+    implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
+    implementation "androidx.multidex:multidex:2.0.1"
+//    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
+//    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 }

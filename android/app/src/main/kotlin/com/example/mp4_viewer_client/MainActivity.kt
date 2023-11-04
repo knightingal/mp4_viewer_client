@@ -19,6 +19,10 @@ class MainActivity: FlutterActivity() {
                 val url: String? = call.arguments()
                 startWeb( url)
             }
+            if (call.method == "aboutPage") {
+                val intent = Intent(this, AboutActivity::class.java)
+                startActivity(intent)
+            }
         }
     }
 
