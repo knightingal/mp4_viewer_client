@@ -93,6 +93,7 @@ class MountConfigListState extends State<MountConfigListPage> {
     }
   }
 
+  static const platform = MethodChannel('flutter/startWeb');
   List<MountConfig> dirConfigList = [];
 
   @override
@@ -146,7 +147,18 @@ class MountConfigListState extends State<MountConfigListPage> {
         itemCount: dirConfigList.length,
       );
     }
-    return body;
+    if (kIsWeb) {
+      return body;
+    } else {
+      return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {platform.invokeMethod("aboutPage" );},
+          tooltip: 'Increment',
+          child: const Icon(Icons.arrow_back_sharp),
+        ), // This trailing comma makes auto-formatting nicer for build methods.
+        body: Center(child: body),
+      );
+    }
   }
 }
 
@@ -269,11 +281,11 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(""),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {},
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.arrow_back_sharp),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {platform.invokeMethod("aboutPage" );},
+        tooltip: 'Increment',
+        child: const Icon(Icons.arrow_back_sharp),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
       body: Center(child: body),
     );
   }
