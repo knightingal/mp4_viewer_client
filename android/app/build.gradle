@@ -1,3 +1,11 @@
+import java.text.SimpleDateFormat
+import okhttp3.MediaType
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.Response
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -11,16 +19,6 @@ if (flutterRoot == null) {
     throw new Exception("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
@@ -29,6 +27,33 @@ def keystorePropertiesFile = rootProject.file("keystore.properties")
 def keystoreProperties = new Properties()
 keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
+static def String releaseTime() {
+    return new SimpleDateFormat("yyMMdd").format(new Date())
+}
+
+static def int parseVersionCode() {
+    return Integer.parseInt(new SimpleDateFormat("yyMMdd0HH").format(new Date()))
+}
+
+static def String commitNum() {
+    def resultArray = readText(processCmd("git describe --always")).trim().split("-")
+    return resultArray[resultArray.size() - 1]
+}
+
+static def Process processCmd(String cmd) {
+    return Runtime.getRuntime().exec(cmd)
+}
+
+static def String readText(Process process) {
+    def inputStream = process.inputStream
+    def insReader = new InputStreamReader(inputStream)
+    def bufReader = new BufferedReader(insReader)
+    def output = ""
+    def line = ""
+    line = bufReader.readLine()
+    output += line
+    return output
+}
 
 android {
     namespace "com.example.mp4_viewer_client"
@@ -70,8 +95,8 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode parseVersionCode()
+        versionName releaseTime() + "-" + commitNum()
     }
 
     buildTypes {
@@ -85,6 +110,29 @@ android {
 
 flutter {
     source '../..'
+}
+
+tasks.register('releaseUpload') {
+    dependsOn("assembleRelease")
+    doLast {
+        println("do releaseUpload")
+        def target = project.buildDir.toString() + '/outputs/apk/release/app-release.apk'
+        println(target)
+        def client = new OkHttpClient().newBuilder().build()
+        def body = new MultipartBody.Builder().setType(MultipartBody.FORM)
+                .addFormDataPart("file",
+                        target,
+                        RequestBody.create(MediaType.parse("application/octet-stream"),
+                                new File(target)
+                        )
+                ).build()
+        Request request = new Request.Builder()
+                .url("http://localhost:8000/apkConfig/upload")
+                .method("POST", body)
+                .build()
+        Response response = client.newCall(request).execute()
+        println("${response.code().toString()}  ${response.body().string()}")
+    }
 }
 
 dependencies {
