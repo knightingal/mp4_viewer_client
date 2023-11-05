@@ -102,7 +102,7 @@ class AboutActivity : AppCompatActivity() {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             val contentUri = FileProvider.getUriForFile(
                 this@AboutActivity,
-                "com.example.flow1000client.file_provider",
+                "com.example.mp4_viewer_client.file_provider",
                 apkFile
             )
             intent.setDataAndType(contentUri, mimeDefault)
