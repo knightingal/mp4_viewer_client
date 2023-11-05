@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -113,6 +114,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 
   final GlobalKey globalKey = GlobalKey();
 
+  bool displayConsole = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -137,6 +140,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 Text(widget.videoUrl,
                     style: const TextStyle(color: Color(0xFF00FF00))),
                 PlayerTimer(controller: _controller),
+                ConsolePad(
+                  controller: _controller,
+                  display: displayConsole,
+                ),
                 GestureDetector(
                   key: globalKey,
                   onTapDown: (e) {
@@ -148,6 +155,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     var seekToSec =
                         (_controller.value.duration.inSeconds * per).toInt();
                     _controller.seekTo(Duration(seconds: seekToSec));
+                  },
+                  onDoubleTap: () {
+                    log("double tap");
+                    setState(() {
+                      displayConsole = !displayConsole;
+                    });
                   },
                   child: Container(
                     padding: const EdgeInsets.all(0),
@@ -166,6 +179,51 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
         },
       ),
     );
+  }
+}
+
+class ConsolePad extends StatefulWidget {
+  final VideoPlayerController controller;
+
+  final bool display;
+
+  const ConsolePad(
+      {super.key, required this.controller, required this.display});
+
+  @override
+  State<StatefulWidget> createState() {
+    return ConsolePadState();
+  }
+}
+
+class ConsolePadState extends State<ConsolePad> {
+  final double consoleHeight = 60;
+
+  @override
+  Widget build(BuildContext context) {
+    var width = MediaQuery.of(context).size.width;
+    var height = MediaQuery.of(context).size.height;
+    return Container(
+        padding: EdgeInsets.fromLTRB(0, height - consoleHeight, 0, 0),
+        child: SizedBox(
+          width: width,
+          height: widget.display ? consoleHeight : 0,
+          child: CustomPaint(painter: ConsolePainter()),
+        ));
+  }
+}
+
+class ConsolePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()..color = Colors.green;
+    Rect rect = Rect.fromLTRB(0, 0, size.width, size.height);
+    canvas.drawRect(rect, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter o) {
+    return false;
   }
 }
 
