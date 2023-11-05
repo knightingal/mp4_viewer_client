@@ -52,6 +52,8 @@ class AboutActivity : AppCompatActivity() {
             val pendingUrl = "http://${SERVER_IP}:${SERVER_PORT}/apkConfig/newest/package/${packageName}"
             MainScope().launch {
                 val respBody = ConcurrencyJsonApiTask.makeRequest(pendingUrl)
+
+                Log.i("about", "package resp:${respBody}")
                 val apkConfig = Gson().fromJson(respBody, ApkConfig::class.java)
 
                 Log.d("about", apkConfig.toString())
