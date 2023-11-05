@@ -106,7 +106,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
     _controller.dispose();
 
     super.dispose();
@@ -143,9 +142,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   onTapDown: (e) {
                     RenderBox box = globalKey.currentContext!.findRenderObject()
                         as RenderBox;
-                    // log("onTap");
-                    // log("position ${e.localPosition}");
-                    // log("box ${box.size}");
                     var x = e.localPosition.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
@@ -169,28 +165,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           }
         },
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     // Wrap the play or pause in a call to `setState`. This ensures the
-      //     // correct icon is shown.
-      //     setState(() {
-      //       // If the video is playing, pause it.
-      //       if (_controller.value.isPlaying) {
-      //         _controller.pause();
-      //       } else {
-      //         // If the video is paused, play it.
-      //         _controller.play();
-      //         // Duration position = _controller.value.position;
-      //         //
-      //         // _controller.seekTo(position + const Duration(minutes: 10));
-      //       }
-      //     });
-      //   },
-      //   // Display the correct icon depending on the state of the player.
-      //   child: Icon(
-      //     _controller.value.isPlaying ? Icons.pause : Icons.play_arrow,
-      //   ),
-      // ),
     );
   }
 }

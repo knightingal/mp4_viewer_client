@@ -11,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/image_viewer.dart';
 import 'package:mp4_viewer_client/video_player.dart';
-import 'deeper/openmp4.dart';
 import 'dir_item.dart';
 import 'global.dart';
 
@@ -152,7 +151,9 @@ class MountConfigListState extends State<MountConfigListPage> {
     } else {
       return Scaffold(
         floatingActionButton: FloatingActionButton(
-          onPressed: () {platform.invokeMethod("aboutPage" );},
+          onPressed: () {
+            platform.invokeMethod("aboutPage");
+          },
           tooltip: 'Increment',
           child: const Icon(Icons.arrow_back_sharp),
         ), // This trailing comma makes auto-formatting nicer for build methods.
@@ -282,7 +283,9 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         title: Text(""),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {platform.invokeMethod("aboutPage" );},
+        onPressed: () {
+          platform.invokeMethod("aboutPage");
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.arrow_back_sharp),
       ), // This trailing comma makes auto-formatting nicer for build methods.
