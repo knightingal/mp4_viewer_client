@@ -206,10 +206,13 @@ class ConsolePadState extends State<ConsolePad> {
     return Container(
         padding: EdgeInsets.fromLTRB(0, height - consoleHeight, 0, 0),
         child: SizedBox(
-          width: width,
-          height: widget.display ? consoleHeight : 0,
-          child: CustomPaint(painter: ConsolePainter()),
-        ));
+            width: width,
+            height: widget.display ? consoleHeight : 0,
+            child: Stack(
+              children: [
+                CustomPaint(painter: ConsolePainter()),
+              ],
+            )));
   }
 }
 
