@@ -197,22 +197,34 @@ class ConsolePad extends StatefulWidget {
 }
 
 class ConsolePadState extends State<ConsolePad> {
-  final double consoleHeight = 60;
+  double consoleHeight = 60;
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     var height = MediaQuery.of(context).size.height;
+    consoleHeight = widget.display ? 60 : 0;
     return Container(
         padding: EdgeInsets.fromLTRB(0, height - consoleHeight, 0, 0),
-        child: SizedBox(
-            width: width,
-            height: widget.display ? consoleHeight : 0,
-            child: Stack(
-              children: [
-                CustomPaint(painter: ConsolePainter()),
-              ],
-            )));
+        child: Stack(
+          children: [
+            SizedBox(
+              width: width,
+              height: consoleHeight,
+              child: CustomPaint(painter: ConsolePainter()),
+            ),
+            Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              child: IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.arrow_back_sharp)),
+            ),
+            Container(
+              padding: EdgeInsets.fromLTRB(width - 60, 0, 0, 0),
+              child: IconButton(
+                  onPressed: () {}, icon: const Icon(Icons.arrow_back_sharp)),
+            )
+          ],
+        ));
   }
 }
 
