@@ -21,29 +21,34 @@ class ConsolePadState extends State<ConsolePad> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
-    consoleHeight = widget.display ? 60 : 0;
-    return Container(
-        padding: EdgeInsets.fromLTRB(0, height - consoleHeight, 0, 0),
-        child: Stack(
+    if (!widget.display) {
+      return const Text("");
+    } else {
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: UnconstrainedBox(
+            child: Stack(
           children: [
-            SizedBox(
-              width: width,
-              height: consoleHeight,
-              child: CustomPaint(painter: ConsolePainter()),
-            ),
+            // SizedBox(
+            //   width: width,
+            //   height: consoleHeight,
+            //   child: CustomPaint(painter: ConsolePainter()),
+            // ),
             Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              child: IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.arrow_back_sharp)),
+              child: FloatingActionButton(
+                  onPressed: () {}, child: const Icon(Icons.arrow_back_sharp)),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(width - 60, 0, 0, 0),
-              child: IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.arrow_back_sharp)),
+              child: FloatingActionButton(
+                  onPressed: () {},
+                  child: const Icon(Icons.arrow_forward_sharp)),
             )
           ],
-        ));
+        )),
+      );
+    }
   }
 }
 
