@@ -142,10 +142,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 Text(widget.videoUrl,
                     style: const TextStyle(color: Color(0xFF00FF00))),
                 PlayerTimer(controller: _controller),
-                ConsolePad(
-                  controller: _controller,
-                  display: displayConsole,
-                ),
                 GestureDetector(
                   key: globalKey,
                   onTapDown: (e) {
@@ -168,7 +164,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     padding: const EdgeInsets.all(0),
                     color: Colors.transparent,
                   ),
-                )
+                ),
+                ConsolePad(
+                  controller: _controller,
+                  display: displayConsole,
+                ),
               ],
             );
           } else {

@@ -37,12 +37,20 @@ class ConsolePadState extends State<ConsolePad> {
             Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               child: FloatingActionButton(
-                  onPressed: () {}, child: const Icon(Icons.arrow_back_sharp)),
+                  onPressed: () {
+                    var current = widget.controller.value.position.inSeconds;
+                    widget.controller.seekTo(Duration(seconds: current - 10));
+                  },
+                  child: const Icon(Icons.arrow_back_sharp)),
             ),
             Container(
               padding: EdgeInsets.fromLTRB(width - 60, 0, 0, 0),
               child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    widget.controller.seekTo(Duration(
+                        seconds:
+                            widget.controller.value.position.inSeconds + 10));
+                  },
                   child: const Icon(Icons.arrow_forward_sharp)),
             )
           ],
