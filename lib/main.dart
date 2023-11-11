@@ -273,14 +273,13 @@ class Mp4ListPageState extends State<Mp4ListPage> {
                   );
                 });
           } else {
-            return const Text("");
+            return const SizedBox.shrink();
           }
         });
 
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(""),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

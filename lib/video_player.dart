@@ -4,7 +4,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:mp4_viewer_client/console_pad.dart';
-import 'package:mp4_viewer_client/processbar.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerApp extends StatelessWidget {
@@ -136,7 +135,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     child: VideoPlayer(_controller),
                   ),
                 ),
-                Processer(controller: _controller),
 
                 // VideoPlayer(_controller),
                 Text(widget.videoUrl,

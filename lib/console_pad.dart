@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mp4_viewer_client/processbar.dart';
 import 'package:video_player/video_player.dart';
 
 class ConsolePad extends StatefulWidget {
@@ -22,7 +23,7 @@ class ConsolePadState extends State<ConsolePad> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     if (!widget.display) {
-      return const Text("");
+      return const SizedBox.shrink();
     } else {
       return Align(
         alignment: Alignment.bottomCenter,
@@ -52,7 +53,8 @@ class ConsolePadState extends State<ConsolePad> {
                             widget.controller.value.position.inSeconds + 10));
                   },
                   child: const Icon(Icons.arrow_forward_sharp)),
-            )
+            ),
+            Processer(controller: widget.controller)
           ],
         )),
       );

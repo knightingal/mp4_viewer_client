@@ -50,10 +50,9 @@ class ProcesserState extends State<Processer>
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    var height = MediaQuery.of(context).size.height;
 
     return CustomPaint(
-      size: Size(width, height),
+      size: Size(width, 2),
       painter: ProcesserPainter(
           width: width *
               (duration.inSeconds /
