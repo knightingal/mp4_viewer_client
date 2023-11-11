@@ -52,7 +52,7 @@ class ProcesserState extends State<Processer>
     var width = MediaQuery.of(context).size.width;
 
     return CustomPaint(
-      size: Size(width, 2),
+      size: Size(width, 4),
       painter: ProcesserPainter(
           width: width *
               (duration.inSeconds /
