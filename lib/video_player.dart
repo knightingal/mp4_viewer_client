@@ -115,7 +115,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 
   final GlobalKey globalKey = GlobalKey();
 
-  bool displayConsole = false;
+  bool displayConsole = true;
 
   @override
   Widget build(BuildContext context) {

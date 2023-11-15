@@ -17,10 +17,29 @@ class ConsolePad extends StatefulWidget {
 }
 
 class ConsolePadState extends State<ConsolePad> {
-  double consoleHeight = 60;
+  void videoBack() {
+    var current = widget.controller.value.position.inSeconds;
+    widget.controller.seekTo(Duration(seconds: current - 10));
+  }
+
+  void videoForward() {
+    var current = widget.controller.value.position.inSeconds;
+    widget.controller.seekTo(Duration(seconds: current + 10));
+  }
 
   @override
   Widget build(BuildContext context) {
+    var backButton = FloatingActionButton(
+        onPressed: videoBack, child: const Icon(Icons.arrow_back_sharp));
+
+    var forwardButton = Expanded(
+        child: Align(
+      alignment: Alignment.centerRight,
+      child: FloatingActionButton(
+          onPressed: videoForward,
+          child: const Icon(Icons.arrow_forward_sharp)),
+    ));
+
     if (!widget.display) {
       return const SizedBox.shrink();
     } else {
@@ -32,24 +51,8 @@ class ConsolePadState extends State<ConsolePad> {
             Processer(controller: widget.controller),
             Row(
               children: [
-                FloatingActionButton(
-                    onPressed: () {
-                      var current = widget.controller.value.position.inSeconds;
-                      widget.controller.seekTo(Duration(seconds: current - 10));
-                    },
-                    child: const Icon(Icons.arrow_back_sharp)),
-                Expanded(
-                    child: Align(
-                  alignment: Alignment.centerRight,
-                  child: FloatingActionButton(
-                      onPressed: () {
-                        widget.controller.seekTo(Duration(
-                            seconds:
-                                widget.controller.value.position.inSeconds +
-                                    10));
-                      },
-                      child: const Icon(Icons.arrow_forward_sharp)),
-                )),
+                backButton,
+                forwardButton,
               ],
             )
           ],
