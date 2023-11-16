@@ -144,7 +144,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 PlayerTimer(controller: _controller),
                 GestureDetector(
                   key: globalKey,
-                  onTapDown: (e) {
+                  onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
+                    log("move distance:${d.offsetFromOrigin.dx}");
+                  },
+                  onTapUp: (e) {
                     RenderBox box = globalKey.currentContext!.findRenderObject()
                         as RenderBox;
                     var x = e.localPosition.dx;
