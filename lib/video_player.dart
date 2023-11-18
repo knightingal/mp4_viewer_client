@@ -147,6 +147,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
                     log("move distance:${d.offsetFromOrigin.dx}");
                   },
+                  onLongPress: () {
+                    _controller.pause();
+                  },
+                  onLongPressUp: () {
+                    _controller.play();
+                  },
                   onTapUp: (e) {
                     RenderBox box = globalKey.currentContext!.findRenderObject()
                         as RenderBox;
