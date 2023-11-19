@@ -117,6 +117,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 
   bool displayConsole = true;
 
+  int longPressPausePosition = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -142,7 +144,29 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 PlayerTimer(controller: _controller),
                 GestureDetector(
                   key: globalKey,
-                  onTapDown: (e) {
+                  onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
+                    log("move distance:${d.offsetFromOrigin.dx}");
+                    RenderBox box = globalKey.currentContext!.findRenderObject()
+                    as RenderBox;
+                    var x = d.offsetFromOrigin.dx;
+                    var xTotal = box.size.width;
+                    var per = x / xTotal;
+                    var seekToSec =
+                    (_controller.value.duration.inSeconds * per + longPressPausePosition).toInt();
+                    _controller.seekTo(Duration(seconds: seekToSec));
+                    _controller.play();
+                    _controller.pause();
+
+                  },
+                  onLongPress: () {
+                    _controller.pause();
+                    var current = _controller.value.position.inSeconds;
+                    longPressPausePosition = current;
+                  },
+                  onLongPressUp: () {
+                    _controller.play();
+                  },
+                  onTapUp: (e) {
                     RenderBox box = globalKey.currentContext!.findRenderObject()
                         as RenderBox;
                     var x = e.localPosition.dx;
