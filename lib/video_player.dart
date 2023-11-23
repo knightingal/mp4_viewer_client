@@ -120,6 +120,16 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 
   int longPressPausePosition = 0;
 
+  void videoBack() {
+    var current = _controller.value.position.inSeconds;
+    _controller.seekTo(Duration(seconds: current - 10));
+  }
+
+  void videoForward() {
+    var current = _controller.value.position.inSeconds;
+    _controller.seekTo(Duration(seconds: current + 10));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -149,16 +159,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
                     log("move distance:${d.offsetFromOrigin.dx}");
                     RenderBox box = globalKey.currentContext!.findRenderObject()
-                    as RenderBox;
+                        as RenderBox;
                     var x = d.offsetFromOrigin.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
                     var seekToSec =
-                    (_controller.value.duration.inSeconds * per + longPressPausePosition).toInt();
+                        (_controller.value.duration.inSeconds * per +
+                                longPressPausePosition)
+                            .toInt();
                     _controller.seekTo(Duration(seconds: seekToSec));
-                    _controller.play();
-                    _controller.pause();
-
                   },
                   onLongPress: () {
                     _controller.pause();
@@ -178,11 +187,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                         (_controller.value.duration.inSeconds * per).toInt();
                     _controller.seekTo(Duration(seconds: seekToSec));
                   },
-                  onDoubleTap: () {
-                    log("double tap");
-                    setState(() {
-                      displayConsole = !displayConsole;
-                    });
+                  onDoubleTapDown: (d) {
+                    RenderBox box = globalKey.currentContext!.findRenderObject()
+                        as RenderBox;
+                    var x = d.localPosition.dx;
+                    var xTotal = box.size.width;
+                    var per = x / xTotal;
+                    if (per < 0.5) {
+                      videoBack();
+                    } else {
+                      videoForward();
+                    }
                   },
                   child: Container(
                     padding: const EdgeInsets.all(0),
