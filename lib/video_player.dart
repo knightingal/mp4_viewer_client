@@ -177,7 +177,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   onLongPressUp: () {
                     _controller.play();
                   },
-                  onTapUp: (e) {
+                  onDoubleTapDown: (e) {
                     RenderBox box = globalKey.currentContext!.findRenderObject()
                         as RenderBox;
                     var x = e.localPosition.dx;
@@ -187,10 +187,10 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                         (_controller.value.duration.inSeconds * per).toInt();
                     _controller.seekTo(Duration(seconds: seekToSec));
                   },
-                  onDoubleTapDown: (d) {
+                  onTapUp: (e) {
                     RenderBox box = globalKey.currentContext!.findRenderObject()
                         as RenderBox;
-                    var x = d.localPosition.dx;
+                    var x = e.localPosition.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
                     if (per < 0.5) {
