@@ -20,6 +20,25 @@ class MountConfig {
   }
 }
 
+class VideoInfo {
+  final int id;
+  final String coverFileName;
+  final String videoFileName;
+
+  const VideoInfo({
+    required this.id,
+    required this.coverFileName,
+    required this.videoFileName,
+  });
+
+  factory VideoInfo.fromJson(Map<String, dynamic> json) {
+    return VideoInfo(
+        id: json["id"],
+        coverFileName: json["coverFileName"],
+        videoFileName: json["videoFileName"]);
+  }
+}
+
 late List<MountConfig> gMountConfigList;
 
 int? selectedMountConfig;

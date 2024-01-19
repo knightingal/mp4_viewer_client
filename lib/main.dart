@@ -208,13 +208,13 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     }
   }
 
-  Future<List<String>> fetchSubDirs(String subDir) async {
+  Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
+        "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<String> dataList =
-          jsonArray.map((dynamic e) => e as String).toList();
+      List<VideoInfo> dataList =
+          jsonArray.map((e) => VideoInfo.fromJson(e)).toList();
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -224,6 +224,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 
   late Future<List<String>> futureDataList;
+  late Future<List<VideoInfo>> futureVideoInfoList;
 
   @override
   void initState() {
@@ -231,7 +232,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     if (parent.isEmpty) {
       futureDataList = fetchDirs();
     } else {
-      futureDataList = fetchSubDirs(getSubDir());
+      futureVideoInfoList = fetchSubDirs(getSubDir());
     }
   }
 
