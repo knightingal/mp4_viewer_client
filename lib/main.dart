@@ -9,10 +9,11 @@ import 'package:flutter/services.dart';
 
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/image_viewer.dart';
-import 'package:mp4_viewer_client/video_player.dart';
 import 'dir_item.dart';
 import 'global.dart';
+import 'image_viewer.dart';
+import 'video_player.dart';
+import 'widget/mount_home.dart';
 
 // @JS('JSON.stringify')
 // external String stringify(Object obj);
@@ -129,23 +130,13 @@ class MountConfigListState extends State<MountConfigListPage> {
               title: dirConfigList[index].baseDir,
               tapCallback: (int index, String title) {
                 selectedMountConfig = index;
-                if (dirConfigList[index].apiVersion == 1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Mp4ListPage(
-                              title: title,
-                            )),
-                  );
-                } else {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => Mp4GridPage(
-                              title: title,
-                            )),
-                  );
-                }
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => MountHome(
+                          title: title,
+                          apiVersion: dirConfigList[index].apiVersion)),
+                );
               });
         },
         prototypeItem: DirItem(
@@ -153,23 +144,13 @@ class MountConfigListState extends State<MountConfigListPage> {
           title: dirConfigList.first.baseDir,
           tapCallback: (int index, String title) {
             selectedMountConfig = index;
-            if (dirConfigList[index].apiVersion == 1) {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Mp4ListPage(
-                          title: title,
-                        )),
-              );
-            } else {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Mp4GridPage(
-                          title: title,
-                        )),
-              );
-            }
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => MountHome(
+                      title: title,
+                      apiVersion: dirConfigList[index].apiVersion)),
+            );
           },
         ),
         itemCount: dirConfigList.length,
