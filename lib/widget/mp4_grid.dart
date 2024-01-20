@@ -6,28 +6,23 @@ import 'package:http/http.dart' as http;
 
 import '../dir_item.dart';
 import '../global.dart';
+import '../image_viewer.dart';
 import '../main.dart';
-import 'mp4_grid.dart';
-import 'mp4_list.dart';
+import '../video_player.dart';
 
-class MountHome extends StatefulWidget {
-  const MountHome({super.key, required this.title, required this.apiVersion});
+class Mp4GridPage extends StatefulWidget {
+  const Mp4GridPage({super.key, required this.title});
 
   final String title;
-  final int apiVersion;
 
   @override
-  State<StatefulWidget> createState() {
-    return MountHomeState();
-  }
+  State<Mp4GridPage> createState() => Mp4GridPageState();
 }
 
-class MountHomeState extends State<MountHome> {
-  late Future<List<String>> futureDataList;
-
-  Future<List<String>> fetchDirs() async {
+class Mp4GridPageState extends State<Mp4GridPage> {
+  Future<List<String>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/"));
+        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<String> dataList =
@@ -40,34 +35,58 @@ class MountHomeState extends State<MountHome> {
     }
   }
 
+  late Future<List<String>> futureDataList;
+
   @override
   void initState() {
     super.initState();
-    futureDataList = fetchDirs();
+    futureDataList = fetchSubDirs(getSubDir());
   }
 
+  static const platform = MethodChannel('flutter/startWeb');
+
+  String generateFileUrlByTitle(String title) =>
+      "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+
   void itemTapCallback(int index, String title) {
-    parent.add(title);
-    if (widget.apiVersion == 1) {
+    if (title.endsWith(".mp4")) {
+      // String videoUrl =
+      //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Mp4ListPage(
-                  title: title,
+            builder: (context) => VideoPlayerApp(
+                  videoUrl: generateFileUrlByTitle(title),
                 )),
       );
+    } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ImageViewer(imageUrl: generateFileUrlByTitle(title)),
+          ));
     } else {
+      parent.add(title);
       Navigator.push(
         context,
         MaterialPageRoute(
             builder: (context) => Mp4GridPage(
-                  title: title,
+                  title: widget.title,
                 )),
       );
     }
   }
 
-  static const platform = MethodChannel('flutter/startWeb');
+  @override
+  void dispose() {
+    // Ensure disposing of the VideoPlayerController to free up resources.
+
+    if (parent.isNotEmpty) {
+      parent.removeLast();
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
