@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import '../dir_item.dart';
 import '../global.dart';
 import '../main.dart';
+import 'mp4_list.dart';
 
 class MountHome extends StatefulWidget {
   const MountHome({super.key, required this.title, required this.apiVersion});
@@ -45,6 +46,7 @@ class MountHomeState extends State<MountHome> {
   }
 
   void itemTapCallback(int index, String title) {
+    parent.add(title);
     Navigator.push(
       context,
       MaterialPageRoute(
