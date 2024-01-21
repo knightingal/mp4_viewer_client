@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
-import '../dir_item.dart';
 import '../global.dart';
 import '../image_viewer.dart';
 import '../main.dart';
@@ -20,13 +19,14 @@ class Mp4GridPage extends StatefulWidget {
 }
 
 class Mp4GridPageState extends State<Mp4GridPage> {
-  Future<List<String>> fetchSubDirs(String subDir) async {
+  Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
+        "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<String> dataList =
-          jsonArray.map((dynamic e) => e as String).toList();
+      List<VideoInfo> dataList =
+          jsonArray.map((e) => VideoInfo.fromJson(e)).toList();
+
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -35,7 +35,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     }
   }
 
-  late Future<List<String>> futureDataList;
+  late Future<List<VideoInfo>> futureDataList;
 
   @override
   void initState() {
@@ -50,8 +50,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      // String videoUrl =
-      //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -91,7 +89,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   @override
   Widget build(BuildContext context) {
     Widget body;
-    body = FutureBuilder<List<String>>(
+    body = FutureBuilder<List<VideoInfo>>(
         future: futureDataList,
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -102,7 +100,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                 itemBuilder: (context, index) {
                   return GridItem(
                     index: index,
-                    title: snapshot.data![index],
+                    title: snapshot.data![index].videoFileName,
                     tapCallback: itemTapCallback,
                   );
                 });
