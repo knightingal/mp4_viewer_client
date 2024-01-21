@@ -95,13 +95,10 @@ class Mp4GridPageState extends State<Mp4GridPage> {
         future: futureDataList,
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
+            return GridView.builder(
                 itemCount: snapshot.data!.length,
-                prototypeItem: DirItem(
-                  index: 0,
-                  title: snapshot.data!.first,
-                  tapCallback: itemTapCallback,
-                ),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2),
                 itemBuilder: (context, index) {
                   return DirItem(
                     index: index,
