@@ -98,9 +98,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
             return GridView.builder(
                 itemCount: snapshot.data!.length,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2),
+                    childAspectRatio: 4 / 3, crossAxisCount: 2),
                 itemBuilder: (context, index) {
-                  return DirItem(
+                  return GridItem(
                     index: index,
                     title: snapshot.data![index],
                     tapCallback: itemTapCallback,
@@ -124,6 +124,33 @@ class Mp4GridPageState extends State<Mp4GridPage> {
         child: const Icon(Icons.arrow_back_sharp),
       ), // This trailing comma makes auto-formatting nicer for build methods.
       body: Center(child: body),
+    );
+  }
+}
+
+class GridItem extends StatelessWidget {
+  final String title;
+
+  final int index;
+  final void Function(int index, String title) tapCallback;
+
+  const GridItem({
+    super.key,
+    required this.index,
+    required this.title,
+    required this.tapCallback,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      color: Colors.green[500],
+      child: Text(title),
+
+      // onTap: () {
+      //   tapCallback(index, title);
+      // },
     );
   }
 }
