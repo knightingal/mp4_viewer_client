@@ -101,6 +101,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                   return GridItem(
                     index: index,
                     title: snapshot.data![index].videoFileName,
+                    coverUrl: generateFileUrlByTitle(
+                        snapshot.data![index].coverFileName),
                     tapCallback: itemTapCallback,
                   );
                 });
@@ -128,6 +130,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
 class GridItem extends StatelessWidget {
   final String title;
+  final String coverUrl;
 
   final int index;
   final void Function(int index, String title) tapCallback;
@@ -136,19 +139,17 @@ class GridItem extends StatelessWidget {
     super.key,
     required this.index,
     required this.title,
+    required this.coverUrl,
     required this.tapCallback,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      color: Colors.green[500],
-      child: Text(title),
-
-      // onTap: () {
-      //   tapCallback(index, title);
-      // },
-    );
+    return GestureDetector(
+        child: Container(
+          padding: const EdgeInsets.all(8),
+          child: Image.network(coverUrl),
+        ),
+        onTapUp: (e) => tapCallback(index, title));
   }
 }
