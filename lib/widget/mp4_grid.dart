@@ -123,7 +123,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(""),
+        title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

@@ -50,8 +50,6 @@ class Mp4ListPageState extends State<Mp4ListPage> {
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      // String videoUrl =
-      //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -117,7 +115,7 @@ class Mp4ListPageState extends State<Mp4ListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(""),
+        title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

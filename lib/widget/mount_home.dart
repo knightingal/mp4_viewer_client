@@ -71,8 +71,7 @@ class MountHomeState extends State<MountHome> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body;
-    body = FutureBuilder<List<String>>(
+    Widget body = FutureBuilder<List<String>>(
         future: futureDataList,
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
@@ -98,7 +97,7 @@ class MountHomeState extends State<MountHome> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(""),
+        title: Text(widget.title),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

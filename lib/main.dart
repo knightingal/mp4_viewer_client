@@ -48,7 +48,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text(""),
+        title: const Text("Flow1000"),
       ),
       // floatingActionButton: FloatingActionButton(
       //   onPressed: () => {},
