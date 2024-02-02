@@ -146,10 +146,14 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 Center(
                   child: AspectRatio(
                     aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
+                    child: Stack(
+                      children: [
+                        VideoPlayer(_controller),
+                        Processer(controller: _controller),
+                      ],
+                    ),
                   ),
                 ),
-                Processer(controller: _controller),
 
                 // VideoPlayer(_controller),
                 Text(widget.videoUrl,
