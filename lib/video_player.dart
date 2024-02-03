@@ -143,8 +143,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
             _controller.play();
             return Stack(
               children: [
-                Center(
-                    child: Column(
+                Column(
                   children: [
                     const Expanded(
                       child: SizedBox.shrink(),
@@ -157,7 +156,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                       child: Processer(controller: _controller),
                     )
                   ],
-                )),
+                ),
 
                 // VideoPlayer(_controller),
                 Text(widget.videoUrl,
