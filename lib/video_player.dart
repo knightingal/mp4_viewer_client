@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:mp4_viewer_client/console_pad.dart';
 import 'package:mp4_viewer_client/processbar.dart';
 import 'package:video_player/video_player.dart';
@@ -176,6 +177,22 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     )
                   ],
                 ),
+                Focus(
+                    autofocus: true,
+                    onKey: (node, event) {
+                      if (event is RawKeyDownEvent) {
+                        switch (event.data.physicalKey) {
+                          case PhysicalKeyboardKey.keyQ:
+                            Navigator.pop(context);
+                          case PhysicalKeyboardKey.arrowLeft:
+                            videoBack();
+                          case PhysicalKeyboardKey.arrowRight:
+                            videoForward();
+                        }
+                      }
+                      return KeyEventResult.handled;
+                    },
+                    child: const SizedBox.shrink()),
 
                 // VideoPlayer(_controller),
                 Text(widget.videoUrl,
