@@ -132,6 +132,28 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
 
   @override
   Widget build(BuildContext context) {
+    var height = MediaQuery.of(context).size.height;
+    var width = MediaQuery.of(context).size.width;
+
+    var aspectRatio = _controller.value.aspectRatio;
+    var videoHeight = -1.0;
+    Widget videoWidget = AspectRatio(
+      aspectRatio: _controller.value.aspectRatio,
+      child: VideoPlayer(_controller),
+    );
+    if (width / (height - 4) > aspectRatio) {
+      videoHeight = height - 4;
+      videoWidget = Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: videoHeight,
+        child: AspectRatio(
+          aspectRatio: _controller.value.aspectRatio,
+          child: VideoPlayer(_controller),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: FutureBuilder(
@@ -148,10 +170,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     const Expanded(
                       child: SizedBox.shrink(),
                     ),
-                    AspectRatio(
-                      aspectRatio: _controller.value.aspectRatio,
-                      child: VideoPlayer(_controller),
-                    ),
+                    videoWidget,
                     Expanded(
                       child: Processer(controller: _controller),
                     )
