@@ -136,25 +136,6 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     var height = MediaQuery.of(context).size.height;
     var width = MediaQuery.of(context).size.width;
 
-    var aspectRatio = _controller.value.aspectRatio;
-    var videoHeight = -1.0;
-    Widget videoWidget = AspectRatio(
-      aspectRatio: _controller.value.aspectRatio,
-      child: VideoPlayer(_controller),
-    );
-    if (width / (height - 4) > aspectRatio) {
-      videoHeight = height - 4;
-      videoWidget = Container(
-        alignment: Alignment.center,
-        width: double.infinity,
-        height: videoHeight,
-        child: AspectRatio(
-          aspectRatio: _controller.value.aspectRatio,
-          child: VideoPlayer(_controller),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: Colors.black,
       body: FutureBuilder(
@@ -164,6 +145,26 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
             _controller.play();
+
+            var aspectRatio = _controller.value.aspectRatio;
+            var videoHeight = -1.0;
+            Widget videoWidget = AspectRatio(
+              aspectRatio: _controller.value.aspectRatio,
+              child: VideoPlayer(_controller),
+            );
+            if (width / (height - 4) > aspectRatio) {
+              videoHeight = height - 4;
+              videoWidget = Container(
+                alignment: Alignment.center,
+                width: double.infinity,
+                height: videoHeight,
+                child: AspectRatio(
+                  aspectRatio: _controller.value.aspectRatio,
+                  child: VideoPlayer(_controller),
+                ),
+              );
+            }
+
             return Stack(
               children: [
                 Column(
