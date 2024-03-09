@@ -14,12 +14,7 @@ class VideoPlayerApp extends StatelessWidget {
   const VideoPlayerApp({super.key, required this.videoUrl});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // title: 'Video Player Demo',
-      home: VideoPlayerScreen(videoUrl: videoUrl),
-    );
-  }
+  Widget build(BuildContext context) => VideoPlayerScreen(videoUrl: videoUrl);
 }
 
 class PlayerTimer extends StatefulWidget {
