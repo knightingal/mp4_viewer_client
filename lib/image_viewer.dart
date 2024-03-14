@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ImageViewer extends StatelessWidget {
-  const ImageViewer({super.key, required this.imageUrl});
+  const ImageViewer({super.key, required this.imageUrl, this.videoTitle});
   final String imageUrl;
+  final String? videoTitle;
 
   @override
   Widget build(BuildContext context) {
-    var title = 'Web Images';
+    String title;
+    if (videoTitle != null) {
+      title = videoTitle!;
+    } else {
+      title = 'Web Images';
+    }
 
     return MaterialApp(
       title: title,

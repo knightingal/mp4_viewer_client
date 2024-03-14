@@ -48,11 +48,14 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   String generateFileUrlByTitle(String title) =>
       "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
 
-  void longPressCallback(int index, String coverUrl) {
+  void longPressCallback(int index, String coverUrl, String title) {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => ImageViewer(imageUrl: coverUrl),
+          builder: (context) => ImageViewer(
+            imageUrl: coverUrl,
+            videoTitle: title,
+          ),
         ));
   }
 
@@ -143,7 +146,8 @@ class GridItem extends StatelessWidget {
 
   final int index;
   final void Function(int index, String title) tapCallback;
-  final void Function(int index, String coverUrl) longPressCallback;
+  final void Function(int index, String coverUrl, String title)
+      longPressCallback;
 
   const GridItem({
     super.key,
@@ -161,7 +165,7 @@ class GridItem extends StatelessWidget {
           padding: const EdgeInsets.all(8),
           child: Image.network(coverUrl),
         ),
-        onLongPress: () => longPressCallback(index, coverUrl),
+        onLongPress: () => longPressCallback(index, coverUrl, title),
         onTapUp: (e) => tapCallback(index, title));
   }
 }
