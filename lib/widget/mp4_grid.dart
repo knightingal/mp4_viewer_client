@@ -162,9 +162,20 @@ class GridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Container(
-          padding: const EdgeInsets.all(8),
-          child: Image.network(coverUrl),
-        ),
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Image.network(coverUrl),
+                Expanded(
+                  child: Text(
+                    title,
+                    style: TextStyle(
+                        backgroundColor:
+                            Theme.of(context).colorScheme.inversePrimary),
+                  ),
+                )
+              ],
+            )),
         onLongPress: () => longPressCallback(index, coverUrl, title),
         onTapUp: (e) => tapCallback(index, title));
   }
