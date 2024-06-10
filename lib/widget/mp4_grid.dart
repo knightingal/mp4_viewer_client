@@ -165,8 +165,12 @@ class GridItem extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                Image.network(coverUrl),
                 Expanded(
+                  flex: 1,
+                  child: Image.network(coverUrl),
+                ),
+                Expanded(
+                  flex: 0,
                   child: Text(
                     title,
                     style: TextStyle(
