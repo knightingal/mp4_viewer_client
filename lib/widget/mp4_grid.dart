@@ -162,7 +162,7 @@ class GridItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
         child: Container(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(0),
             child: Column(
               children: [
                 Expanded(
@@ -171,11 +171,14 @@ class GridItem extends StatelessWidget {
                 ),
                 Expanded(
                   flex: 0,
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                        backgroundColor:
-                            Theme.of(context).colorScheme.inversePrimary),
+                  child: Container(
+                    color: Theme.of(context).colorScheme.inversePrimary,
+                    width: double.infinity,
+                    height: 40,
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      title,
+                    ),
                   ),
                 )
               ],
