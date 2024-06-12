@@ -160,30 +160,31 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        child: Container(
-            padding: const EdgeInsets.all(0),
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Image.network(coverUrl),
+    return Container(
+        padding: const EdgeInsets.all(0),
+        child: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: GestureDetector(
+                onLongPress: () => longPressCallback(index, coverUrl, title),
+                onTapUp: (e) => tapCallback(index, title),
+                child: Image.network(coverUrl),
+              ),
+            ),
+            Expanded(
+              flex: 0,
+              child: Container(
+                color: Theme.of(context).colorScheme.inversePrimary,
+                width: double.infinity,
+                height: 40,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  title,
                 ),
-                Expanded(
-                  flex: 0,
-                  child: Container(
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                    width: double.infinity,
-                    height: 40,
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      title,
-                    ),
-                  ),
-                )
-              ],
-            )),
-        onLongPress: () => longPressCallback(index, coverUrl, title),
-        onTapUp: (e) => tapCallback(index, title));
+              ),
+            )
+          ],
+        ));
   }
 }
