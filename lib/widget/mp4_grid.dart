@@ -140,6 +140,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
+enum SampleItem { itemOne, itemTwo, itemThree }
+
 class GridItem extends StatelessWidget {
   final String title;
   final String coverUrl;
@@ -173,17 +175,48 @@ class GridItem extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 0,
-              child: Container(
-                color: Theme.of(context).colorScheme.inversePrimary,
-                width: double.infinity,
-                height: 40,
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  title,
-                ),
-              ),
-            )
+                flex: 0,
+                child: Container(
+                  color: Theme.of(context).colorScheme.inversePrimary,
+                  width: double.infinity,
+                  height: 40,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    children: [
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          title,
+                        ),
+                      ),
+                      Expanded(
+                          flex: 0,
+                          child: PopupMenuButton<SampleItem>(
+                            // initialValue: selectedItem,
+                            onSelected: (SampleItem item) {
+                              // setState(() {
+                              //   selectedItem = item;
+                              // });
+                            },
+                            itemBuilder: (BuildContext context) =>
+                                <PopupMenuEntry<SampleItem>>[
+                              const PopupMenuItem<SampleItem>(
+                                value: SampleItem.itemOne,
+                                child: Text('Item 1'),
+                              ),
+                              const PopupMenuItem<SampleItem>(
+                                value: SampleItem.itemTwo,
+                                child: Text('Item 2'),
+                              ),
+                              const PopupMenuItem<SampleItem>(
+                                value: SampleItem.itemThree,
+                                child: Text('Item 3'),
+                              ),
+                            ],
+                          ))
+                    ],
+                  ),
+                ))
           ],
         ));
   }
