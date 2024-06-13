@@ -140,7 +140,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
-enum SampleItem { good, normal, bad }
+enum SampleItem { good, normal, bad, none }
 
 class GridItem extends StatelessWidget {
   final String title;
@@ -174,50 +174,87 @@ class GridItem extends StatelessWidget {
                 child: Image.network(coverUrl),
               ),
             ),
-            Expanded(
-                flex: 0,
-                child: Container(
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                  width: double.infinity,
-                  height: 40,
-                  alignment: Alignment.centerLeft,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          title,
-                        ),
-                      ),
-                      Expanded(
-                          flex: 0,
-                          child: PopupMenuButton<SampleItem>(
-                            // initialValue: selectedItem,
-                            onSelected: (SampleItem item) {
-                              // setState(() {
-                              //   selectedItem = item;
-                              // });
-                            },
-                            itemBuilder: (BuildContext context) =>
-                                <PopupMenuEntry<SampleItem>>[
-                              const PopupMenuItem<SampleItem>(
-                                value: SampleItem.good,
-                                child: Text('Good'),
-                              ),
-                              const PopupMenuItem<SampleItem>(
-                                value: SampleItem.normal,
-                                child: Text('Normal'),
-                              ),
-                              const PopupMenuItem<SampleItem>(
-                                value: SampleItem.bad,
-                                child: Text('Bad'),
-                              ),
-                            ],
-                          ))
-                    ],
-                  ),
-                ))
+            Expanded(flex: 0, child: GridTitleBar(title: title))
           ],
         ));
+  }
+}
+
+class GridTitleBar extends StatefulWidget {
+  final String title;
+
+  final SampleItem sampleItem = SampleItem.none;
+
+  const GridTitleBar({super.key, required this.title});
+
+  @override
+  State<StatefulWidget> createState() {
+    return GridTitleBarState();
+  }
+}
+
+class GridTitleBarState extends State<GridTitleBar> {
+  late SampleItem selectedItem;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedItem = widget.sampleItem;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Color color;
+    if (selectedItem == SampleItem.bad) {
+      color = Colors.red[900] as Color;
+    } else if (selectedItem == SampleItem.good) {
+      color = Colors.green[900] as Color;
+    } else if (selectedItem == SampleItem.normal) {
+      color = Colors.blue[900] as Color;
+    } else {
+      color = Theme.of(context).colorScheme.inversePrimary;
+    }
+
+    return Container(
+      color: color,
+      width: double.infinity,
+      height: 40,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              widget.title,
+            ),
+          ),
+          Expanded(
+              flex: 0,
+              child: PopupMenuButton<SampleItem>(
+                // initialValue: selectedItem,
+                onSelected: (SampleItem item) {
+                  setState(() {
+                    selectedItem = item;
+                  });
+                },
+                itemBuilder: (BuildContext context) =>
+                    <PopupMenuEntry<SampleItem>>[
+                  const PopupMenuItem<SampleItem>(
+                    value: SampleItem.good,
+                    child: Text('Good'),
+                  ),
+                  const PopupMenuItem<SampleItem>(
+                    value: SampleItem.normal,
+                    child: Text('Normal'),
+                  ),
+                  const PopupMenuItem<SampleItem>(
+                    value: SampleItem.bad,
+                    child: Text('Bad'),
+                  ),
+                ],
+              ))
+        ],
+      ),
+    );
   }
 }
