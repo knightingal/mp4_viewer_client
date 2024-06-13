@@ -140,7 +140,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
-enum SampleItem { itemOne, itemTwo, itemThree }
+enum SampleItem { good, normal, bad }
 
 class GridItem extends StatelessWidget {
   final String title;
@@ -201,16 +201,16 @@ class GridItem extends StatelessWidget {
                             itemBuilder: (BuildContext context) =>
                                 <PopupMenuEntry<SampleItem>>[
                               const PopupMenuItem<SampleItem>(
-                                value: SampleItem.itemOne,
-                                child: Text('Item 1'),
+                                value: SampleItem.good,
+                                child: Text('Good'),
                               ),
                               const PopupMenuItem<SampleItem>(
-                                value: SampleItem.itemTwo,
-                                child: Text('Item 2'),
+                                value: SampleItem.normal,
+                                child: Text('Normal'),
                               ),
                               const PopupMenuItem<SampleItem>(
-                                value: SampleItem.itemThree,
-                                child: Text('Item 3'),
+                                value: SampleItem.bad,
+                                child: Text('Bad'),
                               ),
                             ],
                           ))
