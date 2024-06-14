@@ -174,7 +174,12 @@ class GridItem extends StatelessWidget {
                 child: Image.network(coverUrl),
               ),
             ),
-            Expanded(flex: 0, child: GridTitleBar(title: title))
+            Expanded(
+                flex: 0,
+                child: GridTitleBar(
+                  title: title,
+                  id: index,
+                ))
           ],
         ));
   }
@@ -182,10 +187,11 @@ class GridItem extends StatelessWidget {
 
 class GridTitleBar extends StatefulWidget {
   final String title;
+  final int id;
 
   final SampleItem sampleItem = SampleItem.none;
 
-  const GridTitleBar({super.key, required this.title});
+  const GridTitleBar({super.key, required this.title, required this.id});
 
   @override
   State<StatefulWidget> createState() {
@@ -201,6 +207,20 @@ class GridTitleBarState extends State<GridTitleBar> {
     super.initState();
     selectedItem = widget.sampleItem;
   }
+
+  Future<int> postRate() async {
+    final response =
+        await http.post(Uri.parse("${apiHost()}/video-rate/${widget.id}/1"));
+    if (response.statusCode == 200) {
+      return 1;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
+  Future<int>? rateRet;
 
   @override
   Widget build(BuildContext context) {
@@ -234,7 +254,7 @@ class GridTitleBarState extends State<GridTitleBar> {
                 // initialValue: selectedItem,
                 onSelected: (SampleItem item) {
                   setState(() {
-                    selectedItem = item;
+                    rateRet = postRate();
                   });
                 },
                 itemBuilder: (BuildContext context) =>
