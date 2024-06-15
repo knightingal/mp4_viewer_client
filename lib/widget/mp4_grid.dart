@@ -111,6 +111,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                 itemBuilder: (context, index) {
                   return GridItem(
                     index: index,
+                    videoId: snapshot.data![index].id,
                     title: snapshot.data![index].videoFileName,
                     coverUrl: generateFileUrlByTitle(
                         snapshot.data![index].coverFileName),
@@ -147,6 +148,7 @@ class GridItem extends StatelessWidget {
   final String coverUrl;
 
   final int index;
+  final int videoId;
   final void Function(int index, String title) tapCallback;
   final void Function(int index, String coverUrl, String title)
       longPressCallback;
@@ -154,6 +156,7 @@ class GridItem extends StatelessWidget {
   const GridItem({
     super.key,
     required this.index,
+    required this.videoId,
     required this.title,
     required this.coverUrl,
     required this.tapCallback,
@@ -178,7 +181,7 @@ class GridItem extends StatelessWidget {
                 flex: 0,
                 child: GridTitleBar(
                   title: title,
-                  index: index,
+                  videoId: videoId,
                 ))
           ],
         ));
@@ -187,11 +190,11 @@ class GridItem extends StatelessWidget {
 
 class GridTitleBar extends StatefulWidget {
   final String title;
-  final int index;
+  final int videoId;
 
   final SampleItem sampleItem = SampleItem.none;
 
-  const GridTitleBar({super.key, required this.title, required this.index});
+  const GridTitleBar({super.key, required this.title, required this.videoId});
 
   @override
   State<StatefulWidget> createState() {
@@ -209,8 +212,8 @@ class GridTitleBarState extends State<GridTitleBar> {
   }
 
   Future<int> postRate() async {
-    final response =
-        await http.post(Uri.parse("${apiHost()}/video-rate/${widget.index}/1"));
+    final response = await http
+        .post(Uri.parse("${apiHost()}/video-rate/${widget.videoId}/1"));
     if (response.statusCode == 200) {
       return 1;
     } else {
