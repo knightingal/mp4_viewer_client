@@ -178,7 +178,7 @@ class GridItem extends StatelessWidget {
                 flex: 0,
                 child: GridTitleBar(
                   title: title,
-                  id: index,
+                  index: index,
                 ))
           ],
         ));
@@ -187,11 +187,11 @@ class GridItem extends StatelessWidget {
 
 class GridTitleBar extends StatefulWidget {
   final String title;
-  final int id;
+  final int index;
 
   final SampleItem sampleItem = SampleItem.none;
 
-  const GridTitleBar({super.key, required this.title, required this.id});
+  const GridTitleBar({super.key, required this.title, required this.index});
 
   @override
   State<StatefulWidget> createState() {
@@ -210,7 +210,7 @@ class GridTitleBarState extends State<GridTitleBar> {
 
   Future<int> postRate() async {
     final response =
-        await http.post(Uri.parse("${apiHost()}/video-rate/${widget.id}/1"));
+        await http.post(Uri.parse("${apiHost()}/video-rate/${widget.index}/1"));
     if (response.statusCode == 200) {
       return 1;
     } else {
@@ -235,46 +235,65 @@ class GridTitleBarState extends State<GridTitleBar> {
       color = Theme.of(context).colorScheme.inversePrimary;
     }
 
-    return Container(
-      color: color,
-      width: double.infinity,
-      height: 40,
-      alignment: Alignment.centerLeft,
-      child: Row(
-        children: [
-          Expanded(
-            flex: 1,
-            child: Text(
-              widget.title,
+    return buildFutureBuilder();
+  }
+
+  FutureBuilder<int> buildFutureBuilder() {
+    return FutureBuilder(
+        future: rateRet,
+        builder: (context, snapshot) {
+          Color color;
+          if (snapshot.hasData) {
+            int ret = snapshot.data as int;
+            if (ret == 1) {
+              color = Colors.red[900] as Color;
+            } else {
+              color = Colors.blue[900] as Color;
+            }
+          } else {
+            color = Theme.of(context).colorScheme.inversePrimary;
+          }
+          return Container(
+            color: color,
+            width: double.infinity,
+            height: 40,
+            alignment: Alignment.centerLeft,
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: Text(
+                    widget.title,
+                  ),
+                ),
+                Expanded(
+                    flex: 0,
+                    child: PopupMenuButton<SampleItem>(
+                      // initialValue: selectedItem,
+                      onSelected: (SampleItem item) {
+                        setState(() {
+                          rateRet = postRate();
+                        });
+                      },
+                      itemBuilder: (BuildContext context) =>
+                          <PopupMenuEntry<SampleItem>>[
+                        const PopupMenuItem<SampleItem>(
+                          value: SampleItem.good,
+                          child: Text('Good'),
+                        ),
+                        const PopupMenuItem<SampleItem>(
+                          value: SampleItem.normal,
+                          child: Text('Normal'),
+                        ),
+                        const PopupMenuItem<SampleItem>(
+                          value: SampleItem.bad,
+                          child: Text('Bad'),
+                        ),
+                      ],
+                    ))
+              ],
             ),
-          ),
-          Expanded(
-              flex: 0,
-              child: PopupMenuButton<SampleItem>(
-                // initialValue: selectedItem,
-                onSelected: (SampleItem item) {
-                  setState(() {
-                    rateRet = postRate();
-                  });
-                },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<SampleItem>>[
-                  const PopupMenuItem<SampleItem>(
-                    value: SampleItem.good,
-                    child: Text('Good'),
-                  ),
-                  const PopupMenuItem<SampleItem>(
-                    value: SampleItem.normal,
-                    child: Text('Normal'),
-                  ),
-                  const PopupMenuItem<SampleItem>(
-                    value: SampleItem.bad,
-                    child: Text('Bad'),
-                  ),
-                ],
-              ))
-        ],
-      ),
-    );
+          );
+        });
   }
 }
