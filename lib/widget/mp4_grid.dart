@@ -112,6 +112,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                   return GridItem(
                     index: index,
                     videoId: snapshot.data![index].id,
+                    rate: snapshot.data![index].rate,
                     title: snapshot.data![index].videoFileName,
                     coverUrl: generateFileUrlByTitle(
                         snapshot.data![index].coverFileName),
@@ -141,11 +142,17 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
-enum SampleItem { good, normal, bad, none }
+enum SampleItem {
+  none,
+  good,
+  normal,
+  bad;
+}
 
 class GridItem extends StatelessWidget {
   final String title;
   final String coverUrl;
+  final int? rate;
 
   final int index;
   final int videoId;
@@ -161,6 +168,7 @@ class GridItem extends StatelessWidget {
     required this.coverUrl,
     required this.tapCallback,
     required this.longPressCallback,
+    required this.rate,
   });
 
   @override
@@ -182,6 +190,7 @@ class GridItem extends StatelessWidget {
                 child: GridTitleBar(
                   title: title,
                   videoId: videoId,
+                  rate: rate,
                 ))
           ],
         ));
@@ -191,10 +200,13 @@ class GridItem extends StatelessWidget {
 class GridTitleBar extends StatefulWidget {
   final String title;
   final int videoId;
+  final int? rate;
 
-  final SampleItem sampleItem = SampleItem.none;
-
-  const GridTitleBar({super.key, required this.title, required this.videoId});
+  const GridTitleBar(
+      {super.key,
+      required this.title,
+      required this.videoId,
+      required this.rate});
 
   @override
   State<StatefulWidget> createState() {
@@ -208,14 +220,24 @@ class GridTitleBarState extends State<GridTitleBar> {
   @override
   void initState() {
     super.initState();
-    selectedItem = widget.sampleItem;
+    if (widget.rate != null) {
+      selectedItem = SampleItem.values[widget.rate as int];
+    } else {
+      selectedItem = SampleItem.none;
+    }
   }
 
-  Future<int> postRate() async {
-    final response = await http
-        .post(Uri.parse("${apiHost()}/video-rate/${widget.videoId}/1"));
+  Future<SampleItem> postRate(SampleItem item) async {
+    final response = await http.post(
+        Uri.parse("${apiHost()}/video-rate/${widget.videoId}/${item.index}"));
     if (response.statusCode == 200) {
-      return 1;
+      final videoInfoMap = jsonDecode(response.body) as Map<String, dynamic>;
+      final videoInfo = VideoInfo.fromJson(videoInfoMap);
+      if (videoInfo.rate != null) {
+        return SampleItem.values[videoInfo.rate!];
+      } else {
+        return SampleItem.none;
+      }
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -223,7 +245,7 @@ class GridTitleBarState extends State<GridTitleBar> {
     }
   }
 
-  Future<int>? rateRet;
+  Future<SampleItem>? rateRet;
 
   @override
   Widget build(BuildContext context) {
@@ -241,20 +263,34 @@ class GridTitleBarState extends State<GridTitleBar> {
     return buildFutureBuilder();
   }
 
-  FutureBuilder<int> buildFutureBuilder() {
+  FutureBuilder<SampleItem> buildFutureBuilder() {
     return FutureBuilder(
         future: rateRet,
         builder: (context, snapshot) {
           Color color;
           if (snapshot.hasData) {
-            int ret = snapshot.data as int;
-            if (ret == 1) {
-              color = Colors.red[900] as Color;
-            } else {
-              color = Colors.blue[900] as Color;
+            SampleItem ret = snapshot.data as SampleItem;
+            switch (ret) {
+              case SampleItem.bad:
+                color = Colors.red[900] as Color;
+              case SampleItem.normal:
+                color = Colors.blue[900] as Color;
+              case SampleItem.good:
+                color = Colors.green[900] as Color;
+              default:
+                color = Theme.of(context).colorScheme.inversePrimary;
             }
           } else {
-            color = Theme.of(context).colorScheme.inversePrimary;
+            switch (selectedItem) {
+              case SampleItem.bad:
+                color = Colors.red[900] as Color;
+              case SampleItem.normal:
+                color = Colors.blue[900] as Color;
+              case SampleItem.good:
+                color = Colors.green[900] as Color;
+              default:
+                color = Theme.of(context).colorScheme.inversePrimary;
+            }
           }
           return Container(
             color: color,
@@ -275,7 +311,7 @@ class GridTitleBarState extends State<GridTitleBar> {
                       // initialValue: selectedItem,
                       onSelected: (SampleItem item) {
                         setState(() {
-                          rateRet = postRate();
+                          rateRet = postRate(item);
                         });
                       },
                       itemBuilder: (BuildContext context) =>
