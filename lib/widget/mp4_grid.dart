@@ -147,6 +147,19 @@ enum SampleItem {
   good,
   normal,
   bad;
+
+  Color toColor(Color defaultColor) {
+    switch (this) {
+      case SampleItem.bad:
+        return Colors.red[900] as Color;
+      case SampleItem.normal:
+        return Colors.blue[900] as Color;
+      case SampleItem.good:
+        return Colors.green[900] as Color;
+      default:
+        return defaultColor;
+    }
+  }
 }
 
 class GridItem extends StatelessWidget {
@@ -259,27 +272,10 @@ class GridTitleBarState extends State<GridTitleBar> {
           Color color;
           if (snapshot.hasData) {
             SampleItem ret = snapshot.data as SampleItem;
-            switch (ret) {
-              case SampleItem.bad:
-                color = Colors.red[900] as Color;
-              case SampleItem.normal:
-                color = Colors.blue[900] as Color;
-              case SampleItem.good:
-                color = Colors.green[900] as Color;
-              default:
-                color = Theme.of(context).colorScheme.inversePrimary;
-            }
+            color = ret.toColor(Theme.of(context).colorScheme.inversePrimary);
           } else {
-            switch (selectedItem) {
-              case SampleItem.bad:
-                color = Colors.red[900] as Color;
-              case SampleItem.normal:
-                color = Colors.blue[900] as Color;
-              case SampleItem.good:
-                color = Colors.green[900] as Color;
-              default:
-                color = Theme.of(context).colorScheme.inversePrimary;
-            }
+            color = selectedItem
+                .toColor(Theme.of(context).colorScheme.inversePrimary);
           }
           return Container(
             color: color,
