@@ -142,7 +142,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
-enum SampleItem {
+enum RateMenuItem {
   none,
   good,
   normal,
@@ -150,11 +150,11 @@ enum SampleItem {
 
   Color toColor(Color defaultColor) {
     switch (this) {
-      case SampleItem.bad:
+      case RateMenuItem.bad:
         return Colors.red[900] as Color;
-      case SampleItem.normal:
+      case RateMenuItem.normal:
         return Colors.blue[900] as Color;
-      case SampleItem.good:
+      case RateMenuItem.good:
         return Colors.green[900] as Color;
       default:
         return defaultColor;
@@ -228,28 +228,28 @@ class GridTitleBar extends StatefulWidget {
 }
 
 class GridTitleBarState extends State<GridTitleBar> {
-  late SampleItem selectedItem;
+  late RateMenuItem selectedItem;
 
   @override
   void initState() {
     super.initState();
     if (widget.rate != null) {
-      selectedItem = SampleItem.values[widget.rate as int];
+      selectedItem = RateMenuItem.values[widget.rate as int];
     } else {
-      selectedItem = SampleItem.none;
+      selectedItem = RateMenuItem.none;
     }
   }
 
-  Future<SampleItem> postRate(SampleItem item) async {
+  Future<RateMenuItem> postRate(RateMenuItem item) async {
     final response = await http.post(
         Uri.parse("${apiHost()}/video-rate/${widget.videoId}/${item.index}"));
     if (response.statusCode == 200) {
       final videoInfoMap = jsonDecode(response.body) as Map<String, dynamic>;
       final videoInfo = VideoInfo.fromJson(videoInfoMap);
       if (videoInfo.rate != null) {
-        return SampleItem.values[videoInfo.rate!];
+        return RateMenuItem.values[videoInfo.rate!];
       } else {
-        return SampleItem.none;
+        return RateMenuItem.none;
       }
     } else {
       // If the server did not return a 200 OK response,
@@ -258,20 +258,20 @@ class GridTitleBarState extends State<GridTitleBar> {
     }
   }
 
-  Future<SampleItem>? rateRet;
+  Future<RateMenuItem>? rateRet;
 
   @override
   Widget build(BuildContext context) {
     return buildFutureBuilder();
   }
 
-  FutureBuilder<SampleItem> buildFutureBuilder() {
+  FutureBuilder<RateMenuItem> buildFutureBuilder() {
     return FutureBuilder(
         future: rateRet,
         builder: (context, snapshot) {
           Color color;
           if (snapshot.hasData) {
-            SampleItem ret = snapshot.data as SampleItem;
+            RateMenuItem ret = snapshot.data as RateMenuItem;
             color = ret.toColor(Theme.of(context).colorScheme.inversePrimary);
           } else {
             color = selectedItem
@@ -292,25 +292,25 @@ class GridTitleBarState extends State<GridTitleBar> {
                 ),
                 Expanded(
                     flex: 0,
-                    child: PopupMenuButton<SampleItem>(
+                    child: PopupMenuButton<RateMenuItem>(
                       // initialValue: selectedItem,
-                      onSelected: (SampleItem item) {
+                      onSelected: (RateMenuItem item) {
                         setState(() {
                           rateRet = postRate(item);
                         });
                       },
                       itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<SampleItem>>[
-                        const PopupMenuItem<SampleItem>(
-                          value: SampleItem.good,
+                          <PopupMenuEntry<RateMenuItem>>[
+                        const PopupMenuItem<RateMenuItem>(
+                          value: RateMenuItem.good,
                           child: Text('Good'),
                         ),
-                        const PopupMenuItem<SampleItem>(
-                          value: SampleItem.normal,
+                        const PopupMenuItem<RateMenuItem>(
+                          value: RateMenuItem.normal,
                           child: Text('Normal'),
                         ),
-                        const PopupMenuItem<SampleItem>(
-                          value: SampleItem.bad,
+                        const PopupMenuItem<RateMenuItem>(
+                          value: RateMenuItem.bad,
                           child: Text('Bad'),
                         ),
                       ],
