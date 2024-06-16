@@ -249,17 +249,6 @@ class GridTitleBarState extends State<GridTitleBar> {
 
   @override
   Widget build(BuildContext context) {
-    Color color;
-    if (selectedItem == SampleItem.bad) {
-      color = Colors.red[900] as Color;
-    } else if (selectedItem == SampleItem.good) {
-      color = Colors.green[900] as Color;
-    } else if (selectedItem == SampleItem.normal) {
-      color = Colors.blue[900] as Color;
-    } else {
-      color = Theme.of(context).colorScheme.inversePrimary;
-    }
-
     return buildFutureBuilder();
   }
 
