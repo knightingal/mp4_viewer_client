@@ -24,18 +24,22 @@ class VideoInfo {
   final int id;
   final String coverFileName;
   final String videoFileName;
+  final int? rate;
 
   const VideoInfo({
     required this.id,
     required this.coverFileName,
     required this.videoFileName,
+    required this.rate,
   });
 
   factory VideoInfo.fromJson(Map<String, dynamic> json) {
     return VideoInfo(
-        id: json["id"],
-        coverFileName: json["coverFileName"],
-        videoFileName: json["videoFileName"]);
+      id: json["id"],
+      coverFileName: json["coverFileName"],
+      videoFileName: json["videoFileName"],
+      rate: json["rate"],
+    );
   }
 }
 
