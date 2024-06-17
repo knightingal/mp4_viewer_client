@@ -20,7 +20,9 @@ class ImageViewer extends StatelessWidget {
         appBar: AppBar(
           title: Text(title),
         ),
-        body: Image.network(imageUrl),
+        body: Center(
+          child: Image.network(imageUrl),
+        ),
       ),
     );
   }
