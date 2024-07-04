@@ -149,16 +149,12 @@ enum RateMenuItem {
   bad;
 
   Color toColor(Color defaultColor) {
-    switch (this) {
-      case RateMenuItem.bad:
-        return Colors.red[900] as Color;
-      case RateMenuItem.normal:
-        return Colors.blue[900] as Color;
-      case RateMenuItem.good:
-        return Colors.green[900] as Color;
-      default:
-        return defaultColor;
-    }
+    return switch (this) {
+      RateMenuItem.bad => Colors.red[900] as Color,
+      RateMenuItem.normal => Colors.blue[900] as Color,
+      RateMenuItem.good => Colors.green[900] as Color,
+      _ => defaultColor
+    };
   }
 }
 
