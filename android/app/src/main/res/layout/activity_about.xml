@@ -13,7 +13,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/ic_launcher"
+        android:src="@drawable/app_icon"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:id="@+id/image_view_logo"
