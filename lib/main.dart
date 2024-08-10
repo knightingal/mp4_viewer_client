@@ -15,6 +15,11 @@ import 'widget/mount_home.dart';
 
 // @JS('JSON.stringify')
 // external String stringify(Object obj);
+
+/*
+  For ip bind in fedora40, refer this document to reset mac address
+  https://docs.fedoraproject.org/en-US/fedora/latest/release-notes/sysadmin/#stable-mac-for-wifi
+ */
 String apiHost() => "http://192.168.2.12:8082";
 
 String gatewayHost() => "http://192.168.2.12:3002";
