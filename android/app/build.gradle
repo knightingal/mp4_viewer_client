@@ -1,149 +1,52 @@
-import java.text.SimpleDateFormat
-import okhttp3.MediaType
-import okhttp3.MultipartBody
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
-
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file('local.properties')
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new Exception("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
-def keystorePropertiesFile = rootProject.file("keystore.properties")
-def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
-
-static def String releaseTime() {
-    return new SimpleDateFormat("yyMMdd").format(new Date())
-}
-
-static def int parseVersionCode() {
-    return Integer.parseInt(new SimpleDateFormat("yyMMdd0HH").format(new Date()))
-}
-
-static def String commitNum() {
-    def resultArray = readText(processCmd("git describe --always")).trim().split("-")
-    return resultArray[resultArray.size() - 1]
-}
-
-static def Process processCmd(String cmd) {
-    return Runtime.getRuntime().exec(cmd)
-}
-
-static def String readText(Process process) {
-    def inputStream = process.inputStream
-    def insReader = new InputStreamReader(inputStream)
-    def bufReader = new BufferedReader(insReader)
-    def output = ""
-    def line = ""
-    line = bufReader.readLine()
-    output += line
-    return output
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
+    id "dev.flutter.flutter-gradle-plugin"
 }
 
 android {
-    namespace "com.example.mp4_viewer_client"
-    compileSdkVersion flutter.compileSdkVersion
-    ndkVersion flutter.ndkVersion
+    namespace = "com.example.mp4_viewer_client"
+    compileSdk = flutter.compileSdkVersion
+    ndkVersion = flutter.ndkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
-    }
-
-    signingConfigs {
-        getByName("debug") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
-        }
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
-        }
-    }
-
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.mp4_viewer_client"
+        applicationId = "com.example.mp4_viewer_client"
         // You can update the following values to match your application needs.
-        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode parseVersionCode()
-        versionName releaseTime() + "-" + commitNum()
-        multiDexEnabled true
+        // For more information, see: https://flutter.dev/to/review-gradle-config.
+        minSdk = flutter.minSdkVersion
+        targetSdk = flutter.targetSdkVersion
+        versionCode = flutter.versionCode
+        versionName = flutter.versionName
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            signingConfig = signingConfigs.debug
         }
     }
 }
 
 flutter {
-    source '../..'
-}
-
-tasks.register('releaseUpload') {
-    dependsOn("assembleRelease")
-    doLast {
-        println("do releaseUpload")
-        def target = project.buildDir.toString() + '/outputs/apk/release/app-release.apk'
-        println(target)
-        def client = new OkHttpClient().newBuilder().build()
-        def body = new MultipartBody.Builder().setType(MultipartBody.FORM)
-                .addFormDataPart("file",
-                        target,
-                        RequestBody.create(MediaType.parse("application/octet-stream"),
-                                new File(target)
-                        )
-                ).build()
-        Request request = new Request.Builder()
-                .url("http://localhost:8000/apkConfig/upload")
-                .method("POST", body)
-                .build()
-        Response response = client.newCall(request).execute()
-        println("${response.code().toString()}  ${response.body().string()}")
-    }
+    source = "../.."
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation( "com.google.code.gson:gson:2.10.1")
     implementation "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
-    implementation "androidx.multidex:multidex:2.0.1"
-//    implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
-//    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
 }

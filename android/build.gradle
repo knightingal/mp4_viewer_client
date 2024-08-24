@@ -1,5 +1,4 @@
-buildscript {
-    ext.kotlin_version = '1.9.0'
+allprojects {
     repositories {
         maven {
             url 'https://maven.aliyun.com/repository/public/'
@@ -10,39 +9,20 @@ buildscript {
         maven {
             url 'https://maven.aliyun.com/repository/gradle-plugin'
         }
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath "com.squareup.okhttp3:okhttp:5.0.0-alpha.11"
-    }
-}
-
-allprojects {
-    repositories {
         maven {
-            url 'https://maven.aliyun.com/repository/public/'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/central'
-        }
-        maven {
-            url 'https://maven.aliyun.com/repository/apache-snapshots'
+            url 'https://maven.aliyun.com/repository/google'
         }
         google()
         mavenCentral()
     }
 }
 
-rootProject.buildDir = '../build'
+rootProject.buildDir = "../build"
 subprojects {
     project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
 subprojects {
-    project.evaluationDependsOn(':app')
+    project.evaluationDependsOn(":app")
 }
 
 tasks.register("clean", Delete) {
