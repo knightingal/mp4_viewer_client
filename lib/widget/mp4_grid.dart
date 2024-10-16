@@ -104,22 +104,29 @@ class Mp4GridPageState extends State<Mp4GridPage> {
         future: futureDataList,
         builder: (context, snapshot) {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return GridView.builder(
-                itemCount: snapshot.data!.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    childAspectRatio: 4 / 3, crossAxisCount: 2),
-                itemBuilder: (context, index) {
-                  return GridItem(
-                    index: index,
-                    videoId: snapshot.data![index].id,
-                    rate: snapshot.data![index].rate,
-                    title: snapshot.data![index].videoFileName,
-                    coverUrl: generateFileUrlByTitle(
-                        snapshot.data![index].coverFileName),
-                    tapCallback: itemTapCallback,
-                    longPressCallback: longPressCallback,
-                  );
-                });
+            return LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+              var crossAxisCount = switch (constraints.maxWidth) {
+                >= 1500 => 4,
+                _ => 2,
+              };
+              return GridView.builder(
+                  itemCount: snapshot.data!.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 4 / 3, crossAxisCount: crossAxisCount),
+                  itemBuilder: (context, index) {
+                    return GridItem(
+                      index: index,
+                      videoId: snapshot.data![index].id,
+                      rate: snapshot.data![index].rate,
+                      title: snapshot.data![index].videoFileName,
+                      coverUrl: generateFileUrlByTitle(
+                          snapshot.data![index].coverFileName),
+                      tapCallback: itemTapCallback,
+                      longPressCallback: longPressCallback,
+                    );
+                  });
+            });
           } else {
             return const Text("");
           }
