@@ -77,8 +77,9 @@ class MountHomeState extends State<MountHome> {
                 )),
       );
     } else {
+      final subDir = getSubDir();
       final response = http.get(Uri.parse(
-          "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$getSubDir()"));
+          "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
       response.then((response) {
         List<dynamic> jsonArray = jsonDecode(response.body);
         List<VideoInfo> dataList =
