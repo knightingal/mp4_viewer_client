@@ -46,6 +46,26 @@ class MountHomeState extends State<MountHome> {
     futureDataList = fetchDirs();
   }
 
+  void gotoListPage(String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Mp4ListPage(
+                title: title,
+              )),
+    );
+  }
+
+  void gotoGridPage(String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (context) => Mp4GridPage(
+                title: title,
+              )),
+    );
+  }
+
   void itemTapCallback(int index, String title) {
     parent.add(title);
     if (widget.apiVersion == 1) {
@@ -57,13 +77,18 @@ class MountHomeState extends State<MountHome> {
                 )),
       );
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Mp4GridPage(
-                  title: title,
-                )),
-      );
+      final response = http.get(Uri.parse(
+          "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$getSubDir()"));
+      response.then((response) {
+        List<dynamic> jsonArray = jsonDecode(response.body);
+        List<VideoInfo> dataList =
+            jsonArray.map((e) => VideoInfo.fromJson(e)).toList();
+        if (dataList.isEmpty) {
+          gotoListPage(title);
+        } else {
+          gotoGridPage(title);
+        }
+      });
     }
   }
 
