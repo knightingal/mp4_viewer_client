@@ -175,9 +175,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 ),
                 Focus(
                     autofocus: true,
-                    onKey: (node, event) {
-                      if (event is RawKeyDownEvent) {
-                        switch (event.data.physicalKey) {
+                    onKeyEvent: (node, event) {
+                      if (event is KeyDownEvent) {
+                        switch (event.physicalKey) {
                           case PhysicalKeyboardKey.keyQ:
                             Navigator.pop(context);
                           case PhysicalKeyboardKey.arrowLeft:
