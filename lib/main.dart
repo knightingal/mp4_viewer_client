@@ -50,18 +50,28 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text("Flow1000"),
-      ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () => {},
-      //   tooltip: 'Increment',
-      //   child: const Icon(Icons.arrow_back_sharp),
-      // ), // This trailing comma makes auto-formatting nicer for build methods.
-      body: const Center(child: MountConfigListPage()),
-    );
+    return DefaultTabController(
+        length: 2,
+        initialIndex: 0,
+        child: Scaffold(
+            appBar: AppBar(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              title: const Text("Flow1000"),
+              bottom: const TabBar(tabs: [
+                Tab(
+                  text: "mount",
+                ),
+                Tab(
+                  text: "tab",
+                )
+              ]),
+            ),
+            body: const TabBarView(children: [
+              Center(child: MountConfigListPage()),
+              Center(
+                child: Text("tab"),
+              )
+            ])));
   }
 }
 
