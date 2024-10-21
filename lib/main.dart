@@ -67,10 +67,8 @@ class HomePage extends StatelessWidget {
                 )
               ]),
             ),
-            body: const TabBarView(children: [
-              Center(child: MountConfigListPage()),
-              Center(child: TagMainPage())
-            ])));
+            body: const TabBarView(
+                children: [MountConfigListPage(), TagMainPage()])));
   }
 }
 
