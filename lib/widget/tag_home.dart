@@ -5,6 +5,14 @@ class TagMainPage extends StatelessWidget {
 
   @override
   Widget build(Object context) {
-    return const Text("tag page");
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.add),
+      ),
+      body: const Center(
+        child: Text("tag page"),
+      ),
+    );
   }
 }
