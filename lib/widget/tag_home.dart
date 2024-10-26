@@ -69,6 +69,49 @@ class TagMainState extends State<TagMainPage> {
       body: Center(
         child: body,
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddTagDialog().then((value) {
+            log("return $value, $tagValue");
+          });
+        },
+        tooltip: 'Add tag',
+        child: const Icon(Icons.add),
+      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  late String tagValue;
+
+  Future<(int, String)?> _showAddTagDialog() async {
+    return showDialog<(int, String)>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Add Tag'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Enter your tag...'),
+                TextField(
+                  onChanged: (value) {
+                    tagValue = value;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop((1, "pop"));
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
