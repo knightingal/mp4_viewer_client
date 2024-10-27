@@ -78,7 +78,9 @@ class TagMainState extends State<TagMainPage> {
             return response;
           }).then((resp) {
             if (resp.statusCode == 200) {
-              futureDataList = fetchSubDirs();
+              setState(() {
+                futureDataList = fetchSubDirs();
+              });
             }
           });
         },
