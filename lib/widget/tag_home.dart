@@ -73,6 +73,13 @@ class TagMainState extends State<TagMainPage> {
         onPressed: () {
           _showAddTagDialog().then((value) {
             log("return $value, $tagValue");
+            final response =
+                http.post(Uri.parse("${apiHost()}/add-tag/$tagValue"));
+            return response;
+          }).then((resp) {
+            if (resp.statusCode == 200) {
+              futureDataList = fetchSubDirs();
+            }
           });
         },
         tooltip: 'Add tag',
