@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,8 +46,16 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-  String generateFileUrlByTitle(String title) =>
-      "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+  String generateFileUrlByTitle(String title) {
+    var videoUrl =
+        "${apiHost()}/video-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+    log(videoUrl);
+    return videoUrl;
+  }
+
+  String generateImgUrlByTitle(String title) {
+    return "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+  }
 
   void longPressCallback(int index, String coverUrl, String title) {
     Navigator.push(
@@ -73,7 +82,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
           context,
           MaterialPageRoute(
             builder: (context) =>
-                ImageViewer(imageUrl: generateFileUrlByTitle(title)),
+                ImageViewer(imageUrl: generateImgUrlByTitle(title)),
           ));
     } else {
       parent.add(title);
@@ -120,7 +129,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                       videoId: snapshot.data![index].id,
                       rate: snapshot.data![index].rate,
                       title: snapshot.data![index].videoFileName,
-                      coverUrl: generateFileUrlByTitle(
+                      coverUrl: generateImgUrlByTitle(
                           snapshot.data![index].coverFileName),
                       tapCallback: itemTapCallback,
                       longPressCallback: longPressCallback,

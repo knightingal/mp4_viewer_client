@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -45,8 +46,12 @@ class Mp4ListPageState extends State<Mp4ListPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-  String generateFileUrlByTitle(String title) =>
-      "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+  String generateFileUrlByTitle(String title) {
+    var videoUrl =
+        "${apiHost()}/video-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+    log(videoUrl);
+    return videoUrl;
+  }
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
