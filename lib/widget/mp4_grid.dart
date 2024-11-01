@@ -54,7 +54,10 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 
   String generateImgUrlByTitle(String title) {
-    return "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
+    var videoUrl =
+        "${apiHost()}/image-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+    log(videoUrl);
+    return videoUrl;
   }
 
   void longPressCallback(int index, String coverUrl, String title) {
