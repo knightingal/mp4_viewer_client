@@ -52,6 +52,8 @@ class Mp4ListPageState extends State<Mp4ListPage> {
     log(videoUrl);
     return videoUrl;
   }
+  // String generateFileUrlByTitle(String title) =>
+  //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
