@@ -312,6 +312,7 @@ class GridTitleBarState extends State<GridTitleBar> {
           return Container(
             // color: color,
             width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
             height: 40,
             alignment: Alignment.centerLeft,
             child: Row(
