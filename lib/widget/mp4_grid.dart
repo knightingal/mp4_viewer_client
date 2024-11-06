@@ -201,27 +201,42 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    late RateMenuItem selectedItem;
+    if (rate != null) {
+      selectedItem = RateMenuItem.values[rate as int];
+    } else {
+      selectedItem = RateMenuItem.none;
+    }
+
+    Color color =
+        selectedItem.toColor(Theme.of(context).colorScheme.inversePrimary);
     return Container(
         padding: const EdgeInsets.all(0),
-        child: Column(
-          children: [
-            Expanded(
-              flex: 1,
-              child: GestureDetector(
-                onLongPress: () => longPressCallback(index, coverUrl, title),
-                onTapUp: (e) => tapCallback(index, title),
-                child: Image.network(coverUrl),
-              ),
-            ),
-            Expanded(
-                flex: 0,
-                child: GridTitleBar(
-                  title: title,
-                  videoId: videoId,
-                  rate: rate,
-                ))
-          ],
-        ));
+        child: Card(
+            color: color,
+            child: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: GestureDetector(
+                    onLongPress: () =>
+                        longPressCallback(index, coverUrl, title),
+                    onTapUp: (e) => tapCallback(index, title),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12.0),
+                      child: Image.network(coverUrl, fit: BoxFit.fill),
+                    ),
+                  ),
+                ),
+                Expanded(
+                    flex: 0,
+                    child: GridTitleBar(
+                      title: title,
+                      videoId: videoId,
+                      rate: rate,
+                    ))
+              ],
+            )));
   }
 }
 
@@ -293,7 +308,7 @@ class GridTitleBarState extends State<GridTitleBar> {
                 .toColor(Theme.of(context).colorScheme.inversePrimary);
           }
           return Container(
-            color: color,
+            // color: color,
             width: double.infinity,
             height: 40,
             alignment: Alignment.centerLeft,
