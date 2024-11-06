@@ -218,13 +218,15 @@ class GridItem extends StatelessWidget {
               children: [
                 Expanded(
                   flex: 1,
-                  child: GestureDetector(
-                    onLongPress: () =>
-                        longPressCallback(index, coverUrl, title),
-                    onTapUp: (e) => tapCallback(index, title),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12.0),
-                      child: Image.network(coverUrl, fit: BoxFit.fill),
+                  child: SizedBox.expand(
+                    child: GestureDetector(
+                      onLongPress: () =>
+                          longPressCallback(index, coverUrl, title),
+                      onTapUp: (e) => tapCallback(index, title),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(12.0),
+                        child: Image.network(coverUrl, fit: BoxFit.fill),
+                      ),
                     ),
                   ),
                 ),
