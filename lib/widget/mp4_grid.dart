@@ -44,6 +44,12 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     futureDataList = fetchSubDirs(getSubDir());
   }
 
+  void _refresh() {
+    setState(() {
+      futureDataList = fetchSubDirs(getSubDir());
+    });
+  }
+
   static const platform = MethodChannel('flutter/startWeb');
 
   String generateFileUrlByTitle(String title) {
@@ -136,6 +142,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                           snapshot.data![index].coverFileName),
                       tapCallback: itemTapCallback,
                       longPressCallback: longPressCallback,
+                      refreshCallback: _refresh,
                     );
                   });
             });
@@ -188,6 +195,8 @@ class GridItem extends StatelessWidget {
   final void Function(int index, String coverUrl, String title)
       longPressCallback;
 
+  final void Function() refreshCallback;
+
   const GridItem({
     super.key,
     required this.index,
@@ -197,6 +206,7 @@ class GridItem extends StatelessWidget {
     required this.tapCallback,
     required this.longPressCallback,
     required this.rate,
+    required this.refreshCallback,
   });
 
   @override
@@ -236,6 +246,7 @@ class GridItem extends StatelessWidget {
                       title: title,
                       videoId: videoId,
                       rate: rate,
+                      refreshCallback: refreshCallback,
                     ))
               ],
             )));
@@ -246,12 +257,14 @@ class GridTitleBar extends StatefulWidget {
   final String title;
   final int videoId;
   final int? rate;
+  final void Function() refreshCallback;
 
   const GridTitleBar(
       {super.key,
       required this.title,
       required this.videoId,
-      required this.rate});
+      required this.rate,
+      required this.refreshCallback});
 
   @override
   State<StatefulWidget> createState() {
@@ -278,6 +291,7 @@ class GridTitleBarState extends State<GridTitleBar> {
     if (response.statusCode == 200) {
       final videoInfoMap = jsonDecode(response.body) as Map<String, dynamic>;
       final videoInfo = VideoInfo.fromJson(videoInfoMap);
+      widget.refreshCallback();
       if (videoInfo.rate != null) {
         return RateMenuItem.values[videoInfo.rate!];
       } else {
@@ -301,16 +315,7 @@ class GridTitleBarState extends State<GridTitleBar> {
     return FutureBuilder(
         future: rateRet,
         builder: (context, snapshot) {
-          Color color;
-          if (snapshot.hasData) {
-            RateMenuItem ret = snapshot.data as RateMenuItem;
-            color = ret.toColor(Theme.of(context).colorScheme.inversePrimary);
-          } else {
-            color = selectedItem
-                .toColor(Theme.of(context).colorScheme.inversePrimary);
-          }
           return Container(
-            // color: color,
             width: double.infinity,
             padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
             height: 40,
@@ -326,7 +331,6 @@ class GridTitleBarState extends State<GridTitleBar> {
                 Expanded(
                     flex: 0,
                     child: PopupMenuButton<RateMenuItem>(
-                      // initialValue: selectedItem,
                       onSelected: (RateMenuItem item) {
                         setState(() {
                           rateRet = postRate(item);
