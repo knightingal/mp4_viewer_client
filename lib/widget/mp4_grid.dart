@@ -66,17 +66,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     return videoUrl;
   }
 
-  void longPressCallback(int index, String coverUrl, String title) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ImageViewer(
-            imageUrl: coverUrl,
-            videoTitle: title,
-          ),
-        ));
-  }
-
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       Navigator.push(
@@ -141,7 +130,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                       coverUrl: generateImgUrlByTitle(
                           snapshot.data![index].coverFileName),
                       tapCallback: itemTapCallback,
-                      longPressCallback: longPressCallback,
                       refreshCallback: _refresh,
                     );
                   });
@@ -192,8 +180,6 @@ class GridItem extends StatelessWidget {
   final int index;
   final int videoId;
   final void Function(int index, String title) tapCallback;
-  final void Function(int index, String coverUrl, String title)
-      longPressCallback;
 
   final void Function() refreshCallback;
 
@@ -204,7 +190,6 @@ class GridItem extends StatelessWidget {
     required this.title,
     required this.coverUrl,
     required this.tapCallback,
-    required this.longPressCallback,
     required this.rate,
     required this.refreshCallback,
   });
@@ -230,12 +215,23 @@ class GridItem extends StatelessWidget {
                   flex: 1,
                   child: SizedBox.expand(
                     child: GestureDetector(
-                      onLongPress: () =>
-                          longPressCallback(index, coverUrl, title),
+                      onLongPress: () => {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ImageViewer(
+                                imageUrl: coverUrl,
+                                videoTitle: title,
+                              ),
+                            ))
+                      },
+                      // longPressCallback(index, coverUrl, title),
                       onTapUp: (e) => tapCallback(index, title),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
-                        child: Image.network(coverUrl, fit: BoxFit.fill),
+                        child: Hero(
+                            tag: "video-cover-$coverUrl",
+                            child: Image.network(coverUrl, fit: BoxFit.fill)),
                       ),
                     ),
                   ),

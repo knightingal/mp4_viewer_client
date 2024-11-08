@@ -21,7 +21,8 @@ class ImageViewer extends StatelessWidget {
           title: Text(title),
         ),
         body: Center(
-          child: Image.network(imageUrl),
+          child: Hero(
+              tag: "video-cover-$imageUrl", child: Image.network(imageUrl)),
         ),
       ),
     );
