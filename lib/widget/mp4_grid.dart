@@ -266,18 +266,11 @@ class GridTitleBar extends StatelessWidget {
       required this.rate,
       required this.refreshCallback});
 
-  Future<RateMenuItem> postRate(RateMenuItem item) async {
+  void postRate(RateMenuItem item) async {
     final response = await http
         .post(Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"));
     if (response.statusCode == 200) {
-      final videoInfoMap = jsonDecode(response.body) as Map<String, dynamic>;
-      final videoInfo = VideoInfo.fromJson(videoInfoMap);
       refreshCallback();
-      if (videoInfo.rate != null) {
-        return RateMenuItem.values[videoInfo.rate!];
-      } else {
-        return RateMenuItem.none;
-      }
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
