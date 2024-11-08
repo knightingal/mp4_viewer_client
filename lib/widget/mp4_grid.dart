@@ -68,13 +68,13 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => VideoPlayerApp(
-                  videoUrl: generateFileUrlByTitle(title),
-                )),
-      );
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => VideoPlayerApp(
+      //             videoUrl: generateFileUrlByTitle(title),
+      //           )),
+      // );
     } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
       Navigator.push(
           context,
@@ -193,6 +193,12 @@ class GridItem extends StatelessWidget {
     required this.rate,
     required this.refreshCallback,
   });
+  String generateFileUrlByTitle(String title) {
+    var videoUrl =
+        "${apiHost()}/video-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+    log(videoUrl);
+    return videoUrl;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +232,16 @@ class GridItem extends StatelessWidget {
                             ))
                       },
                       // longPressCallback(index, coverUrl, title),
-                      onTapUp: (e) => tapCallback(index, title),
+                      onTapUp: (e) => {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => VideoPlayerApp(
+                                    videoUrl: generateFileUrlByTitle(title),
+                                    coverUrl: coverUrl,
+                                  )),
+                        )
+                      },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
                         child: Hero(

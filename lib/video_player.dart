@@ -10,11 +10,16 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerApp extends StatelessWidget {
   final String videoUrl;
+  final String coverUrl;
 
-  const VideoPlayerApp({super.key, required this.videoUrl});
+  const VideoPlayerApp(
+      {super.key, required this.videoUrl, required this.coverUrl});
 
   @override
-  Widget build(BuildContext context) => VideoPlayerScreen(videoUrl: videoUrl);
+  Widget build(BuildContext context) => VideoPlayerScreen(
+        videoUrl: videoUrl,
+        coverUrl: coverUrl,
+      );
 }
 
 class PlayerTimer extends StatefulWidget {
@@ -71,8 +76,10 @@ class PlayerTimerState extends State<PlayerTimer>
 
 class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
+  final String coverUrl;
 
-  const VideoPlayerScreen({super.key, required this.videoUrl});
+  const VideoPlayerScreen(
+      {super.key, required this.videoUrl, required this.coverUrl});
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
@@ -167,7 +174,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     const Expanded(
                       child: SizedBox.shrink(),
                     ),
-                    videoWidget,
+                    Hero(
+                        tag: "video-cover-${widget.coverUrl}",
+                        child: videoWidget),
                     Expanded(
                       child: Processer(controller: _controller),
                     )

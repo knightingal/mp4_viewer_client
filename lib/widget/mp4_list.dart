@@ -62,6 +62,7 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         MaterialPageRoute(
             builder: (context) => VideoPlayerApp(
                   videoUrl: generateFileUrlByTitle(title),
+                  coverUrl: "",
                 )),
       );
     } else if (title.endsWith(".png") ||
