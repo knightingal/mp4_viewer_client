@@ -36,10 +36,16 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      themeMode: ThemeMode.system,
       title: 'Flutter Demo',
-      theme: ThemeData(
+      darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.yellow, brightness: Brightness.dark),
+        useMaterial3: true,
+      ),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: Colors.yellow, brightness: Brightness.light),
         useMaterial3: true,
       ),
       home: const HomePage(),
