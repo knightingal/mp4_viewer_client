@@ -278,7 +278,7 @@ class GridTitleBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
       height: 40,
       alignment: Alignment.centerLeft,
       child: Row(
