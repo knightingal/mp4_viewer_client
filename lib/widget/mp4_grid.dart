@@ -253,7 +253,7 @@ class GridItem extends StatelessWidget {
   }
 }
 
-class GridTitleBar extends StatefulWidget {
+class GridTitleBar extends StatelessWidget {
   final String title;
   final int videoId;
   final int? rate;
@@ -266,32 +266,13 @@ class GridTitleBar extends StatefulWidget {
       required this.rate,
       required this.refreshCallback});
 
-  @override
-  State<StatefulWidget> createState() {
-    return GridTitleBarState();
-  }
-}
-
-class GridTitleBarState extends State<GridTitleBar> {
-  late RateMenuItem selectedItem;
-
-  @override
-  void initState() {
-    super.initState();
-    if (widget.rate != null) {
-      selectedItem = RateMenuItem.values[widget.rate as int];
-    } else {
-      selectedItem = RateMenuItem.none;
-    }
-  }
-
   Future<RateMenuItem> postRate(RateMenuItem item) async {
-    final response = await http.post(
-        Uri.parse("${apiHost()}/video-rate/${widget.videoId}/${item.index}"));
+    final response = await http
+        .post(Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"));
     if (response.statusCode == 200) {
       final videoInfoMap = jsonDecode(response.body) as Map<String, dynamic>;
       final videoInfo = VideoInfo.fromJson(videoInfoMap);
-      widget.refreshCallback();
+      refreshCallback();
       if (videoInfo.rate != null) {
         return RateMenuItem.values[videoInfo.rate!];
       } else {
@@ -304,57 +285,45 @@ class GridTitleBarState extends State<GridTitleBar> {
     }
   }
 
-  Future<RateMenuItem>? rateRet;
-
   @override
   Widget build(BuildContext context) {
-    return buildFutureBuilder();
-  }
-
-  FutureBuilder<RateMenuItem> buildFutureBuilder() {
-    return FutureBuilder(
-        future: rateRet,
-        builder: (context, snapshot) {
-          return Container(
-            width: double.infinity,
-            padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
-            height: 40,
-            alignment: Alignment.centerLeft,
-            child: Row(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Text(
-                    widget.title,
-                  ),
-                ),
-                Expanded(
-                    flex: 0,
-                    child: PopupMenuButton<RateMenuItem>(
-                      onSelected: (RateMenuItem item) {
-                        setState(() {
-                          rateRet = postRate(item);
-                        });
-                      },
-                      itemBuilder: (BuildContext context) =>
-                          <PopupMenuEntry<RateMenuItem>>[
-                        const PopupMenuItem<RateMenuItem>(
-                          value: RateMenuItem.good,
-                          child: Text('Good'),
-                        ),
-                        const PopupMenuItem<RateMenuItem>(
-                          value: RateMenuItem.normal,
-                          child: Text('Normal'),
-                        ),
-                        const PopupMenuItem<RateMenuItem>(
-                          value: RateMenuItem.bad,
-                          child: Text('Bad'),
-                        ),
-                      ],
-                    ))
-              ],
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.fromLTRB(8.0, 0, 8.0, 0),
+      height: 40,
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          Expanded(
+            flex: 1,
+            child: Text(
+              title,
             ),
-          );
-        });
+          ),
+          Expanded(
+              flex: 0,
+              child: PopupMenuButton<RateMenuItem>(
+                onSelected: (RateMenuItem item) {
+                  postRate(item);
+                },
+                itemBuilder: (BuildContext context) =>
+                    <PopupMenuEntry<RateMenuItem>>[
+                  const PopupMenuItem<RateMenuItem>(
+                    value: RateMenuItem.good,
+                    child: Text('Good'),
+                  ),
+                  const PopupMenuItem<RateMenuItem>(
+                    value: RateMenuItem.normal,
+                    child: Text('Normal'),
+                  ),
+                  const PopupMenuItem<RateMenuItem>(
+                    value: RateMenuItem.bad,
+                    child: Text('Bad'),
+                  ),
+                ],
+              ))
+        ],
+      ),
+    );
   }
 }
