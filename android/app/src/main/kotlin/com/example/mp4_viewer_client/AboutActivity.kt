@@ -18,6 +18,7 @@ import com.example.jianming.Tasks.ConcurrencyApkTask
 import com.example.jianming.Tasks.ConcurrencyJsonApiTask
 import com.example.mp4_viewer_client.bean.ApkConfig
 import com.google.gson.Gson
+import com.google.gson.JsonObject
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
@@ -54,7 +55,15 @@ class AboutActivity : AppCompatActivity() {
                 val respBody = ConcurrencyJsonApiTask.makeRequest(pendingUrl)
 
                 Log.i("about", "package resp:${respBody}")
-                val apkConfig = Gson().fromJson(respBody, ApkConfig::class.java)
+                val apkConfigJson = Gson().fromJson(respBody, JsonObject::class.java)
+                val apkConfig = ApkConfig(
+                    applicationId = apkConfigJson.get("applicationId").asString,
+                    apkName = apkConfigJson.get("apkName").asString,
+                    downloadUrl = apkConfigJson.get("downloadUrl").asString,
+                    versionCode = apkConfigJson.get("versionCode").asLong,
+                    versionName = apkConfigJson.get("versionName").asString
+                )
+
 
                 Log.d("about", apkConfig.toString())
                 Log.i("about", "currVersion:$versionCode, newestVersion: ${apkConfig.versionCode}")
