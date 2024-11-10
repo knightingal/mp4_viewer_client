@@ -324,6 +324,11 @@ class GridTitleBar extends StatelessWidget {
                     value: RateMenuItem.bad,
                     child: Text('Bad'),
                   ),
+                  const PopupMenuDivider(),
+                  const PopupMenuItem<RateMenuItem>(
+                    value: RateMenuItem.bad,
+                    child: Text("Tag"),
+                  )
                 ],
               ))
         ],
