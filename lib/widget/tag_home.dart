@@ -9,7 +9,9 @@ import '../global.dart';
 import '../main.dart';
 
 class TagMainPage extends StatefulWidget {
-  const TagMainPage({super.key});
+  const TagMainPage({super.key, this.videoId});
+
+  final int? videoId;
 
   @override
   State<TagMainPage> createState() {

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import '../widget/tag_home.dart';
 
 import '../global.dart';
 import '../image_viewer.dart';
@@ -160,7 +161,8 @@ enum RateMenuItem {
   none,
   good,
   normal,
-  bad;
+  bad,
+  tag;
 
   Color toColor(Color defaultColor) {
     return switch (this) {
@@ -289,6 +291,16 @@ class GridTitleBar extends StatelessWidget {
     }
   }
 
+  void nav2TagHome(BuildContext context, int videoId) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TagMainPage(
+            videoId: videoId,
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -308,7 +320,16 @@ class GridTitleBar extends StatelessWidget {
               flex: 0,
               child: PopupMenuButton<RateMenuItem>(
                 onSelected: (RateMenuItem item) {
-                  postRate(item);
+                  switch (item) {
+                    case RateMenuItem.bad ||
+                          RateMenuItem.good ||
+                          RateMenuItem.normal:
+                      postRate(item);
+                    case RateMenuItem.tag:
+                      nav2TagHome(context, videoId);
+                    default:
+                    // do nothing
+                  }
                 },
                 itemBuilder: (BuildContext context) =>
                     <PopupMenuEntry<RateMenuItem>>[
@@ -326,7 +347,7 @@ class GridTitleBar extends StatelessWidget {
                   ),
                   const PopupMenuDivider(),
                   const PopupMenuItem<RateMenuItem>(
-                    value: RateMenuItem.bad,
+                    value: RateMenuItem.tag,
                     child: Text("Tag"),
                   )
                 ],
