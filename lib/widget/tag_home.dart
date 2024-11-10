@@ -3,7 +3,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/dir_item.dart';
+import 'package:http/http.dart';
 
 import '../global.dart';
 import '../main.dart';
@@ -21,11 +21,35 @@ class TagMainPage extends StatefulWidget {
 
 class TagMainState extends State<TagMainPage> {
   Future<List<Tag>> fetchSubDirs() async {
-    final response = await http.get(Uri.parse("${apiHost()}/query-tags"));
-    if (response.statusCode == 200) {
-      log(response.body);
-      List<dynamic> jsonArray = jsonDecode(response.body);
+    final queryTagsFuture = http.get(Uri.parse("${apiHost()}/query-tags"));
+    List<Future<Response>> futures = [queryTagsFuture];
+    if (widget.videoId != null) {
+      final queryTagsByVideoFuture = http
+          .get(Uri.parse("${apiHost()}/query-tags-by-video/${widget.videoId}"));
+      futures.add(queryTagsByVideoFuture);
+    }
+    var respList = await Future.wait(futures);
+    var queryTagsResp = respList[0];
+
+    if (queryTagsResp.statusCode == 200) {
+      log(queryTagsResp.body);
+      List<dynamic> jsonArray = jsonDecode(queryTagsResp.body);
       List<Tag> dataList = jsonArray.map((e) => Tag.fromJson(e)).toList();
+
+      if (respList.length > 1) {
+        var byVideoResp = respList[1];
+        if (byVideoResp.statusCode == 200) {
+          List<dynamic> jsonArray = jsonDecode(byVideoResp.body);
+          List<int> checkVideoList = jsonArray.map((e) => e as int).toList();
+          for (int tagId in checkVideoList) {
+            for (Tag t in dataList) {
+              if (t.id == tagId) {
+                t.checked = true;
+              }
+            }
+          }
+        }
+      }
 
       return dataList;
     } else {
@@ -52,14 +76,15 @@ class TagMainState extends State<TagMainPage> {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             return ListView.builder(
               itemCount: snapshot.data!.length,
-              prototypeItem: DirItem(
+              prototypeItem: TagItem(
                   index: 0,
                   title: snapshot.data!.first.tag,
                   tapCallback: (int index, String title) {}),
               itemBuilder: (context, index) {
-                return DirItem(
+                return TagItem(
                     index: index,
                     title: snapshot.data![index].tag,
+                    checked: snapshot.data![index].checked,
                     tapCallback: (int index, String title) {});
               },
             );
@@ -123,6 +148,38 @@ class TagMainState extends State<TagMainPage> {
           ],
         );
       },
+    );
+  }
+}
+
+class TagItem extends StatelessWidget {
+  final String title;
+
+  final int index;
+  final bool checked;
+  final void Function(int index, String title) tapCallback;
+
+  const TagItem({
+    super.key,
+    required this.index,
+    required this.title,
+    required this.tapCallback,
+    this.checked = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        log("click $title");
+        tapCallback(index, title);
+      },
+      title: checked
+          ? Text(
+              title,
+              style: const TextStyle(color: Colors.green),
+            )
+          : Text(title),
     );
   }
 }
