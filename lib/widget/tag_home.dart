@@ -85,7 +85,20 @@ class TagMainState extends State<TagMainPage> {
                     index: index,
                     title: snapshot.data![index].tag,
                     checked: snapshot.data![index].checked,
-                    tapCallback: (int index, String title) {});
+                    tapCallback: (int index, String title) {
+                      if (widget.videoId != null) {
+                        var bindTag = http.post(Uri.parse(
+                            "${apiHost()}/bind-tag/${snapshot.data![index].id}/${widget.videoId}"));
+                        bindTag.then((Response resp) => {
+                              if (resp.statusCode == 200)
+                                {
+                                  setState(() {
+                                    futureDataList = fetchSubDirs();
+                                  })
+                                }
+                            });
+                      }
+                    });
               },
             );
           } else {
