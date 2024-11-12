@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
@@ -116,6 +117,17 @@ class TagMainState extends State<TagMainPage> {
             final response =
                 http.post(Uri.parse("${apiHost()}/add-tag/$tagValue"));
             return response;
+          }).then((resp) {
+            if (widget.videoId != null) {
+              final jsonData = jsonDecode(resp.body);
+              int tagId = jsonData["id"];
+
+              final response = http.post(
+                  Uri.parse("${apiHost()}/bind-tag/$tagId/${widget.videoId}"));
+              return response;
+            } else {
+              return SynchronousFuture(resp);
+            }
           }).then((resp) {
             if (resp.statusCode == 200) {
               setState(() {
