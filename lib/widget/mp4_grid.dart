@@ -157,23 +157,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
-enum RateMenuItem {
-  none,
-  good,
-  normal,
-  bad,
-  tag;
-
-  Color toColor(Color defaultColor) {
-    return switch (this) {
-      RateMenuItem.bad => Colors.red[900] as Color,
-      RateMenuItem.normal => Colors.blue[900] as Color,
-      RateMenuItem.good => Colors.green[900] as Color,
-      _ => defaultColor
-    };
-  }
-}
-
 class GridItem extends StatelessWidget {
   final String title;
   final String coverUrl;
@@ -204,11 +187,11 @@ class GridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late RateMenuItem selectedItem;
+    late Rate selectedItem;
     if (rate != null) {
-      selectedItem = RateMenuItem.values[rate as int];
+      selectedItem = Rate.values[rate as int];
     } else {
-      selectedItem = RateMenuItem.none;
+      selectedItem = Rate.none;
     }
 
     Color color =
@@ -279,7 +262,7 @@ class GridTitleBar extends StatelessWidget {
       required this.rate,
       required this.refreshCallback});
 
-  void postRate(RateMenuItem item) async {
+  void postRate(GridItemMenuItem item) async {
     final response = await http
         .post(Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"));
     if (response.statusCode == 200) {
@@ -318,36 +301,36 @@ class GridTitleBar extends StatelessWidget {
           ),
           Expanded(
               flex: 0,
-              child: PopupMenuButton<RateMenuItem>(
-                onSelected: (RateMenuItem item) {
+              child: PopupMenuButton<GridItemMenuItem>(
+                onSelected: (GridItemMenuItem item) {
                   switch (item) {
-                    case RateMenuItem.bad ||
-                          RateMenuItem.good ||
-                          RateMenuItem.normal:
+                    case GridItemMenuItem.bad ||
+                          GridItemMenuItem.good ||
+                          GridItemMenuItem.normal:
                       postRate(item);
-                    case RateMenuItem.tag:
+                    case GridItemMenuItem.tag:
                       nav2TagHome(context, videoId);
                     default:
                     // do nothing
                   }
                 },
                 itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<RateMenuItem>>[
-                  const PopupMenuItem<RateMenuItem>(
-                    value: RateMenuItem.good,
+                    <PopupMenuEntry<GridItemMenuItem>>[
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.good,
                     child: Text('Good'),
                   ),
-                  const PopupMenuItem<RateMenuItem>(
-                    value: RateMenuItem.normal,
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.normal,
                     child: Text('Normal'),
                   ),
-                  const PopupMenuItem<RateMenuItem>(
-                    value: RateMenuItem.bad,
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.bad,
                     child: Text('Bad'),
                   ),
                   const PopupMenuDivider(),
-                  const PopupMenuItem<RateMenuItem>(
-                    value: RateMenuItem.tag,
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.tag,
                     child: Text("Tag"),
                   )
                 ],
@@ -356,4 +339,28 @@ class GridTitleBar extends StatelessWidget {
       ),
     );
   }
+}
+
+enum Rate {
+  none,
+  good,
+  normal,
+  bad;
+
+  Color toColor(Color defaultColor) {
+    return switch (this) {
+      bad => Colors.red[900] as Color,
+      normal => Colors.blue[900] as Color,
+      good => Colors.green[900] as Color,
+      _ => defaultColor
+    };
+  }
+}
+
+enum GridItemMenuItem {
+  none,
+  good,
+  normal,
+  bad,
+  tag,
 }
