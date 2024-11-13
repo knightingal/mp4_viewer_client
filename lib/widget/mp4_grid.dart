@@ -268,9 +268,7 @@ class GridTitleBar extends StatelessWidget {
     if (response.statusCode == 200) {
       refreshCallback();
     } else {
-      // If the server did not return a 200 OK response,
-      // then throw an exception.
-      throw Exception('Failed to load album');
+      log("failed to post rate, ${response.statusCode}", error: response);
     }
   }
 
