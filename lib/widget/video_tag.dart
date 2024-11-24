@@ -195,16 +195,13 @@ class TagItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        log("click $title");
-        tapCallback(index, title);
-      },
-      title: checked
-          ? Text(
-              title,
-              style: const TextStyle(color: Colors.green),
-            )
-          : Text(title),
+      title: FilterChip(
+        onSelected: (value) {
+          tapCallback(index, title);
+        },
+        label: Text(title),
+        selected: checked,
+      ),
     );
   }
 }

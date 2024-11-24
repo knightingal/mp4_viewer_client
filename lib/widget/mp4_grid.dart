@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import '../widget/tag_home.dart';
+import '../widget/video_tag.dart';
 
 import '../global.dart';
 import '../image_viewer.dart';
@@ -276,7 +276,7 @@ class GridTitleBar extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => TagMainPage(
+          builder: (context) => VideoTagPage(
             videoId: videoId,
           ),
         ));
