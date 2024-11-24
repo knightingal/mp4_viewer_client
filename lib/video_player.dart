@@ -262,8 +262,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           } else {
             // If the VideoPlayerController is still initializing, show a
             // loading spinner.
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Stack(
+              children: [
+                Center(
+                  child: Hero(
+                      tag: "video-cover-${widget.coverUrl}",
+                      child: Image.network(widget.coverUrl)),
+                ),
+                const Center(
+                  child: CircularProgressIndicator(),
+                )
+              ],
             );
           }
         },
