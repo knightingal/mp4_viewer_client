@@ -8,7 +8,7 @@
     <application
         android:name="${applicationName}"
         android:icon="@drawable/app_icon"
-        android:label="mp4_viewer_client"
+        android:label="Flow1000 Player"
         android:usesCleartextTraffic="true">
 
         <activity
