@@ -242,7 +242,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     var x = e.localPosition.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
-                    if (per < 0.33) {
+                    if (per < 0.5) {
                       videoBack();
                     } else {
                       videoForward();
