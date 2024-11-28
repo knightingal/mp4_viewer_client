@@ -175,32 +175,3 @@ class VideoTagState extends State<VideoTagPage> {
     );
   }
 }
-
-class TagItem extends StatelessWidget {
-  final String title;
-
-  final int index;
-  final bool checked;
-  final void Function(int index, String title) tapCallback;
-
-  const TagItem({
-    super.key,
-    required this.index,
-    required this.title,
-    required this.tapCallback,
-    this.checked = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      title: FilterChip(
-        onSelected: (value) {
-          tapCallback(index, title);
-        },
-        label: Text(title),
-        selected: checked,
-      ),
-    );
-  }
-}
