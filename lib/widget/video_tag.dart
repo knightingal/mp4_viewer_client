@@ -77,7 +77,22 @@ class VideoTagState extends State<VideoTagPage> {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<Widget> children = snapshot.data!.map((e) {
               return FilterChip(
-                  onSelected: (value) {}, label: Text(e.tag), selected: true);
+                  onSelected: (value) {
+                    if (widget.videoId != null) {
+                      var bindTag = http.post(Uri.parse(
+                          "${apiHost()}/bind-tag/${e.id}/${widget.videoId}"));
+                      bindTag.then((Response resp) => {
+                            if (resp.statusCode == 200)
+                              {
+                                setState(() {
+                                  futureDataList = fetchSubDirs();
+                                })
+                              }
+                          });
+                    }
+                  },
+                  label: Text(e.tag),
+                  selected: e.checked);
             }).toList();
             return Align(
                 alignment: Alignment.topCenter,
