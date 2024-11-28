@@ -79,39 +79,13 @@ class VideoTagState extends State<VideoTagPage> {
               return FilterChip(
                   onSelected: (value) {}, label: Text(e.tag), selected: true);
             }).toList();
-
-            return Wrap(
-              spacing: 8.0, // gap between adjacent chips
-              runSpacing: 4.0, // gap between lines
-              children: children,
-            );
-            // return ListView.builder(
-            //   itemCount: snapshot.data!.length,
-            //   prototypeItem: TagItem(
-            //       index: 0,
-            //       title: snapshot.data!.first.tag,
-            //       tapCallback: (int index, String title) {}),
-            //   itemBuilder: (context, index) {
-            //     return TagItem(
-            //         index: index,
-            //         title: snapshot.data![index].tag,
-            //         checked: snapshot.data![index].checked,
-            //         tapCallback: (int index, String title) {
-            //           if (widget.videoId != null) {
-            //             var bindTag = http.post(Uri.parse(
-            //                 "${apiHost()}/bind-tag/${snapshot.data![index].id}/${widget.videoId}"));
-            //             bindTag.then((Response resp) => {
-            //                   if (resp.statusCode == 200)
-            //                     {
-            //                       setState(() {
-            //                         futureDataList = fetchSubDirs();
-            //                       })
-            //                     }
-            //                 });
-            //           }
-            //         });
-            //   },
-            // );
+            return Align(
+                alignment: Alignment.topCenter,
+                child: Wrap(
+                  spacing: 8.0, // gap between adjacent chips
+                  runSpacing: 4.0, // gap between lines
+                  children: children,
+                ));
           } else {
             return const Text("tag");
           }
