@@ -79,16 +79,29 @@ class VideoTagState extends State<VideoTagPage> {
               return FilterChip(
                   onSelected: (value) {
                     if (widget.videoId != null) {
-                      var bindTag = http.post(Uri.parse(
-                          "${apiHost()}/bind-tag/${e.id}/${widget.videoId}"));
-                      bindTag.then((Response resp) => {
-                            if (resp.statusCode == 200)
-                              {
-                                setState(() {
-                                  futureDataList = fetchSubDirs();
-                                })
-                              }
-                          });
+                      if (!e.checked) {
+                        var bindTag = http.post(Uri.parse(
+                            "${apiHost()}/bind-tag/${e.id}/${widget.videoId}"));
+                        bindTag.then((Response resp) => {
+                              if (resp.statusCode == 200)
+                                {
+                                  setState(() {
+                                    futureDataList = fetchSubDirs();
+                                  })
+                                }
+                            });
+                      } else {
+                        var bindTag = http.post(Uri.parse(
+                            "${apiHost()}/unbind-tag/${e.id}/${widget.videoId}"));
+                        bindTag.then((Response resp) => {
+                              if (resp.statusCode == 200)
+                                {
+                                  setState(() {
+                                    futureDataList = fetchSubDirs();
+                                  })
+                                }
+                            });
+                      }
                     }
                   },
                   label: Text(e.tag),
