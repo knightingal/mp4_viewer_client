@@ -109,16 +109,22 @@ class VideoTagState extends State<VideoTagPage> {
             }).toList();
             return Align(
                 alignment: Alignment.topCenter,
-                child: Wrap(
-                  spacing: 8.0, // gap between adjacent chips
-                  runSpacing: 4.0, // gap between lines
-                  children: children,
+                child: Container(
+                  padding: const EdgeInsetsDirectional.all(8),
+                  child: Wrap(
+                    spacing: 8.0, // gap between adjacent chips
+                    runSpacing: 4.0, // gap between lines
+                    children: children,
+                  ),
                 ));
           } else {
             return const Text("tag");
           }
         });
     return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: Center(
         child: body,
       ),
