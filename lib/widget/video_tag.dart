@@ -68,6 +68,20 @@ class VideoTagState extends State<VideoTagPage> {
     futureDataList = fetchSubDirs();
   }
 
+  Color colorByTagName(String name) {
+    List<Color> colorPool = [
+      Colors.green,
+      Colors.blue,
+      Colors.red,
+      Colors.yellow,
+      Colors.orange,
+      Colors.pink,
+      Colors.purple
+    ];
+    var hash = name.hashCode;
+    return colorPool[hash % colorPool.length];
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body;
@@ -77,6 +91,8 @@ class VideoTagState extends State<VideoTagPage> {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<Widget> children = snapshot.data!.map((e) {
               return FilterChip(
+                  backgroundColor: colorByTagName(e.tag),
+                  selectedColor: colorByTagName(e.tag),
                   onSelected: (value) {
                     if (widget.videoId != null) {
                       if (!e.checked) {
