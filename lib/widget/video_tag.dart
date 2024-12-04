@@ -70,13 +70,13 @@ class VideoTagState extends State<VideoTagPage> {
 
   Color colorByTagName(String name) {
     List<Color> colorPool = [
-      Colors.green,
-      Colors.blue,
-      Colors.red,
-      Colors.yellow,
-      Colors.orange,
-      Colors.pink,
-      Colors.purple
+      Colors.green[100] as Color,
+      Colors.blue[100] as Color,
+      Colors.red[100] as Color,
+      Colors.yellow[100] as Color,
+      Colors.orange[100] as Color,
+      Colors.pink[100] as Color,
+      Colors.purple[100] as Color
     ];
     var hash = name.hashCode;
     return colorPool[hash % colorPool.length];
