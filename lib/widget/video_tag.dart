@@ -93,6 +93,7 @@ class VideoTagState extends State<VideoTagPage> {
               return FilterChip(
                   backgroundColor: colorByTagName(e.tag),
                   selectedColor: colorByTagName(e.tag),
+                  side: const BorderSide(color: Colors.transparent),
                   onSelected: (value) {
                     if (widget.videoId != null) {
                       if (!e.checked) {
