@@ -69,14 +69,16 @@ class VideoTagState extends State<VideoTagPage> {
   }
 
   Color colorByTagName(String name) {
+    var colorSelect =
+        Theme.of(context).brightness == Brightness.dark ? 900 : 100;
     List<Color> colorPool = [
-      Colors.green[100] as Color,
-      Colors.blue[100] as Color,
-      Colors.red[100] as Color,
-      Colors.yellow[100] as Color,
-      Colors.orange[100] as Color,
-      Colors.pink[100] as Color,
-      Colors.purple[100] as Color
+      Colors.green[colorSelect] as Color,
+      Colors.blue[colorSelect] as Color,
+      Colors.red[colorSelect] as Color,
+      Colors.yellow[colorSelect] as Color,
+      Colors.orange[colorSelect] as Color,
+      Colors.pink[colorSelect] as Color,
+      Colors.purple[colorSelect] as Color
     ];
     var hash = name.hashCode;
     return colorPool[hash % colorPool.length];
