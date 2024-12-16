@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
+import 'widget/encript_image.dart';
 import 'widget/tag_home.dart';
 import 'dir_item.dart';
 import 'global.dart';
@@ -59,7 +60,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 2,
+        length: 3,
         initialIndex: 0,
         child: Scaffold(
             appBar: AppBar(
@@ -71,11 +72,17 @@ class HomePage extends StatelessWidget {
                 ),
                 Tab(
                   text: "tab",
+                ),
+                Tab(
+                  text: "image",
                 )
               ]),
             ),
-            body: const TabBarView(
-                children: [MountConfigListPage(), TagMainPage()])));
+            body: const TabBarView(children: [
+              MountConfigListPage(),
+              TagMainPage(),
+              EncriptImageWidget()
+            ])));
   }
 }
 
