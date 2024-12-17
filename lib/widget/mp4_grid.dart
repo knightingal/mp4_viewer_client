@@ -20,6 +20,16 @@ class Mp4GridPage extends StatefulWidget {
   State<Mp4GridPage> createState() => Mp4GridPageState();
 }
 
+int rateToGridOrder(int? rate) {
+  return switch (rate) {
+    1 => 0,
+    2 => 1,
+    3 => 3,
+    int() => 2,
+    null => 2,
+  };
+}
+
 class Mp4GridPageState extends State<Mp4GridPage> {
   Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
@@ -29,14 +39,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       List<VideoInfo> dataList =
           jsonArray.map((e) => VideoInfo.fromJson(e)).toList()
             ..sort((info1, info2) {
-              int rate1 = switch (info1.rate == null) {
-                true => 0,
-                false => info1.rate as int
-              };
-              int rate2 = switch (info2.rate == null) {
-                true => 0,
-                false => info2.rate as int
-              };
+              int rate1 = rateToGridOrder(info1.rate);
+              int rate2 = rateToGridOrder(info2.rate);
               return rate1.compareTo(rate2);
             });
 
