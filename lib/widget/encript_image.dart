@@ -1,8 +1,7 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:encrypt/encrypt.dart' as encrypt_lib;
+import "package:mp4_viewer_client/encrypt_lib.dart" as encrypt_lib;
 
 import 'package:http/http.dart' as http;
 
@@ -22,7 +21,7 @@ class EncriptImageState extends State<EncriptImageWidget> {
     final key = encrypt_lib.Key.fromUtf8("password");
     final iv = encrypt_lib.IV.fromUtf8("");
     final encrypter = encrypt_lib.Encrypter(
-        encrypt_lib.AES(key, mode: encrypt_lib.AESMode.cfb128, padding: null));
+        encrypt_lib.AES(key, mode: encrypt_lib.AESMode.cfb, padding: null));
     final reps2Future =
         http.get(Uri.parse("http://192.168.2.12:8000/dev/aes-image"));
     return reps2Future.then((resp2) {
