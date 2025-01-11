@@ -12,9 +12,11 @@ import '../main.dart';
 import '../video_player.dart';
 
 class Mp4GridPage extends StatefulWidget {
-  const Mp4GridPage({super.key, required this.title});
+  const Mp4GridPage({super.key, required this.title, this.tagId});
 
   final String title;
+
+  final int? tagId;
 
   @override
   State<Mp4GridPage> createState() => Mp4GridPageState();
@@ -31,6 +33,27 @@ int rateToGridOrder(int? rate) {
 }
 
 class Mp4GridPageState extends State<Mp4GridPage> {
+  Future<List<VideoInfo>> fetchVideoByTagId(int tagId) async {
+    final response = await http.get(Uri.parse(
+        "${apiHost()}/query-videos-by-tag/$tagId"));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonArray = jsonDecode(response.body);
+      List<VideoInfo> dataList =
+          jsonArray.map((e) => VideoInfo.fromJson(e)).toList()
+            ..sort((info1, info2) {
+              int rate1 = rateToGridOrder(info1.rate);
+              int rate2 = rateToGridOrder(info2.rate);
+              return rate1.compareTo(rate2);
+            });
+
+      return dataList;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
+
   Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
         "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
@@ -57,12 +80,20 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   @override
   void initState() {
     super.initState();
-    futureDataList = fetchSubDirs(getSubDir());
+    if (widget.tagId == null) {
+      futureDataList = fetchSubDirs(getSubDir());
+    } else {
+      futureDataList = fetchVideoByTagId(widget.tagId!);
+    }
   }
 
   void _refresh() {
     setState(() {
-      futureDataList = fetchSubDirs(getSubDir());
+      if (widget.tagId == null) {
+        futureDataList = fetchSubDirs(getSubDir());
+      } else {
+        futureDataList = fetchVideoByTagId(widget.tagId!);
+      }
     });
   }
 

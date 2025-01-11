@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 
 import '../global.dart';
 import '../main.dart';
+import 'mp4_grid.dart';
 
 class TagMainPage extends StatefulWidget {
   const TagMainPage({super.key, this.videoId});
@@ -100,6 +101,14 @@ class TagMainState extends State<TagMainPage> {
                             });
                       } else {
                         // TODO: nav to video grid to display all video in this tag
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Mp4GridPage(
+                                      title: snapshot.data![index].tag,
+                                      tagId: snapshot.data![index].id,
+                                  )),
+                        );
                       }
                     });
               },
