@@ -106,9 +106,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     return videoUrl;
   }
 
-  String generateImgUrlByTitle(String title) {
+  String generateImgUrlByTitle(int baseIndex, String dirPath, String title) {
     var videoUrl =
-        "${apiHost()}/image-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+        "${apiHost()}/image-stream/$baseIndex$dirPath/$title";
     log(videoUrl);
     return videoUrl;
   }
@@ -147,7 +147,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                       videoId: snapshot.data![index].id,
                       rate: snapshot.data![index].rate,
                       title: snapshot.data![index].videoFileName,
-                      coverUrl: generateImgUrlByTitle(
+                      coverUrl: generateImgUrlByTitle(snapshot.data![index].baseIndex,
+                          snapshot.data![index].dirPath,
                           snapshot.data![index].coverFileName),
                       // tapCallback: itemTapCallback,
                       refreshCallback: _refresh,
