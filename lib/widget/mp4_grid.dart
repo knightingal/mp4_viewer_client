@@ -176,7 +176,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                       title: snapshot.data![index].videoFileName,
                       coverUrl: generateImgUrlByTitle(
                           snapshot.data![index].coverFileName),
-                      tapCallback: itemTapCallback,
+                      // tapCallback: itemTapCallback,
                       refreshCallback: _refresh,
                     );
                   });
@@ -210,7 +210,7 @@ class GridItem extends StatelessWidget {
 
   final int index;
   final int videoId;
-  final void Function(int index, String title) tapCallback;
+  // final void Function(int index, int baseIndex, String dirPath, String title) tapCallback;
 
   final void Function() refreshCallback;
 
@@ -220,7 +220,7 @@ class GridItem extends StatelessWidget {
     required this.videoId,
     required this.title,
     required this.coverUrl,
-    required this.tapCallback,
+    // required this.tapCallback,
     required this.rate,
     required this.refreshCallback,
   });
