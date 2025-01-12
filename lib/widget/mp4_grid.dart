@@ -113,33 +113,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     return videoUrl;
   }
 
-  void itemTapCallback(int index, String title) {
-    if (title.endsWith(".mp4")) {
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //       builder: (context) => VideoPlayerApp(
-      //             videoUrl: generateFileUrlByTitle(title),
-      //           )),
-      // );
-    } else if (title.endsWith(".png") || title.endsWith(".jpg")) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                ImageViewer(imageUrl: generateImgUrlByTitle(title)),
-          ));
-    } else {
-      parent.add(title);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Mp4GridPage(
-                  title: widget.title,
-                )),
-      );
-    }
-  }
 
   @override
   void dispose() {
