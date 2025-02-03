@@ -2,6 +2,7 @@
 // library stringify;
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -163,7 +164,26 @@ class MountConfigListState extends State<MountConfigListPage> {
       );
     }
     if (kIsWeb) {
-      return body;
+      return Scaffold(
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            // platform.invokeMethod("aboutPage");
+            _showSearchDialog().then((value) {
+              log("value=$value, searchWord=$searchWord");
+              final response =
+                  http.get(Uri.parse("${apiHost()}/designation-search/$searchWord"));
+              return response;
+
+            }).then((resp) {
+              log("resp=$resp");
+
+            });
+          },
+          tooltip: 'Search',
+          child: const Icon(Icons.search_outlined),
+        ),
+        body: Center(child: body),
+      );
     } else {
       return Scaffold(
         floatingActionButton: FloatingActionButton(
@@ -176,5 +196,39 @@ class MountConfigListState extends State<MountConfigListPage> {
         body: Center(child: body),
       );
     }
+  }
+
+  late String searchWord;
+
+  Future<(int, String)?> _showSearchDialog() async {
+    return showDialog<(int, String)>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Search'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Enter your word...'),
+                TextField(
+                  onChanged: (value) {
+                    searchWord = value;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop((1, "pop"));
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 }
