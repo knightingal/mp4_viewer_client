@@ -43,12 +43,16 @@ class MyApp extends StatelessWidget {
       title: 'Flow1000 Player',
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.yellow, brightness: Brightness.dark),
+          seedColor: Colors.yellow,
+          brightness: Brightness.dark,
+        ),
         useMaterial3: true,
       ),
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.yellow, brightness: Brightness.light),
+          seedColor: Colors.yellow,
+          brightness: Brightness.light,
+        ),
         useMaterial3: true,
       ),
       home: const HomePage(),
@@ -62,29 +66,25 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-        length: 3,
-        initialIndex: 0,
-        child: Scaffold(
-            appBar: AppBar(
-              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-              title: const Text("Flow1000"),
-              bottom: const TabBar(tabs: [
-                Tab(
-                  text: "mount",
-                ),
-                Tab(
-                  text: "tab",
-                ),
-                Tab(
-                  text: "image",
-                )
-              ]),
-            ),
-            body: const TabBarView(children: [
-              MountConfigListPage(),
-              TagMainPage(),
-              EncriptImageWidget()
-            ])));
+      length: 3,
+      initialIndex: 0,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text("Flow1000"),
+          bottom: const TabBar(
+            tabs: [Tab(text: "mount"), Tab(text: "tab"), Tab(text: "image")],
+          ),
+        ),
+        body: const TabBarView(
+          children: [
+            MountConfigListPage(),
+            TagMainPage(),
+            EncriptImageWidget(),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -134,18 +134,22 @@ class MountConfigListState extends State<MountConfigListPage> {
       body = ListView.builder(
         itemBuilder: (context, index) {
           return DirItem(
-              index: index,
-              title: dirConfigList[index].baseDir,
-              tapCallback: (int index, String title) {
-                selectedMountConfig = index;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => MountHome(
-                          title: title,
-                          apiVersion: dirConfigList[index].apiVersion)),
-                );
-              });
+            index: index,
+            title: dirConfigList[index].baseDir,
+            tapCallback: (int index, String title) {
+              selectedMountConfig = index;
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder:
+                      (context) => MountHome(
+                        title: title,
+                        apiVersion: dirConfigList[index].apiVersion,
+                      ),
+                ),
+              );
+            },
+          );
         },
         prototypeItem: DirItem(
           index: 0,
@@ -155,9 +159,12 @@ class MountConfigListState extends State<MountConfigListPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => MountHome(
+                builder:
+                    (context) => MountHome(
                       title: title,
-                      apiVersion: dirConfigList[index].apiVersion)),
+                      apiVersion: dirConfigList[index].apiVersion,
+                    ),
+              ),
             );
           },
         ),
@@ -175,10 +182,12 @@ class MountConfigListState extends State<MountConfigListPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => Mp4GridPage(
-                      title: searchWord,
-                      searchWord: searchWord,
-                    )),
+                    builder:
+                        (context) => Mp4GridPage(
+                          title: searchWord,
+                          searchWord: searchWord,
+                        ),
+                  ),
                 );
               }
             });
