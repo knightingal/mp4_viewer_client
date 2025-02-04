@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
+import 'package:mp4_viewer_client/widget/mp4_grid.dart';
 import 'widget/encript_image.dart';
 import 'widget/tag_home.dart';
 import 'dir_item.dart';
@@ -170,13 +171,16 @@ class MountConfigListState extends State<MountConfigListPage> {
             // platform.invokeMethod("aboutPage");
             _showSearchDialog().then((value) {
               log("value=$value, searchWord=$searchWord");
-              final response =
-                  http.get(Uri.parse("${apiHost()}/designation-search/$searchWord"));
-              return response;
-
-            }).then((resp) {
-              log("resp=$resp");
-
+              if (context.mounted) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => Mp4GridPage(
+                      title: searchWord,
+                      searchWord: searchWord,
+                    )),
+                );
+              }
             });
           },
           tooltip: 'Search',

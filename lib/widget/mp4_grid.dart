@@ -12,11 +12,13 @@ import '../main.dart';
 import '../video_player.dart';
 
 class Mp4GridPage extends StatefulWidget {
-  const Mp4GridPage({super.key, required this.title, this.tagId});
+  const Mp4GridPage({super.key, required this.title, this.tagId, this.searchWord});
 
   final String title;
 
   final int? tagId;
+
+  final String? searchWord;
 
   @override
   State<Mp4GridPage> createState() => Mp4GridPageState();
@@ -53,6 +55,22 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       throw Exception('Failed to load album');
     }
   }
+  
+  Future<List<VideoInfo>> fetchSearchWord(String searchWord) async {
+    final response = await http.get(Uri.parse(
+        "${apiHost()}/designation-search/$searchWord"));
+    if (response.statusCode == 200) {
+      List<dynamic> jsonArray = jsonDecode(response.body);
+      List<VideoInfo> dataList =
+          jsonArray.map((e) => VideoInfo.fromJson(e)).toList();
+
+      return dataList;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
+  }
 
   Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
     final response = await http.get(Uri.parse(
@@ -80,19 +98,23 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   @override
   void initState() {
     super.initState();
-    if (widget.tagId == null) {
-      futureDataList = fetchSubDirs(getSubDir());
-    } else {
+    if (widget.tagId != null) {
       futureDataList = fetchVideoByTagId(widget.tagId!);
+    } else if (widget.searchWord != null)  {
+      futureDataList = fetchSearchWord(widget.searchWord!);
+    } else {
+      futureDataList = fetchSubDirs(getSubDir());
     }
   }
 
   void _refresh() {
     setState(() {
-      if (widget.tagId == null) {
-        futureDataList = fetchSubDirs(getSubDir());
-      } else {
+      if (widget.tagId != null) {
         futureDataList = fetchVideoByTagId(widget.tagId!);
+      } else if (widget.searchWord != null)  {
+        futureDataList = fetchSearchWord(widget.searchWord!);
+      } else {
+        futureDataList = fetchSubDirs(getSubDir());
       }
     });
   }
