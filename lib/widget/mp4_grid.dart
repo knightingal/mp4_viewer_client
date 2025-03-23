@@ -174,6 +174,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                           snapshot.data![index].coverFileName),
                       // tapCallback: itemTapCallback,
                       refreshCallback: _refresh,
+                      baseIndex: snapshot.data![index].baseIndex,
+                      dirPath: snapshot.data![index].dirPath,
                     );
                   });
             });
@@ -206,6 +208,8 @@ class GridItem extends StatelessWidget {
 
   final int index;
   final int videoId;
+  final int baseIndex;
+  final String dirPath;
   // final void Function(int index, int baseIndex, String dirPath, String title) tapCallback;
 
   final void Function() refreshCallback;
@@ -219,10 +223,12 @@ class GridItem extends StatelessWidget {
     // required this.tapCallback,
     required this.rate,
     required this.refreshCallback,
+    required this.baseIndex,
+    required this.dirPath,
   });
-  String generateFileUrlByTitle(String title) {
+  String generateFileUrlByTitle(int baseIndex, String dirPath, String title) {
     var videoUrl =
-        "${apiHost()}/video-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+        "${apiHost()}/video-stream/$baseIndex$dirPath/$title";
     log(videoUrl);
     return videoUrl;
   }
@@ -264,7 +270,7 @@ class GridItem extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => VideoPlayerApp(
-                                    videoUrl: generateFileUrlByTitle(title),
+                                    videoUrl: generateFileUrlByTitle(baseIndex, dirPath, title),
                                     coverUrl: coverUrl,
                                   )),
                         )
