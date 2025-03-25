@@ -233,6 +233,13 @@ class GridItem extends StatelessWidget {
     return videoUrl;
   }
 
+
+  String generateVideoExistUrlByTitle() {
+    var videoUrl =
+        "${apiHost()}/video-exist/$baseIndex$dirPath/$title";
+    return videoUrl;
+  }
+
   @override
   Widget build(BuildContext context) {
     late Rate selectedItem;
