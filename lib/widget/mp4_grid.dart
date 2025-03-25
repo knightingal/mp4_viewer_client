@@ -121,13 +121,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-  String generateFileUrlByTitle(String title) {
-    var videoUrl =
-        "${apiHost()}/video-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
-    log(videoUrl);
-    return videoUrl;
-  }
 
+
+  // TODO: check if mount exist
   String generateImgUrlByTitle(int baseIndex, String dirPath, String title) {
     var videoUrl =
         "${apiHost()}/image-stream/$baseIndex$dirPath/$title";
@@ -220,13 +216,13 @@ class GridItem extends StatelessWidget {
     required this.videoId,
     required this.title,
     required this.coverUrl,
-    // required this.tapCallback,
     required this.rate,
     required this.refreshCallback,
     required this.baseIndex,
     required this.dirPath,
   });
-  String generateFileUrlByTitle(int baseIndex, String dirPath, String title) {
+
+  String generateFileUrlByTitle() {
     var videoUrl =
         "${apiHost()}/video-stream/$baseIndex$dirPath/$title";
     log(videoUrl);
@@ -277,7 +273,7 @@ class GridItem extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                               builder: (context) => VideoPlayerApp(
-                                    videoUrl: generateFileUrlByTitle(baseIndex, dirPath, title),
+                                    videoUrl: generateFileUrlByTitle(),
                                     coverUrl: coverUrl,
                                   )),
                         )
