@@ -197,7 +197,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 }
 
-class GridItem extends StatelessWidget {
+class GridItem extends StatefulWidget {
   final String title;
   final String coverUrl;
   final int? rate;
@@ -206,10 +206,7 @@ class GridItem extends StatelessWidget {
   final int videoId;
   final int baseIndex;
   final String dirPath;
-  // final void Function(int index, int baseIndex, String dirPath, String title) tapCallback;
-
   final void Function() refreshCallback;
-
   const GridItem({
     super.key,
     required this.index,
@@ -237,10 +234,17 @@ class GridItem extends StatelessWidget {
   }
 
   @override
+  State<StatefulWidget> createState() {
+    return GridState();
+  }
+}
+
+class GridState extends State<GridItem> {
+  @override
   Widget build(BuildContext context) {
     late Rate selectedItem;
-    if (rate != null) {
-      selectedItem = Rate.values[rate as int];
+    if (widget.rate != null) {
+      selectedItem = Rate.values[widget.rate as int];
     } else {
       selectedItem = Rate.none;
     }
@@ -262,39 +266,42 @@ class GridItem extends StatelessWidget {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ImageViewer(
-                                imageUrl: coverUrl,
-                                videoTitle: title,
+                                imageUrl: widget.coverUrl,
+                                videoTitle: widget.title,
                               ),
-                            ))
+                            )
+                        )
                       },
                       // longPressCallback(index, coverUrl, title),
                       onTapUp: (e) => {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => VideoPlayerApp(
-                                    videoUrl: generateFileUrlByTitle(),
-                                    coverUrl: coverUrl,
-                                  )),
+                            builder: (context) => VideoPlayerApp(
+                              videoUrl: widget.generateFileUrlByTitle(),
+                              coverUrl: widget.coverUrl,
+                            )
+                          ),
                         )
                       },
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12.0),
                         child: Hero(
-                            tag: "video-cover-$coverUrl",
-                            child: Image.network(coverUrl, fit: BoxFit.fill)),
+                            tag: "video-cover-${widget.coverUrl}",
+                            child: Image.network(widget.coverUrl, fit: BoxFit.fill)),
                       ),
                     ),
                   ),
                 ),
                 Expanded(
-                    flex: 0,
-                    child: GridTitleBar(
-                      title: title,
-                      videoId: videoId,
-                      rate: rate,
-                      refreshCallback: refreshCallback,
-                    ))
+                  flex: 0,
+                  child: GridTitleBar(
+                    title: widget.title,
+                    videoId: widget.videoId,
+                    rate: widget.rate,
+                    refreshCallback: widget.refreshCallback,
+                  )
+                )
               ],
             )));
   }
