@@ -240,6 +240,28 @@ class GridItem extends StatefulWidget {
 }
 
 class GridState extends State<GridItem> {
+
+  Future<bool> checkExist() async {
+    final response = await http.get(Uri.parse(widget.generateVideoExistUrlByTitle()));
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool exist = true;
+
+  @override
+  void initState() {
+    super.initState();
+    checkExist().then((exist) {
+      setState(() {
+        this.exist = exist;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     late Rate selectedItem;
@@ -251,6 +273,9 @@ class GridState extends State<GridItem> {
 
     Color color =
         selectedItem.toColor(Theme.of(context).colorScheme.inversePrimary);
+    if (!exist) {
+      color = Colors.grey;
+    }
     return Container(
         padding: const EdgeInsets.all(0),
         child: Card(
@@ -288,7 +313,7 @@ class GridState extends State<GridItem> {
                         borderRadius: BorderRadius.circular(12.0),
                         child: Hero(
                             tag: "video-cover-${widget.coverUrl}",
-                            child: Image.network(widget.coverUrl, fit: BoxFit.fill)),
+                            child: Image.network(widget.coverUrl, fit: BoxFit.fill,)),
                       ),
                     ),
                   ),
