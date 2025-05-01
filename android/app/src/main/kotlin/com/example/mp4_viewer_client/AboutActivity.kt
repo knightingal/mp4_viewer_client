@@ -14,8 +14,8 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
-import com.example.jianming.Tasks.ConcurrencyApkTask
-import com.example.jianming.Tasks.ConcurrencyJsonApiTask
+import com.example.mp4_viewer_client.tasks.ConcurrencyApkTask
+import com.example.mp4_viewer_client.tasks.ConcurrencyJsonApiTask
 import com.example.mp4_viewer_client.bean.ApkConfig
 import com.google.gson.Gson
 import com.google.gson.JsonObject
