@@ -42,6 +42,12 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       title: 'Flow1000 Player',
       darkTheme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+            TargetPlatform.values,
+            value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+          ),
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.yellow,
           brightness: Brightness.dark,
@@ -49,6 +55,12 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       theme: ThemeData(
+        pageTransitionsTheme: PageTransitionsTheme(
+          builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+            TargetPlatform.values,
+            value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+          ),
+        ),
         colorScheme: ColorScheme.fromSeed(
           seedColor: Colors.yellow,
           brightness: Brightness.light,
