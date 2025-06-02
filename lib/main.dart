@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/widget/mp4_grid.dart';
-import 'widget/encript_image.dart';
+import 'package:mp4_viewer_client/widget/search_page.dart';
 import 'widget/tag_home.dart';
 import 'dir_item.dart';
 import 'global.dart';
@@ -85,14 +85,20 @@ class HomePage extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Flow1000"),
           bottom: const TabBar(
-            tabs: [Tab(text: "mount"), Tab(text: "tab"), Tab(text: "image")],
+            tabs: [
+              Tab(text: "mount"),
+              Tab(text: "tab"),
+              Tab(text: "search"),
+              // Tab(text: "image"),
+            ],
           ),
         ),
         body: const TabBarView(
           children: [
             MountConfigListPage(),
             TagMainPage(),
-            EncriptImageWidget(),
+            SearchPage(),
+            // EncriptImageWidget(),
           ],
         ),
       ),
@@ -114,8 +120,9 @@ class MountConfigListState extends State<MountConfigListPage> {
     final response = await http.get(Uri.parse("${apiHost()}/mount-config"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<MountConfig> dataList =
-          jsonArray.map((e) => MountConfig.fromJson(e)).toList();
+      List<MountConfig> dataList = jsonArray
+          .map((e) => MountConfig.fromJson(e))
+          .toList();
       return dataList;
     } else {
       throw Exception('Failed to load album');
@@ -153,11 +160,10 @@ class MountConfigListState extends State<MountConfigListPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder:
-                      (context) => MountHome(
-                        title: title,
-                        apiVersion: dirConfigList[index].apiVersion,
-                      ),
+                  builder: (context) => MountHome(
+                    title: title,
+                    apiVersion: dirConfigList[index].apiVersion,
+                  ),
                 ),
               );
             },
@@ -171,11 +177,10 @@ class MountConfigListState extends State<MountConfigListPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder:
-                    (context) => MountHome(
-                      title: title,
-                      apiVersion: dirConfigList[index].apiVersion,
-                    ),
+                builder: (context) => MountHome(
+                  title: title,
+                  apiVersion: dirConfigList[index].apiVersion,
+                ),
               ),
             );
           },
@@ -194,11 +199,8 @@ class MountConfigListState extends State<MountConfigListPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder:
-                        (context) => Mp4GridPage(
-                          title: searchWord,
-                          searchWord: searchWord,
-                        ),
+                    builder: (context) =>
+                        Mp4GridPage(title: searchWord, searchWord: searchWord),
                   ),
                 );
               }
