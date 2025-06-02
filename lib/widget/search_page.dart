@@ -3,7 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
-import 'package:http/http.dart' as http;
+import 'mp4_grid.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -22,6 +22,39 @@ class SearchPageState extends State<SearchPage> {
     super.initState();
   }
 
+  late String searchWord;
+  Future<(int, String)?> _showSearchDialog() async {
+    return showDialog<(int, String)>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Search'),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                const Text('Enter your word...'),
+                TextField(
+                  onChanged: (value) {
+                    searchWord = value;
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Approve'),
+              onPressed: () {
+                Navigator.of(context).pop((1, "pop"));
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Widget body = SizedBox.shrink();
@@ -29,7 +62,18 @@ class SearchPageState extends State<SearchPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          log("search button");
+          _showSearchDialog().then((value) {
+            log("value=$value, searchWord=$searchWord");
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Mp4GridPage(title: searchWord, searchWord: searchWord),
+                ),
+              );
+            }
+          });
         },
         tooltip: 'Increment',
         child: const Icon(Icons.search),
