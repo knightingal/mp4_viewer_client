@@ -37,6 +37,7 @@ dependencies:
   video_player: ^2.9.5
   js: ^0.7.2
   http: ^1.4.0
+  blur: ^4.0.2
 
 dev_dependencies:
   flutter_test:
