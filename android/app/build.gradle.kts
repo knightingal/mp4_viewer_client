@@ -23,7 +23,7 @@ buildscript {
     }
 }
 
-var keystorePropertiesFile = rootProject.file("keystore.properties")
+var keystorePropertiesFile = rootProject.file("../../../keys/keystore.properties")
 var keystoreProperties = Properties()
 keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 
