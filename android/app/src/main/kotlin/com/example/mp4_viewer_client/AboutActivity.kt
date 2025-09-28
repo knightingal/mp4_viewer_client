@@ -2,7 +2,6 @@ package com.example.mp4_viewer_client
 
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -22,6 +21,7 @@ import com.google.gson.JsonObject
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import java.io.File
+import androidx.core.net.toUri
 
 const val SERVER_IP = "192.168.2.12"
 
@@ -78,9 +78,7 @@ class AboutActivity : AppCompatActivity() {
                         openAPKFile()
                     } else {
                         val intent = Intent(
-                            Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, Uri.parse(
-                                "package:$packageName"
-                            )
+                            Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, "package:$packageName".toUri()
                         )
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         startActivityForResult(intent, 101)
