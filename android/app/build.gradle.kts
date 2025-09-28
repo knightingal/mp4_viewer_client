@@ -18,8 +18,7 @@ plugins {
 }
 buildscript {
     dependencies{
-
-        classpath("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
+        classpath("com.squareup.okhttp3:okhttp:5.1.0")
     }
 }
 
@@ -57,7 +56,6 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.mp4_viewer_client"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
@@ -69,7 +67,6 @@ android {
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("release")
         }
@@ -81,7 +78,8 @@ flutter {
 }
 fun String.execute(): Process {
     val runtime = Runtime.getRuntime()
-    return runtime.exec(this)
+    val command = arrayOf("/bin/bash", "-c", this)
+    return runtime.exec(command)
 }
 
 fun Process.text(): String {
@@ -89,8 +87,7 @@ fun Process.text(): String {
     val insReader = InputStreamReader(inputStream)
     val bufReader = BufferedReader(insReader)
     var output = ""
-    var line: String = ""
-    line = bufReader.readLine()
+    val line = bufReader.readLine()
     output += line
     return output
 }
@@ -109,9 +106,9 @@ task("releaseUpload") {
     dependsOn("assembleRelease")
     doLast {
         println("do releaseUpload")
-        val target = "${project.buildDir}/outputs/apk/release/app-release.apk"
+        val target = "${layout.buildDirectory.get()}/outputs/apk/release/app-release.apk"
         println(target)
-        val client:OkHttpClient = OkHttpClient().newBuilder().build();
+        val client:OkHttpClient = OkHttpClient().newBuilder().build()
         val body = MultipartBody.Builder().setType(MultipartBody.FORM)
             .addFormDataPart("file", target,
                 File(target).asRequestBody("application/octet-stream".toMediaTypeOrNull())
@@ -122,13 +119,13 @@ task("releaseUpload") {
             .method("POST", body)
             .build()
         val response = client.newCall(request).execute()
-        println("${response.code.toString()}  ${response.body.string()}")
+        println("${response.code}  ${response.body.string()}")
     }
 }
 dependencies {
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    implementation("com.google.code.gson:gson:2.10.1")
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
+    implementation("com.google.code.gson:gson:2.13.2")
+    implementation("com.squareup.okhttp3:okhttp:5.1.0")
 }
