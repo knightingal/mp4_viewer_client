@@ -11,7 +11,7 @@ import 'package:flutter/services.dart';
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/widget/mp4_grid.dart';
-import 'package:mp4_viewer_client/widget/search_page.dart';
+import 'package:mp4_viewer_client/widget/duplicate_page.dart';
 import 'widget/tag_home.dart';
 import 'dir_item.dart';
 import 'global.dart';
@@ -88,7 +88,7 @@ class HomePage extends StatelessWidget {
             tabs: [
               Tab(text: "mount"),
               Tab(text: "tab"),
-              Tab(text: "search"),
+              Tab(text: "duplicate"),
               // Tab(text: "image"),
             ],
           ),
@@ -97,7 +97,7 @@ class HomePage extends StatelessWidget {
           children: [
             MountConfigListPage(),
             TagMainPage(),
-            SearchPage(),
+            DuplicatePage(),
             // EncriptImageWidget(),
           ],
         ),

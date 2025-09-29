@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 
 import 'mp4_grid.dart';
 
-class SearchPage extends StatefulWidget {
-  const SearchPage({super.key});
+class DuplicatePage extends StatefulWidget {
+  const DuplicatePage({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return SearchPageState();
+    return DuplicatePageState();
   }
 }
 
-class SearchPageState extends State<SearchPage> {
+class DuplicatePageState extends State<DuplicatePage> {
   late Future<Uint8List> decriptedContentFuture;
 
   @override
