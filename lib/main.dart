@@ -4,7 +4,6 @@
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -75,6 +74,7 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
+  static const platform = MethodChannel('flutter/startWeb');
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -84,6 +84,15 @@ class HomePage extends StatelessWidget {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: const Text("Flow1000"),
+          actions: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.info_outline),
+              tooltip: 'About',
+              onPressed: () {
+                platform.invokeMethod("aboutPage");
+              },
+            ),
+          ],
           bottom: const TabBar(
             tabs: [
               Tab(text: "mount"),
@@ -188,41 +197,28 @@ class MountConfigListState extends State<MountConfigListPage> {
         itemCount: dirConfigList.length,
       );
     }
-    if (kIsWeb) {
-      return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            // platform.invokeMethod("aboutPage");
-            _showSearchDialog().then((value) {
-              log("value=$value, searchWord=$searchWord");
-              if (context.mounted) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        Mp4GridPage(title: searchWord, searchWord: searchWord),
-                  ),
-                );
-              }
-            });
-          },
-          tooltip: 'Search',
-          child: const Icon(Icons.search_outlined),
-        ),
-        body: Center(child: body),
-      );
-    } else {
-      return Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            platform.invokeMethod("aboutPage");
-          },
-          tooltip: 'Increment',
-          child: const Icon(Icons.arrow_back_sharp),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
-        body: Center(child: body),
-      );
-    }
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // platform.invokeMethod("aboutPage");
+          _showSearchDialog().then((value) {
+            log("value=$value, searchWord=$searchWord");
+            if (context.mounted) {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      Mp4GridPage(title: searchWord, searchWord: searchWord),
+                ),
+              );
+            }
+          });
+        },
+        tooltip: 'Search',
+        child: const Icon(Icons.search_outlined),
+      ),
+      body: Center(child: body),
+    );
   }
 
   late String searchWord;
