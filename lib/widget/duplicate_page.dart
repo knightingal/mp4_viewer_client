@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:developer' show log;
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:mp4_viewer_client/global.dart';
 
+import '../main.dart';
 import 'mp4_grid.dart';
 
 class DuplicatePage extends StatefulWidget {
@@ -20,6 +24,23 @@ class DuplicatePageState extends State<DuplicatePage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  fetchDuplicateList() async {
+    final response = await http.get(
+      Uri.parse("${apiHost()}/all-duplicate-video"),
+    );
+    if (response.statusCode == 200) {
+      List<dynamic> jsonArray = jsonDecode(response.body);
+      List<DuplicateVideo> dataList = jsonArray
+          .map((e) => DuplicateVideo.fromJson(e))
+          .toList();
+      return dataList;
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
+    }
   }
 
   late String searchWord;
