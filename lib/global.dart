@@ -13,10 +13,11 @@ class MountConfig {
 
   factory MountConfig.fromJson(Map<String, dynamic> json) {
     return MountConfig(
-        id: json["id"],
-        baseDir: json["baseDir"],
-        urlPrefix: json["urlPrefix"],
-        apiVersion: json["apiVersion"]);
+      id: json["id"],
+      baseDir: json["baseDir"],
+      urlPrefix: json["urlPrefix"],
+      apiVersion: json["apiVersion"],
+    );
   }
 }
 
@@ -72,4 +73,30 @@ String getSubDir() {
     dir += "$value/";
   }
   return dir;
+}
+
+class DuplicateVideo {
+  final int count;
+  final String designationChar;
+  final String designationNum;
+  final List<VideoInfo> videoInfo;
+  const DuplicateVideo({
+    required this.count,
+    required this.designationChar,
+    required this.designationNum,
+    required this.videoInfo,
+  });
+
+  factory DuplicateVideo.fromJson(Map<String, dynamic> json) {
+    List<dynamic> jsonArray = json["videoInfo"];
+    List<VideoInfo> dataList = jsonArray
+        .map((e) => VideoInfo.fromJson(e))
+        .toList();
+    return DuplicateVideo(
+      count: json["count"],
+      designationChar: json["designationChar"],
+      designationNum: json["designationNum"],
+      videoInfo: dataList,
+    );
+  }
 }
