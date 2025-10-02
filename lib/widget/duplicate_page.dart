@@ -21,12 +21,15 @@ class DuplicatePage extends StatefulWidget {
 class DuplicatePageState extends State<DuplicatePage> {
   late Future<Uint8List> decriptedContentFuture;
 
+  late Future<List<DuplicateVideo>> futureDataList;
+
   @override
   void initState() {
     super.initState();
+    futureDataList = fetchDuplicateList();
   }
 
-  fetchDuplicateList() async {
+  Future<List<DuplicateVideo>> fetchDuplicateList() async {
     final response = await http.get(
       Uri.parse("${apiHost()}/all-duplicate-video"),
     );
@@ -78,7 +81,12 @@ class DuplicatePageState extends State<DuplicatePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget body = SizedBox.shrink();
+    Widget body = FutureBuilder<List<DuplicateVideo>>(
+      future: futureDataList,
+      builder: (context, snapshot) {
+        return SizedBox.shrink();
+      },
+    );
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
