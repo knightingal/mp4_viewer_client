@@ -84,7 +84,14 @@ class DuplicatePageState extends State<DuplicatePage> {
     Widget body = FutureBuilder<List<DuplicateVideo>>(
       future: futureDataList,
       builder: (context, snapshot) {
-        return SizedBox.shrink();
+        return ListView.builder(
+          itemCount: snapshot.data!.length,
+          itemBuilder: (context, index) {
+            return Text(
+              "${snapshot.data![index].designationChar}-${snapshot.data![index].designationNum}",
+            );
+          },
+        );
       },
     );
 
