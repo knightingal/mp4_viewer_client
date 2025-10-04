@@ -25,8 +25,6 @@ import 'widget/mount_home.dart';
  */
 String apiHost() => "http://192.168.2.12:8082";
 
-String gatewayHost() => "http://192.168.2.12:3002";
-
 void main() {
   runApp(const MyApp());
 }
