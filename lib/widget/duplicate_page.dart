@@ -85,7 +85,7 @@ class DuplicatePageState extends State<DuplicatePage> {
       future: futureDataList,
       builder: (context, snapshot) {
         return ListView.builder(
-          itemCount: snapshot.data!.length,
+          itemCount: snapshot.data?.length ?? 0,
           itemBuilder: (context, index) {
             return Text(
               "${snapshot.data![index].designationChar}-${snapshot.data![index].designationNum}",
