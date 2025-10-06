@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mp4_viewer_client/dir_item.dart';
 import 'package:mp4_viewer_client/global.dart';
 
 import '../main.dart';
@@ -87,8 +88,25 @@ class DuplicatePageState extends State<DuplicatePage> {
         return ListView.builder(
           itemCount: snapshot.data?.length ?? 0,
           itemBuilder: (context, index) {
-            return Text(
-              "${snapshot.data![index].designationChar}-${snapshot.data![index].designationNum}",
+            return DirItem(
+              index: index,
+              title:
+                  "${snapshot.data![index].designationChar}-${snapshot.data![index].designationNum} (${snapshot.data![index].count})",
+              tapCallback: (int index, String title) {
+                if (context.mounted) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Mp4GridPage(
+                        title:
+                            "${snapshot.data![index].designationChar}-${snapshot.data![index].designationNum}",
+                        searchWord:
+                            "${snapshot.data![index].designationChar}-${snapshot.data![index].designationNum}",
+                      ),
+                    ),
+                  );
+                }
+              },
             );
           },
         );
