@@ -5,6 +5,9 @@
 // gestures. You can also use WidgetTester to find child widgets in the widget
 // tree, read text, and verify that the values of widget properties are correct.
 
+import 'dart:math';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -26,5 +29,20 @@ void main() {
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
+  });
+
+  Uint8List generateRandomBytes(int length) {
+    final rand = Random.secure();
+    return Uint8List.fromList(List.generate(length, (_) => rand.nextInt(256)));
+  }
+
+  String bytesToHex(Uint8List bytes) {
+    return bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+  }
+
+  test("testgenerateRandomBytes", () {
+    var bytes = generateRandomBytes(16);
+    expect(bytes.length, 16);
+    print(bytesToHex(bytes));
   });
 }
