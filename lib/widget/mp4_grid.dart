@@ -449,4 +449,4 @@ enum Rate {
   }
 }
 
-enum GridItemMenuItem { none, good, normal, bad, tag }
+enum GridItemMenuItem { none, good, normal, bad, tag, detail }
