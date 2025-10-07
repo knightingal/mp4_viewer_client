@@ -380,6 +380,13 @@ class GridTitleBar extends StatelessWidget {
     );
   }
 
+  void nav2DetailPage(BuildContext context, int videoId) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => VideoTagPage(videoId: videoId)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
