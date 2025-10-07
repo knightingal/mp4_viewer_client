@@ -12,7 +12,12 @@ import '../main.dart';
 import '../video_player.dart';
 
 class Mp4GridPage extends StatefulWidget {
-  const Mp4GridPage({super.key, required this.title, this.tagId, this.searchWord});
+  const Mp4GridPage({
+    super.key,
+    required this.title,
+    this.tagId,
+    this.searchWord,
+  });
 
   final String title;
 
@@ -36,8 +41,9 @@ int rateToGridOrder(int? rate) {
 
 class Mp4GridPageState extends State<Mp4GridPage> {
   Future<List<VideoInfo>> fetchVideoByTagId(int tagId) async {
-    final response = await http.get(Uri.parse(
-        "${apiHost()}/query-videos-by-tag/$tagId"));
+    final response = await http.get(
+      Uri.parse("${apiHost()}/query-videos-by-tag/$tagId"),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
@@ -55,14 +61,16 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       throw Exception('Failed to load album');
     }
   }
-  
+
   Future<List<VideoInfo>> fetchSearchWord(String searchWord) async {
-    final response = await http.get(Uri.parse(
-        "${apiHost()}/designation-search/$searchWord"));
+    final response = await http.get(
+      Uri.parse("${apiHost()}/designation-search/$searchWord"),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<VideoInfo> dataList =
-          jsonArray.map((e) => VideoInfo.fromJson(e)).toList();
+      List<VideoInfo> dataList = jsonArray
+          .map((e) => VideoInfo.fromJson(e))
+          .toList();
 
       return dataList;
     } else {
@@ -73,8 +81,11 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 
   Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
-    final response = await http.get(Uri.parse(
-        "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
+    final response = await http.get(
+      Uri.parse(
+        "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir",
+      ),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
@@ -100,7 +111,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     super.initState();
     if (widget.tagId != null) {
       futureDataList = fetchVideoByTagId(widget.tagId!);
-    } else if (widget.searchWord != null)  {
+    } else if (widget.searchWord != null) {
       futureDataList = fetchSearchWord(widget.searchWord!);
     } else {
       futureDataList = fetchSubDirs(getSubDir());
@@ -111,7 +122,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     setState(() {
       if (widget.tagId != null) {
         futureDataList = fetchVideoByTagId(widget.tagId!);
-      } else if (widget.searchWord != null)  {
+      } else if (widget.searchWord != null) {
         futureDataList = fetchSearchWord(widget.searchWord!);
       } else {
         futureDataList = fetchSubDirs(getSubDir());
@@ -121,16 +132,12 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-
-
   // TODO: check if mount exist
   String generateImgUrlByTitle(int baseIndex, String dirPath, String title) {
-    var videoUrl =
-        "${apiHost()}/image-stream/$baseIndex$dirPath/$title";
+    var videoUrl = "${apiHost()}/image-stream/$baseIndex$dirPath/$title";
     log(videoUrl);
     return videoUrl;
   }
-
 
   @override
   void dispose() {
@@ -146,39 +153,46 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   Widget build(BuildContext context) {
     Widget body;
     body = FutureBuilder<List<VideoInfo>>(
-        future: futureDataList,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return LayoutBuilder(
-                builder: (BuildContext context, BoxConstraints constraints) {
+      future: futureDataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
               var crossAxisCount = switch (constraints.maxWidth) {
                 >= 1500 => 4,
                 _ => 2,
               };
               return GridView.builder(
-                  itemCount: snapshot.data!.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      childAspectRatio: 4 / 3, crossAxisCount: crossAxisCount),
-                  itemBuilder: (context, index) {
-                    return GridItem(
-                      index: index,
-                      videoId: snapshot.data![index].id,
-                      rate: snapshot.data![index].rate,
-                      title: snapshot.data![index].videoFileName,
-                      coverUrl: generateImgUrlByTitle(snapshot.data![index].baseIndex,
-                          snapshot.data![index].dirPath,
-                          snapshot.data![index].coverFileName),
-                      // tapCallback: itemTapCallback,
-                      refreshCallback: _refresh,
-                      baseIndex: snapshot.data![index].baseIndex,
-                      dirPath: snapshot.data![index].dirPath,
-                    );
-                  });
-            });
-          } else {
-            return const Text("");
-          }
-        });
+                itemCount: snapshot.data!.length,
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  childAspectRatio: 4 / 3,
+                  crossAxisCount: crossAxisCount,
+                ),
+                itemBuilder: (context, index) {
+                  return GridItem(
+                    index: index,
+                    videoId: snapshot.data![index].id,
+                    rate: snapshot.data![index].rate,
+                    title: snapshot.data![index].videoFileName,
+                    coverUrl: generateImgUrlByTitle(
+                      snapshot.data![index].baseIndex,
+                      snapshot.data![index].dirPath,
+                      snapshot.data![index].coverFileName,
+                    ),
+                    // tapCallback: itemTapCallback,
+                    refreshCallback: _refresh,
+                    baseIndex: snapshot.data![index].baseIndex,
+                    dirPath: snapshot.data![index].dirPath,
+                  );
+                },
+              );
+            },
+          );
+        } else {
+          return const Text("");
+        }
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -220,16 +234,13 @@ class GridItem extends StatefulWidget {
   });
 
   String generateFileUrlByTitle() {
-    var videoUrl =
-        "${apiHost()}/video-stream/$baseIndex$dirPath/$title";
+    var videoUrl = "${apiHost()}/video-stream/$baseIndex$dirPath/$title";
     log(videoUrl);
     return videoUrl;
   }
 
-
   String generateVideoExistUrlByTitle() {
-    var videoUrl =
-        "${apiHost()}/video-exist/$baseIndex$dirPath/$title";
+    var videoUrl = "${apiHost()}/video-exist/$baseIndex$dirPath/$title";
     return videoUrl;
   }
 
@@ -240,9 +251,10 @@ class GridItem extends StatefulWidget {
 }
 
 class GridState extends State<GridItem> {
-
   Future<bool> checkExist() async {
-    final response = await http.get(Uri.parse(widget.generateVideoExistUrlByTitle()));
+    final response = await http.get(
+      Uri.parse(widget.generateVideoExistUrlByTitle()),
+    );
     if (response.statusCode == 200) {
       return true;
     } else {
@@ -271,64 +283,68 @@ class GridState extends State<GridItem> {
       selectedItem = Rate.none;
     }
 
-    Color color =
-        selectedItem.toColor(Theme.of(context).colorScheme.inversePrimary);
+    Color color = selectedItem.toColor(
+      Theme.of(context).colorScheme.inversePrimary,
+    );
     if (!exist) {
       color = Colors.grey;
     }
     return Container(
-        padding: const EdgeInsets.all(0),
-        child: Card(
-            color: color,
-            child: Column(
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: SizedBox.expand(
-                    child: GestureDetector(
-                      onLongPress: () => {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ImageViewer(
-                                imageUrl: widget.coverUrl,
-                                videoTitle: widget.title,
-                              ),
-                            )
-                        )
-                      },
-                      // longPressCallback(index, coverUrl, title),
-                      onTapUp: (e) => {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerApp(
-                              videoUrl: widget.generateFileUrlByTitle(),
-                              coverUrl: widget.coverUrl,
-                            )
-                          ),
-                        )
-                      },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(12.0),
-                        child: Hero(
-                            tag: "video-cover-${widget.coverUrl}",
-                            child: Image.network(widget.coverUrl, fit: BoxFit.fill,)),
+      padding: const EdgeInsets.all(0),
+      child: Card(
+        color: color,
+        child: Column(
+          children: [
+            Expanded(
+              flex: 1,
+              child: SizedBox.expand(
+                child: GestureDetector(
+                  onLongPress: () => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ImageViewer(
+                          imageUrl: widget.coverUrl,
+                          videoTitle: widget.title,
+                        ),
                       ),
+                    ),
+                  },
+                  // longPressCallback(index, coverUrl, title),
+                  onTapUp: (e) => {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => VideoPlayerApp(
+                          videoUrl: widget.generateFileUrlByTitle(),
+                          coverUrl: widget.coverUrl,
+                        ),
+                      ),
+                    ),
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12.0),
+                    child: Hero(
+                      tag: "video-cover-${widget.coverUrl}",
+                      child: Image.network(widget.coverUrl, fit: BoxFit.fill),
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 0,
-                  child: GridTitleBar(
-                    title: widget.title,
-                    videoId: widget.videoId,
-                    rate: widget.rate,
-                    refreshCallback: widget.refreshCallback,
-                  )
-                )
-              ],
-            )));
+              ),
+            ),
+            Expanded(
+              flex: 0,
+              child: GridTitleBar(
+                title: widget.title,
+                videoId: widget.videoId,
+                rate: widget.rate,
+                refreshCallback: widget.refreshCallback,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -338,16 +354,18 @@ class GridTitleBar extends StatelessWidget {
   final int? rate;
   final void Function() refreshCallback;
 
-  const GridTitleBar(
-      {super.key,
-      required this.title,
-      required this.videoId,
-      required this.rate,
-      required this.refreshCallback});
+  const GridTitleBar({
+    super.key,
+    required this.title,
+    required this.videoId,
+    required this.rate,
+    required this.refreshCallback,
+  });
 
   void postRate(GridItemMenuItem item) async {
-    final response = await http
-        .post(Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"));
+    final response = await http.post(
+      Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"),
+    );
     if (response.statusCode == 200) {
       refreshCallback();
     } else {
@@ -357,12 +375,9 @@ class GridTitleBar extends StatelessWidget {
 
   void nav2TagHome(BuildContext context, int videoId) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VideoTagPage(
-            videoId: videoId,
-          ),
-        ));
+      context,
+      MaterialPageRoute(builder: (context) => VideoTagPage(videoId: videoId)),
+    );
   }
 
   @override
@@ -374,48 +389,44 @@ class GridTitleBar extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
+          Expanded(flex: 1, child: Text(title)),
           Expanded(
-            flex: 1,
-            child: Text(
-              title,
+            flex: 0,
+            child: PopupMenuButton<GridItemMenuItem>(
+              onSelected: (GridItemMenuItem item) {
+                switch (item) {
+                  case GridItemMenuItem.bad ||
+                      GridItemMenuItem.good ||
+                      GridItemMenuItem.normal:
+                    postRate(item);
+                  case GridItemMenuItem.tag:
+                    nav2TagHome(context, videoId);
+                  default:
+                  // do nothing
+                }
+              },
+              itemBuilder: (BuildContext context) =>
+                  <PopupMenuEntry<GridItemMenuItem>>[
+                    const PopupMenuItem<GridItemMenuItem>(
+                      value: GridItemMenuItem.good,
+                      child: Text('Good'),
+                    ),
+                    const PopupMenuItem<GridItemMenuItem>(
+                      value: GridItemMenuItem.normal,
+                      child: Text('Normal'),
+                    ),
+                    const PopupMenuItem<GridItemMenuItem>(
+                      value: GridItemMenuItem.bad,
+                      child: Text('Bad'),
+                    ),
+                    const PopupMenuDivider(),
+                    const PopupMenuItem<GridItemMenuItem>(
+                      value: GridItemMenuItem.tag,
+                      child: Text("Tag"),
+                    ),
+                  ],
             ),
           ),
-          Expanded(
-              flex: 0,
-              child: PopupMenuButton<GridItemMenuItem>(
-                onSelected: (GridItemMenuItem item) {
-                  switch (item) {
-                    case GridItemMenuItem.bad ||
-                          GridItemMenuItem.good ||
-                          GridItemMenuItem.normal:
-                      postRate(item);
-                    case GridItemMenuItem.tag:
-                      nav2TagHome(context, videoId);
-                    default:
-                    // do nothing
-                  }
-                },
-                itemBuilder: (BuildContext context) =>
-                    <PopupMenuEntry<GridItemMenuItem>>[
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.good,
-                    child: Text('Good'),
-                  ),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.normal,
-                    child: Text('Normal'),
-                  ),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.bad,
-                    child: Text('Bad'),
-                  ),
-                  const PopupMenuDivider(),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.tag,
-                    child: Text("Tag"),
-                  )
-                ],
-              ))
         ],
       ),
     );
@@ -433,15 +444,9 @@ enum Rate {
       bad => Colors.red[900] as Color,
       normal => Colors.blue[900] as Color,
       good => Colors.green[900] as Color,
-      _ => defaultColor
+      _ => defaultColor,
     };
   }
 }
 
-enum GridItemMenuItem {
-  none,
-  good,
-  normal,
-  bad,
-  tag,
-}
+enum GridItemMenuItem { none, good, normal, bad, tag }
