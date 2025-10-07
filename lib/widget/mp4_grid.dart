@@ -380,6 +380,7 @@ class GridTitleBar extends StatelessWidget {
     );
   }
 
+  // TODO: implement detail page
   void nav2DetailPage(BuildContext context, int videoId) {
     Navigator.push(
       context,
