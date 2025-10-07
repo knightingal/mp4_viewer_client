@@ -408,6 +408,8 @@ class GridTitleBar extends StatelessWidget {
                     postRate(item);
                   case GridItemMenuItem.tag:
                     nav2TagHome(context, videoId);
+                  case GridItemMenuItem.detail:
+                    nav2DetailPage(context, videoId);
                   default:
                   // do nothing
                 }
