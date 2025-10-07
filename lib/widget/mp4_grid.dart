@@ -424,6 +424,10 @@ class GridTitleBar extends StatelessWidget {
                       value: GridItemMenuItem.tag,
                       child: Text("Tag"),
                     ),
+                    const PopupMenuItem<GridItemMenuItem>(
+                      value: GridItemMenuItem.detail,
+                      child: Text("Meta Detail"),
+                    ),
                   ],
             ),
           ),
