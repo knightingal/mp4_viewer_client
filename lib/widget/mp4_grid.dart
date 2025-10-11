@@ -10,6 +10,7 @@ import '../global.dart';
 import '../image_viewer.dart';
 import '../main.dart';
 import '../video_player.dart';
+import 'meta_page.dart';
 
 class Mp4GridPage extends StatefulWidget {
   const Mp4GridPage({
@@ -380,11 +381,10 @@ class GridTitleBar extends StatelessWidget {
     );
   }
 
-  // TODO: implement detail page
   void nav2DetailPage(BuildContext context, int videoId) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => VideoTagPage(videoId: videoId)),
+      MaterialPageRoute(builder: (context) => MetaPage(id: videoId)),
     );
   }
 
