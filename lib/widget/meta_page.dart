@@ -43,8 +43,27 @@ class MetaPageState extends State<MetaPage> {
       future: fetchMeta(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          return Text(
-            "id=${snapshot.data!.id}, cover=${snapshot.data!.coverFileName}, video=${snapshot.data!.videoFileName}, rate=${snapshot.data!.rate}, baseIndex=${snapshot.data!.baseIndex}, dirPath=${snapshot.data!.dirPath}",
+          return Column(
+            children: [
+              Expanded(flex: 1, child: Container()),
+              //
+              Text("id=${snapshot.data!.id}"),
+              Text("cover=${snapshot.data!.coverFileName}"),
+              Text("video=${snapshot.data!.videoFileName}"),
+              Text("rate=${snapshot.data!.rate}"),
+              Text("baseIndex=${snapshot.data!.baseIndex}"),
+              Text("dirPath=${snapshot.data!.dirPath}"),
+
+              Text("videoSize=${snapshot.data!.videoSize! ~/ 1024 ~/ 1024} MB"),
+              Text("coverSize=${snapshot.data!.coverSize! ~/ 1024} KB"),
+              Text("height=${snapshot.data!.height}"),
+              Text("width=${snapshot.data!.width}"),
+              Text("frameRate=${snapshot.data!.frameRate}"),
+              Text("duration=${snapshot.data!.duration}"),
+              Text("videoFrameCount=${snapshot.data!.videoFrameCount}"),
+              //
+              Expanded(flex: 1, child: Container()),
+            ],
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
@@ -55,7 +74,7 @@ class MetaPageState extends State<MetaPage> {
     );
     return Scaffold(
       appBar: AppBar(title: const Text("Meta Info")),
-      body: Center(child: body),
+      body: body,
     );
   }
 }
