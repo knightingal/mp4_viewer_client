@@ -29,6 +29,14 @@ class VideoInfo {
   final int baseIndex;
   final String dirPath;
 
+  final int? videoSize;
+  final int? coverSize;
+  final int? height;
+  final int? width;
+  final int? frameRate;
+  final int? duration;
+  final int? videoFrameCount;
+
   const VideoInfo({
     required this.id,
     required this.coverFileName,
@@ -36,6 +44,14 @@ class VideoInfo {
     required this.rate,
     required this.baseIndex,
     required this.dirPath,
+
+    required this.videoSize,
+    required this.coverSize,
+    required this.height,
+    required this.width,
+    required this.frameRate,
+    required this.duration,
+    required this.videoFrameCount,
   });
 
   factory VideoInfo.fromJson(Map<String, dynamic> json) {
@@ -46,6 +62,14 @@ class VideoInfo {
       rate: json["rate"],
       baseIndex: json["baseIndex"],
       dirPath: json["dirPath"],
+
+      videoSize: json["videoSize"],
+      coverSize: json["coverSize"],
+      height: json["height"],
+      width: json["width"],
+      frameRate: json["frameRate"],
+      duration: json["duration"],
+      videoFrameCount: json["videoFrameCount"],
     );
   }
 }
