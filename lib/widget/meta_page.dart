@@ -6,18 +6,38 @@ import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/global.dart';
 import 'package:mp4_viewer_client/main.dart';
 
-class MetaPage extends StatefulWidget {
+class MetaPage extends StatelessWidget {
   const MetaPage({super.key, required this.id});
 
   final int id;
 
   @override
-  State<StatefulWidget> createState() {
-    return MetaPageState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Meta Info")),
+      body: Column(
+        children: [
+          Expanded(flex: 1, child: Container()),
+          VideoMetaInfo(id: id),
+          Expanded(flex: 1, child: Container()),
+        ],
+      ),
+    );
   }
 }
 
-class MetaPageState extends State<MetaPage> {
+class VideoMetaInfo extends StatefulWidget {
+  const VideoMetaInfo({super.key, required this.id});
+
+  final int id;
+
+  @override
+  State<StatefulWidget> createState() {
+    return VideoMetaInfoState();
+  }
+}
+
+class VideoMetaInfoState extends State<VideoMetaInfo> {
   @override
   void initState() {
     super.initState();
@@ -45,31 +65,22 @@ class MetaPageState extends State<MetaPage> {
         if (snapshot.hasData) {
           return Column(
             children: [
-              Expanded(flex: 1, child: Container()),
-              //
-              Column(
-                children: [
-                  Text("id=${snapshot.data!.id}"),
-                  Text("cover=${snapshot.data!.coverFileName}"),
-                  Text("video=${snapshot.data!.videoFileName}"),
-                  Text("rate=${snapshot.data!.rate}"),
-                  Text("baseIndex=${snapshot.data!.baseIndex}"),
-                  Text("dirPath=${snapshot.data!.dirPath}"),
+              Text("id=${snapshot.data!.id}"),
+              Text("cover=${snapshot.data!.coverFileName}"),
+              Text("video=${snapshot.data!.videoFileName}"),
+              Text("rate=${snapshot.data!.rate}"),
+              Text("baseIndex=${snapshot.data!.baseIndex}"),
+              Text("dirPath=${snapshot.data!.dirPath}"),
 
-                  Text(
-                    "videoSize=${snapshot.data!.videoSize! ~/ 1024 ~/ 1024} MB",
-                  ),
-                  Text("coverSize=${snapshot.data!.coverSize! ~/ 1024} KB"),
-                  Text("height=${snapshot.data!.height}"),
-                  Text("width=${snapshot.data!.width}"),
-                  Text("frameRate=${snapshot.data!.frameRate}"),
-                  Text("duration=${snapshot.data!.duration}"),
-                  Text("videoFrameCount=${snapshot.data!.videoFrameCount}"),
-                ],
-              ),
-              //
-              Expanded(flex: 1, child: Container()),
+              Text("videoSize=${snapshot.data!.videoSize! ~/ 1024 ~/ 1024} MB"),
+              Text("coverSize=${snapshot.data!.coverSize! ~/ 1024} KB"),
+              Text("height=${snapshot.data!.height}"),
+              Text("width=${snapshot.data!.width}"),
+              Text("frameRate=${snapshot.data!.frameRate}"),
+              Text("duration=${snapshot.data!.duration}"),
+              Text("videoFrameCount=${snapshot.data!.videoFrameCount}"),
             ],
+            //
           );
         } else if (snapshot.hasError) {
           return Text('${snapshot.error}');
@@ -78,9 +89,6 @@ class MetaPageState extends State<MetaPage> {
         return const CircularProgressIndicator();
       },
     );
-    return Scaffold(
-      appBar: AppBar(title: const Text("Meta Info")),
-      body: body,
-    );
+    return body;
   }
 }
