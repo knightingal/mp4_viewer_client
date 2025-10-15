@@ -199,6 +199,24 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          MenuAnchor(
+            builder: (context, controller, child) => IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: () {
+                controller.open();
+              },
+            ),
+            menuChildren: [
+              MenuItemButton(
+                child: const Text('Refresh'),
+                onPressed: () {
+                  _refresh();
+                },
+              ),
+            ],
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
