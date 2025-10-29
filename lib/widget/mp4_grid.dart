@@ -133,10 +133,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-  // TODO: check if mount exist
   String generateImgUrlByTitle(int baseIndex, String dirPath, String title) {
-    var videoUrl = "${apiHost()}/image-stream/$baseIndex$dirPath/$title";
-    log(videoUrl);
+    var videoUrl =
+        "${apiHost()}/image-stream-by-path/$baseIndex$dirPath/$title";
     return videoUrl;
   }
 
