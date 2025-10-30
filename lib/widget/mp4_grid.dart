@@ -133,9 +133,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   static const platform = MethodChannel('flutter/startWeb');
 
-  String generateImgUrlByTitle(int baseIndex, String dirPath, String title) {
-    var videoUrl =
-        "${apiHost()}/image-stream-by-path/$baseIndex$dirPath/$title";
+  String generateImgUrlById(int videoId) {
+    var videoUrl = "${apiHost()}/image-stream-by-id/$videoId";
     return videoUrl;
   }
 
@@ -174,11 +173,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                     videoId: snapshot.data![index].id,
                     rate: snapshot.data![index].rate,
                     title: snapshot.data![index].videoFileName,
-                    coverUrl: generateImgUrlByTitle(
-                      snapshot.data![index].baseIndex,
-                      snapshot.data![index].dirPath,
-                      snapshot.data![index].coverFileName,
-                    ),
+                    coverUrl: generateImgUrlById(snapshot.data![index].id),
                     // tapCallback: itemTapCallback,
                     refreshCallback: _refresh,
                     baseIndex: snapshot.data![index].baseIndex,
