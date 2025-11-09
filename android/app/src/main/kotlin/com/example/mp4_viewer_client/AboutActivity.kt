@@ -27,6 +27,11 @@ const val SERVER_IP = "192.168.2.12"
 
 const val SERVER_PORT = "3002"
 class AboutActivity : AppCompatActivity() {
+
+    interface DownloadCounterListener {
+        fun update(current: Long, max: Long)
+    }
+
     private var versionCode: Long = 0
 
     private lateinit var apkFile: File
@@ -72,7 +77,10 @@ class AboutActivity : AppCompatActivity() {
                     val directory = File(this@AboutActivity.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS), "apk")
                     apkFile = File(directory, apkConfig.apkName)
                     directory.mkdirs()
-                    ConcurrencyApkTask.makeRequest(apkConfig.downloadUrl, apkFile)
+                    ConcurrencyApkTask.downloadToFile(apkConfig.downloadUrl, apkFile, object : DownloadCounterListener {
+                        override fun update(current: Long, max: Long) {
+                        }
+                    })
 
                     if (getPackageManager().canRequestPackageInstalls()) {
                         openAPKFile()
