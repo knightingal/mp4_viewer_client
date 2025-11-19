@@ -450,6 +450,10 @@ class GridTitleBar extends StatelessWidget {
                       value: GridItemMenuItem.detail,
                       child: Text("Meta Detail"),
                     ),
+                    const PopupMenuItem<GridItemMenuItem>(
+                      value: GridItemMenuItem.duplicate,
+                      child: Text("Duplicate"),
+                    ),
                   ],
             ),
           ),
@@ -475,4 +479,4 @@ enum Rate {
   }
 }
 
-enum GridItemMenuItem { none, good, normal, bad, tag, detail }
+enum GridItemMenuItem { none, good, normal, bad, tag, detail, duplicate }
