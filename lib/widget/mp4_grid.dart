@@ -178,6 +178,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                     refreshCallback: _refresh,
                     baseIndex: snapshot.data![index].baseIndex,
                     dirPath: snapshot.data![index].dirPath,
+                    designationChar: snapshot.data![index].designationChar,
+                    designationNum: snapshot.data![index].designationNum,
                   );
                 },
               );
@@ -234,6 +236,10 @@ class GridItem extends StatefulWidget {
   final int baseIndex;
   final String dirPath;
   final void Function() refreshCallback;
+
+  final String? designationChar;
+  final String? designationNum;
+
   const GridItem({
     super.key,
     required this.index,
@@ -244,6 +250,8 @@ class GridItem extends StatefulWidget {
     required this.refreshCallback,
     required this.baseIndex,
     required this.dirPath,
+    this.designationChar,
+    this.designationNum,
   });
 
   String generateFileUrlByTitle() {
@@ -352,6 +360,8 @@ class GridState extends State<GridItem> {
                 videoId: widget.videoId,
                 rate: widget.rate,
                 refreshCallback: widget.refreshCallback,
+                designationChar: widget.designationChar,
+                designationNum: widget.designationNum,
               ),
             ),
           ],
@@ -366,6 +376,8 @@ class GridTitleBar extends StatelessWidget {
   final int videoId;
   final int? rate;
   final void Function() refreshCallback;
+  final String? designationChar;
+  final String? designationNum;
 
   const GridTitleBar({
     super.key,
@@ -373,6 +385,8 @@ class GridTitleBar extends StatelessWidget {
     required this.videoId,
     required this.rate,
     required this.refreshCallback,
+    this.designationChar,
+    this.designationNum,
   });
 
   void postRate(GridItemMenuItem item) async {
