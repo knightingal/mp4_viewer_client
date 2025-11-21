@@ -438,21 +438,19 @@ class GridTitleBar extends StatelessWidget {
                   case GridItemMenuItem.detail:
                     nav2DetailPage(context, videoId);
                   case GridItemMenuItem.duplicate:
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => Mp4GridPage(
-                          title:
-                              designationChar != null && designationNum != null
-                              ? "Duplicate of ${designationChar!}-${designationNum!}"
-                              : "Duplicate Search",
-                          searchWord:
-                              designationChar != null && designationNum != null
-                              ? "${designationChar!}-${designationNum!}"
-                              : null,
+                    if (designationChar != null && designationNum != null) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => Mp4GridPage(
+                            title:
+                                "Duplicate of ${designationChar!}-${designationNum!}",
+                            searchWord:
+                                "${designationChar!}-${designationNum!}",
+                          ),
                         ),
-                      ),
-                    );
+                      );
+                    }
                   default:
                   // do nothing
                 }
