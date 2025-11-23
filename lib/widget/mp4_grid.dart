@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -333,15 +334,30 @@ class GridState extends State<GridItem> {
                   },
                   // longPressCallback(index, coverUrl, title),
                   onTapUp: (e) => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VideoPlayerApp(
-                          videoUrl: widget.generateFileUrlByTitle(),
-                          coverUrl: widget.coverUrl,
+                    if (Platform.isLinux)
+                      {
+                        // Navigator.push(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //     builder: (context) => VideoPlayerApp(
+                        //       videoUrl: widget.generateFileUrlByTitle(),
+                        //       coverUrl: widget.coverUrl,
+                        //     ),
+                        //   ),
+                        // ),
+                      }
+                    else
+                      {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideoPlayerApp(
+                              videoUrl: widget.generateFileUrlByTitle(),
+                              coverUrl: widget.coverUrl,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                      },
                   },
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
