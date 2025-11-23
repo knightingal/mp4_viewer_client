@@ -296,6 +296,36 @@ class GridState extends State<GridItem> {
     });
   }
 
+  void _startPreview() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            ImageViewer(imageUrl: widget.coverUrl, videoTitle: widget.title),
+      ),
+    );
+  }
+
+  void _startPlayer() {
+    if (Platform.isLinux) {
+      // execute on linux desktop
+      // open mpv player
+      Process.run("mpv", [widget.generateFileUrlByTitle()]).then((result) {
+        log("mpv exited with code ${result.exitCode}");
+      });
+    } else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => VideoPlayerApp(
+            videoUrl: widget.generateFileUrlByTitle(),
+            coverUrl: widget.coverUrl,
+          ),
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     late Rate selectedItem;
@@ -321,44 +351,8 @@ class GridState extends State<GridItem> {
               flex: 1,
               child: SizedBox.expand(
                 child: GestureDetector(
-                  onLongPress: () => {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ImageViewer(
-                          imageUrl: widget.coverUrl,
-                          videoTitle: widget.title,
-                        ),
-                      ),
-                    ),
-                  },
-                  // longPressCallback(index, coverUrl, title),
-                  onTapUp: (e) => {
-                    if (Platform.isLinux)
-                      {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => VideoPlayerApp(
-                        //       videoUrl: widget.generateFileUrlByTitle(),
-                        //       coverUrl: widget.coverUrl,
-                        //     ),
-                        //   ),
-                        // ),
-                      }
-                    else
-                      {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => VideoPlayerApp(
-                              videoUrl: widget.generateFileUrlByTitle(),
-                              coverUrl: widget.coverUrl,
-                            ),
-                          ),
-                        ),
-                      },
-                  },
+                  onLongPress: () => _startPreview(),
+                  onTapUp: (e) => _startPlayer(),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(12.0),
                     child: Hero(
