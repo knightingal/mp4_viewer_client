@@ -4,8 +4,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/dir_item.dart';
-import 'package:mp4_viewer_client/global.dart';
+import '../dir_item.dart';
+import '../global.dart';
 
 import '../main.dart';
 import 'mp4_grid.dart';

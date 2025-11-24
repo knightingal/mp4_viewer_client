@@ -3,8 +3,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/global.dart';
-import 'package:mp4_viewer_client/main.dart';
+import '../global.dart';
+import '../main.dart';
 
 class MetaPage extends StatelessWidget {
   const MetaPage({super.key, required this.id});

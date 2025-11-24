@@ -9,8 +9,8 @@ import 'package:flutter/services.dart';
 
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/widget/mp4_grid.dart';
-import 'package:mp4_viewer_client/widget/duplicate_page.dart';
+import 'widget/mp4_grid.dart';
+import 'widget/duplicate_page.dart';
 import 'widget/tag_home.dart';
 import 'dir_item.dart';
 import 'global.dart';

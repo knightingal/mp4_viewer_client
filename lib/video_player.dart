@@ -4,22 +4,23 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'package:mp4_viewer_client/console_pad.dart';
-import 'package:mp4_viewer_client/processbar.dart';
+import 'console_pad.dart';
+import 'processbar.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPlayerApp extends StatelessWidget {
   final String videoUrl;
   final String coverUrl;
 
-  const VideoPlayerApp(
-      {super.key, required this.videoUrl, required this.coverUrl});
+  const VideoPlayerApp({
+    super.key,
+    required this.videoUrl,
+    required this.coverUrl,
+  });
 
   @override
-  Widget build(BuildContext context) => VideoPlayerScreen(
-        videoUrl: videoUrl,
-        coverUrl: coverUrl,
-      );
+  Widget build(BuildContext context) =>
+      VideoPlayerScreen(videoUrl: videoUrl, coverUrl: coverUrl);
 }
 
 class PlayerTimer extends StatefulWidget {
@@ -61,8 +62,10 @@ class PlayerTimerState extends State<PlayerTimer>
 
   @override
   Widget build(BuildContext context) {
-    return Text("\n${widget.controller.value.duration}\n${duration.inSeconds}",
-        style: const TextStyle(color: Color(0xFF00FF00)));
+    return Text(
+      "\n${widget.controller.value.duration}\n${duration.inSeconds}",
+      style: const TextStyle(color: Color(0xFF00FF00)),
+    );
   }
 
   @override
@@ -78,8 +81,11 @@ class VideoPlayerScreen extends StatefulWidget {
   final String videoUrl;
   final String coverUrl;
 
-  const VideoPlayerScreen(
-      {super.key, required this.videoUrl, required this.coverUrl});
+  const VideoPlayerScreen({
+    super.key,
+    required this.videoUrl,
+    required this.coverUrl,
+  });
 
   @override
   State<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
@@ -99,9 +105,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     // Create and store the VideoPlayerController. The VideoPlayerController
     // offers several different constructors to play videos from assets, files,
     // or the internet.
-    _controller = VideoPlayerController.networkUrl(
-      Uri.parse(widget.videoUrl),
-    );
+    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
     // Initialize the controller and store the Future for later use.
     _initializeVideoPlayerFuture = _controller.initialize();
@@ -171,44 +175,45 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
               children: [
                 Column(
                   children: [
-                    const Expanded(
-                      child: SizedBox.shrink(),
-                    ),
+                    const Expanded(child: SizedBox.shrink()),
                     Hero(
-                        tag: "video-cover-${widget.coverUrl}",
-                        child: videoWidget),
-                    Expanded(
-                      child: Processer(controller: _controller),
-                    )
+                      tag: "video-cover-${widget.coverUrl}",
+                      child: videoWidget,
+                    ),
+                    Expanded(child: Processer(controller: _controller)),
                   ],
                 ),
                 Focus(
-                    autofocus: true,
-                    onKeyEvent: (node, event) {
-                      if (event is KeyDownEvent) {
-                        switch (event.physicalKey) {
-                          case PhysicalKeyboardKey.keyQ:
-                            Navigator.pop(context);
-                          case PhysicalKeyboardKey.arrowLeft:
-                            videoBack();
-                          case PhysicalKeyboardKey.arrowRight:
-                            videoForward();
-                        }
+                  autofocus: true,
+                  onKeyEvent: (node, event) {
+                    if (event is KeyDownEvent) {
+                      switch (event.physicalKey) {
+                        case PhysicalKeyboardKey.keyQ:
+                          Navigator.pop(context);
+                        case PhysicalKeyboardKey.arrowLeft:
+                          videoBack();
+                        case PhysicalKeyboardKey.arrowRight:
+                          videoForward();
                       }
-                      return KeyEventResult.handled;
-                    },
-                    child: const SizedBox.shrink()),
+                    }
+                    return KeyEventResult.handled;
+                  },
+                  child: const SizedBox.shrink(),
+                ),
 
                 // VideoPlayer(_controller),
-                Text(widget.videoUrl,
-                    style: const TextStyle(color: Color(0xFF00FF00))),
+                Text(
+                  widget.videoUrl,
+                  style: const TextStyle(color: Color(0xFF00FF00)),
+                ),
                 PlayerTimer(controller: _controller),
                 GestureDetector(
                   key: globalKey,
                   onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
                     log("move distance:${d.offsetFromOrigin.dx}");
-                    RenderBox box = globalKey.currentContext!.findRenderObject()
-                        as RenderBox;
+                    RenderBox box =
+                        globalKey.currentContext!.findRenderObject()
+                            as RenderBox;
                     var x = d.offsetFromOrigin.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
@@ -227,18 +232,20 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     _controller.play();
                   },
                   onDoubleTapDown: (e) {
-                    RenderBox box = globalKey.currentContext!.findRenderObject()
-                        as RenderBox;
+                    RenderBox box =
+                        globalKey.currentContext!.findRenderObject()
+                            as RenderBox;
                     var x = e.localPosition.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
-                    var seekToSec =
-                        (_controller.value.duration.inSeconds * per).toInt();
+                    var seekToSec = (_controller.value.duration.inSeconds * per)
+                        .toInt();
                     _controller.seekTo(Duration(seconds: seekToSec));
                   },
                   onTapUp: (e) {
-                    RenderBox box = globalKey.currentContext!.findRenderObject()
-                        as RenderBox;
+                    RenderBox box =
+                        globalKey.currentContext!.findRenderObject()
+                            as RenderBox;
                     var x = e.localPosition.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
@@ -253,10 +260,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     color: Colors.transparent,
                   ),
                 ),
-                ConsolePad(
-                  controller: _controller,
-                  display: displayConsole,
-                ),
+                ConsolePad(controller: _controller, display: displayConsole),
               ],
             );
           } else {
@@ -266,12 +270,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
               children: [
                 Center(
                   child: Hero(
-                      tag: "video-cover-${widget.coverUrl}",
-                      child: Image.network(widget.coverUrl)),
+                    tag: "video-cover-${widget.coverUrl}",
+                    child: Image.network(widget.coverUrl),
+                  ),
                 ),
-                const Center(
-                  child: CircularProgressIndicator(),
-                )
+                const Center(child: CircularProgressIndicator()),
               ],
             );
           }
