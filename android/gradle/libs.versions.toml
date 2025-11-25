@@ -2,6 +2,6 @@
 ktorVersion = "3.2.3"
 
 [libraries]
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorVersion" }
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
+#ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktorVersion" }
+#ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorVersion" }
+#ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktorVersion" }
