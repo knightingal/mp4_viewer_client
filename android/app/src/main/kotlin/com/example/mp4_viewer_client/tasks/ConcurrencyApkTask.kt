@@ -20,16 +20,16 @@ import java.io.IOException
 object ConcurrencyApkTask {
     private const val TAG = "DLImageTask"
 
-    private fun makeClient(listener: AboutActivity.DownloadCounterListener) : HttpClient = HttpClient(OkHttp) {
-        engine {
-            addNetworkInterceptor { chain ->
-                val originalResponse: Response = chain.proceed(chain.request())
-                val body = originalResponse.body
-                val wrappedBody = ResponseBodyListener(body!!, listener)
-                originalResponse.newBuilder().body(wrappedBody).build()
-            }
-        }
-    }
+//    private fun makeClient(listener: AboutActivity.DownloadCounterListener) : HttpClient = HttpClient(OkHttp) {
+//        engine {
+//            addNetworkInterceptor { chain ->
+//                val originalResponse: Response = chain.proceed(chain.request())
+//                val body = originalResponse.body
+//                val wrappedBody = ResponseBodyListener(body!!, listener)
+//                originalResponse.newBuilder().body(wrappedBody).build()
+//            }
+//        }
+//    }
 
     suspend fun downloadToFile(src: String, dest: File, listener: AboutActivity.DownloadCounterListener) {
         return withContext(Dispatchers.IO) {
