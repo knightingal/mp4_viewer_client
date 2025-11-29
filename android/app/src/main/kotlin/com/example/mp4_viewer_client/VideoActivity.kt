@@ -40,6 +40,10 @@ class VideoActivity : AppCompatActivity() {
                 Log.d(VideoActivity::class.java.simpleName, "loading changed:$isLoading")
             }
 
+            override fun onIsPlayingChanged(isPlaying: Boolean) {
+                Log.d(VideoActivity::class.java.simpleName, "playing changed:$isPlaying")
+            }
+
         })
     }
 
