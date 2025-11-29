@@ -6,7 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'console_pad.dart';
 import 'processbar.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 
 class VideoPlayerApp extends StatelessWidget {
   final String videoUrl;
@@ -24,9 +24,12 @@ class VideoPlayerApp extends StatelessWidget {
 }
 
 class PlayerTimer extends StatefulWidget {
-  final VideoPlayerController controller;
+  // final VideoPlayerController controller;
 
-  const PlayerTimer({super.key, required this.controller});
+  const PlayerTimer({
+    super.key,
+    // required this.controller
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -51,7 +54,8 @@ class PlayerTimerState extends State<PlayerTimer>
       // 4. update state
       setState(() {
         // _elapsed = elapsed;
-        duration = widget.controller.value.position;
+        // duration = widget.controller.value.position;
+        duration = const Duration(seconds: 0);
       });
     });
 
@@ -63,7 +67,7 @@ class PlayerTimerState extends State<PlayerTimer>
   @override
   Widget build(BuildContext context) {
     return Text(
-      "\n${widget.controller.value.duration}\n${duration.inSeconds}",
+      "\n${const Duration(seconds: 0)}\n${duration.inSeconds}",
       style: const TextStyle(color: Color(0xFF00FF00)),
     );
   }
@@ -93,7 +97,7 @@ class VideoPlayerScreen extends StatefulWidget {
 
 class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     with SingleTickerProviderStateMixin {
-  late VideoPlayerController _controller;
+  // late VideoPlayerController _controller;
   late Future<void> _initializeVideoPlayerFuture;
 
   Duration duration = const Duration();
@@ -105,18 +109,18 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
     // Create and store the VideoPlayerController. The VideoPlayerController
     // offers several different constructors to play videos from assets, files,
     // or the internet.
-    _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
+    // _controller = VideoPlayerController.networkUrl(Uri.parse(widget.videoUrl));
 
     // Initialize the controller and store the Future for later use.
-    _initializeVideoPlayerFuture = _controller.initialize();
+    // _initializeVideoPlayerFuture = _controller.initialize();
 
     // Use the controller to loop the video.
-    _controller.setLooping(true);
+    // _controller.setLooping(true);
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    // _controller.dispose();
 
     super.dispose();
   }
@@ -128,13 +132,13 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
   int longPressPausePosition = 0;
 
   void videoBack() {
-    var current = _controller.value.position.inSeconds;
-    _controller.seekTo(Duration(seconds: current - 10));
+    // var current = _controller.value.position.inSeconds;
+    // _controller.seekTo(Duration(seconds: current - 10));
   }
 
   void videoForward() {
-    var current = _controller.value.position.inSeconds;
-    _controller.seekTo(Duration(seconds: current + 10));
+    // var current = _controller.value.position.inSeconds;
+    // _controller.seekTo(Duration(seconds: current + 10));
   }
 
   @override
@@ -150,13 +154,15 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
           if (snapshot.connectionState == ConnectionState.done) {
             // If the VideoPlayerController has finished initialization, use
             // the data it provides to limit the aspect ratio of the video.
-            _controller.play();
+            // _controller.play();
 
-            var aspectRatio = _controller.value.aspectRatio;
+            // var aspectRatio = _controller.value.aspectRatio;
+            var aspectRatio = 1;
             var videoHeight = -1.0;
             Widget videoWidget = AspectRatio(
-              aspectRatio: _controller.value.aspectRatio,
-              child: VideoPlayer(_controller),
+              aspectRatio: 1,
+              // aspectRatio: _controller.value.aspectRatio,
+              // child: VideoPlayer(_controller),
             );
             if (width / (height - 4) > aspectRatio) {
               videoHeight = height - 4;
@@ -165,8 +171,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                 width: double.infinity,
                 height: videoHeight,
                 child: AspectRatio(
-                  aspectRatio: _controller.value.aspectRatio,
-                  child: VideoPlayer(_controller),
+                  aspectRatio: 1,
+                  // aspectRatio: _controller.value.aspectRatio,
+                  // child: VideoPlayer(_controller),
                 ),
               );
             }
@@ -180,7 +187,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                       tag: "video-cover-${widget.coverUrl}",
                       child: videoWidget,
                     ),
-                    Expanded(child: Processer(controller: _controller)),
+                    // Expanded(child: Processer(controller: _controller)),
                   ],
                 ),
                 Focus(
@@ -206,7 +213,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   widget.videoUrl,
                   style: const TextStyle(color: Color(0xFF00FF00)),
                 ),
-                PlayerTimer(controller: _controller),
+                // PlayerTimer(controller: _controller),
                 GestureDetector(
                   key: globalKey,
                   onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
@@ -217,19 +224,19 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     var x = d.offsetFromOrigin.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
-                    var seekToSec =
-                        (_controller.value.duration.inSeconds * per +
-                                longPressPausePosition)
-                            .toInt();
-                    _controller.seekTo(Duration(seconds: seekToSec));
+                    // var seekToSec =
+                    //     (_controller.value.duration.inSeconds * per +
+                    //             longPressPausePosition)
+                    //         .toInt();
+                    // _controller.seekTo(Duration(seconds: seekToSec));
                   },
                   onLongPress: () {
-                    _controller.pause();
-                    var current = _controller.value.position.inSeconds;
-                    longPressPausePosition = current;
+                    // _controller.pause();
+                    // var current = _controller.value.position.inSeconds;
+                    // longPressPausePosition = current;
                   },
                   onLongPressUp: () {
-                    _controller.play();
+                    // _controller.play();
                   },
                   onDoubleTapDown: (e) {
                     RenderBox box =
@@ -238,9 +245,9 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     var x = e.localPosition.dx;
                     var xTotal = box.size.width;
                     var per = x / xTotal;
-                    var seekToSec = (_controller.value.duration.inSeconds * per)
-                        .toInt();
-                    _controller.seekTo(Duration(seconds: seekToSec));
+                    // var seekToSec = (_controller.value.duration.inSeconds * per)
+                    //     .toInt();
+                    // _controller.seekTo(Duration(seconds: seekToSec));
                   },
                   onTapUp: (e) {
                     RenderBox box =
@@ -260,7 +267,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     color: Colors.transparent,
                   ),
                 ),
-                ConsolePad(controller: _controller, display: displayConsole),
+                // ConsolePad(controller: _controller, display: displayConsole),
               ],
             );
           } else {

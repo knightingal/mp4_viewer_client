@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart';
 
 class Processer extends StatefulWidget {
-  final VideoPlayerController controller;
+  // final VideoPlayerController controller;
 
-  const Processer({super.key, required this.controller});
+  const Processer({
+    super.key,
+    // required this.controller
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -38,7 +41,7 @@ class ProcesserState extends State<Processer>
       // 4. update state
       setState(() {
         // _elapsed = elapsed;
-        duration = widget.controller.value.position;
+        duration = const Duration(seconds: 0);
       });
     });
 
@@ -54,10 +57,7 @@ class ProcesserState extends State<Processer>
 
     return CustomPaint(
       size: Size(width, height),
-      painter: ProcesserPainter(
-          width: width *
-              (duration.inSeconds /
-                  widget.controller.value.duration.inSeconds)),
+      painter: ProcesserPainter(width: width * (duration.inSeconds / 1)),
     );
   }
 }
