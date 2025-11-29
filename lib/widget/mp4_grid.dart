@@ -315,7 +315,10 @@ class GridState extends State<GridItem> {
         log("mpv exited with code ${result.exitCode}");
       });
     } else {
-      platform.invokeMethod("startVideo");
+      platform.invokeMethod("startVideo", {
+        "videoUrl": widget.generateFileUrlByTitle(),
+        "coverUrl": widget.coverUrl,
+      });
       // Navigator.push(
       //   context,
       //   MaterialPageRoute(

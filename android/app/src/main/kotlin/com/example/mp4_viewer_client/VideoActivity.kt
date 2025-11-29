@@ -14,6 +14,7 @@ class VideoActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_video)
+        val videoUrl = intent.getStringExtra("videoUrl")
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -24,7 +25,7 @@ class VideoActivity : AppCompatActivity() {
         val playerView = findViewById<PlayerView>(R.id.player_view)
         playerView.player = player
 
-        val mediaItem = MediaItem.fromUri("http://192.168.2.12:8082/demo-video/1/demo/demp.mp4")
+        val mediaItem = MediaItem.fromUri(videoUrl!!)
         // Set the media item to be played.
         player.setMediaItem(mediaItem)
         // Prepare the player.

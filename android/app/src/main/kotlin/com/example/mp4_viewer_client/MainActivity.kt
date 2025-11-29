@@ -24,7 +24,9 @@ class MainActivity: FlutterActivity() {
                 startActivity(intent)
             }
             if (call.method == "startVideo") {
+                val videoUrl = call.argument<String>("videoUrl")
                 val intent = Intent(this, VideoActivity::class.java)
+                intent.putExtra("videoUrl", videoUrl)
                 startActivity(intent)
 
             }
