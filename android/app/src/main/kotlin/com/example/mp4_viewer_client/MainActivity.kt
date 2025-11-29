@@ -23,6 +23,11 @@ class MainActivity: FlutterActivity() {
                 val intent = Intent(this, AboutActivity::class.java)
                 startActivity(intent)
             }
+            if (call.method == "startVideo") {
+                val intent = Intent(this, VideoActivity::class.java)
+                startActivity(intent)
+
+            }
         }
     }
 

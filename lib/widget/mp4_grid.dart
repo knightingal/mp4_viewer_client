@@ -273,6 +273,7 @@ class GridItem extends StatefulWidget {
 }
 
 class GridState extends State<GridItem> {
+  static const platform = MethodChannel('flutter/startWeb');
   Future<bool> checkExist() async {
     final response = await http.get(
       Uri.parse(widget.generateVideoExistUrlByTitle()),
@@ -314,15 +315,16 @@ class GridState extends State<GridItem> {
         log("mpv exited with code ${result.exitCode}");
       });
     } else {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => VideoPlayerApp(
-            videoUrl: widget.generateFileUrlByTitle(),
-            coverUrl: widget.coverUrl,
-          ),
-        ),
-      );
+      platform.invokeMethod("startVideo");
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //     builder: (context) => VideoPlayerApp(
+      //       videoUrl: widget.generateFileUrlByTitle(),
+      //       coverUrl: widget.coverUrl,
+      //     ),
+      //   ),
+      // );
     }
   }
 
