@@ -1,11 +1,13 @@
 package com.example.mp4_viewer_client
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.media3.common.MediaItem
+import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
@@ -32,6 +34,13 @@ class VideoActivity : AppCompatActivity() {
         player.prepare()
         // Start the playback.
         player.play()
+
+        player.addListener(object : Player.Listener {
+            override fun onIsLoadingChanged(isLoading: Boolean) {
+                Log.d(VideoActivity::class.java.simpleName, "loading changed:$isLoading")
+            }
+
+        })
     }
 
     override fun onResume() {
