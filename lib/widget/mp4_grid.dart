@@ -415,6 +415,17 @@ class GridTitleBar extends StatelessWidget {
     }
   }
 
+  void deleteVideo() async {
+    final response = await http.delete(
+      Uri.parse("${apiHost()}/video/$videoId"),
+    );
+    if (response.statusCode == 200) {
+      refreshCallback();
+    } else {
+      log("failed to delete video, ${response.statusCode}", error: response);
+    }
+  }
+
   void nav2TagHome(BuildContext context, int videoId) {
     Navigator.push(
       context,
@@ -466,38 +477,50 @@ class GridTitleBar extends StatelessWidget {
                         ),
                       );
                     }
+                  case GridItemMenuItem.delete:
+                    deleteVideo();
                   default:
                   // do nothing
                 }
               },
-              itemBuilder: (BuildContext context) =>
-                  <PopupMenuEntry<GridItemMenuItem>>[
+              itemBuilder: (BuildContext context) {
+                var items = <PopupMenuEntry<GridItemMenuItem>>[
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.good,
+                    child: Text('Good'),
+                  ),
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.normal,
+                    child: Text('Normal'),
+                  ),
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.bad,
+                    child: Text('Bad'),
+                  ),
+                  const PopupMenuDivider(),
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.tag,
+                    child: Text("Tag"),
+                  ),
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.detail,
+                    child: Text("Meta Detail"),
+                  ),
+                  const PopupMenuItem<GridItemMenuItem>(
+                    value: GridItemMenuItem.duplicate,
+                    child: Text("Duplicate"),
+                  ),
+                ];
+                if (rate != null && rate == 3) {
+                  items.add(
                     const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.good,
-                      child: Text('Good'),
+                      value: GridItemMenuItem.delete,
+                      child: Text('Delete'),
                     ),
-                    const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.normal,
-                      child: Text('Normal'),
-                    ),
-                    const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.bad,
-                      child: Text('Bad'),
-                    ),
-                    const PopupMenuDivider(),
-                    const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.tag,
-                      child: Text("Tag"),
-                    ),
-                    const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.detail,
-                      child: Text("Meta Detail"),
-                    ),
-                    const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.duplicate,
-                      child: Text("Duplicate"),
-                    ),
-                  ],
+                  );
+                }
+                return items;
+              },
             ),
           ),
         ],
@@ -510,16 +533,27 @@ enum Rate {
   none,
   good,
   normal,
-  bad;
+  bad,
+  deleted;
 
   Color toColor(Color defaultColor) {
     return switch (this) {
       bad => Colors.red[900] as Color,
       normal => Colors.blue[900] as Color,
       good => Colors.green[900] as Color,
+      deleted => Colors.grey[900] as Color,
       _ => defaultColor,
     };
   }
 }
 
-enum GridItemMenuItem { none, good, normal, bad, tag, detail, duplicate }
+enum GridItemMenuItem {
+  none,
+  good,
+  normal,
+  bad,
+  tag,
+  detail,
+  duplicate,
+  delete,
+}
