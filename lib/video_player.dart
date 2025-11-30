@@ -4,8 +4,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
-import 'console_pad.dart';
-import 'processbar.dart';
+// import 'console_pad.dart';
+// import 'processbar.dart';
 // import 'package:video_player/video_player.dart';
 
 class VideoPlayerApp extends StatelessWidget {
@@ -218,12 +218,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                   key: globalKey,
                   onLongPressMoveUpdate: (LongPressMoveUpdateDetails d) {
                     log("move distance:${d.offsetFromOrigin.dx}");
-                    RenderBox box =
-                        globalKey.currentContext!.findRenderObject()
-                            as RenderBox;
-                    var x = d.offsetFromOrigin.dx;
-                    var xTotal = box.size.width;
-                    var per = x / xTotal;
+                    // RenderBox box =
+                    //     globalKey.currentContext!.findRenderObject()
+                    //         as RenderBox;
+                    // var x = d.offsetFromOrigin.dx;
+                    // var xTotal = box.size.width;
+                    // var per = x / xTotal;
                     // var seekToSec =
                     //     (_controller.value.duration.inSeconds * per +
                     //             longPressPausePosition)
@@ -239,12 +239,12 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen>
                     // _controller.play();
                   },
                   onDoubleTapDown: (e) {
-                    RenderBox box =
-                        globalKey.currentContext!.findRenderObject()
-                            as RenderBox;
-                    var x = e.localPosition.dx;
-                    var xTotal = box.size.width;
-                    var per = x / xTotal;
+                    // RenderBox box =
+                    //     globalKey.currentContext!.findRenderObject()
+                    //         as RenderBox;
+                    // var x = e.localPosition.dx;
+                    // var xTotal = box.size.width;
+                    // var per = x / xTotal;
                     // var seekToSec = (_controller.value.duration.inSeconds * per)
                     //     .toInt();
                     // _controller.seekTo(Duration(seconds: seekToSec));

@@ -43,6 +43,6 @@ void main() {
   test("testgenerateRandomBytes", () {
     var bytes = generateRandomBytes(16);
     expect(bytes.length, 16);
-    print(bytesToHex(bytes));
+    bytesToHex(bytes);
   });
 }
