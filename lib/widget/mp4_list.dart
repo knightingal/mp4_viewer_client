@@ -55,16 +55,32 @@ class Mp4ListPageState extends State<Mp4ListPage> {
   // String generateFileUrlByTitle(String title) =>
   //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
 
+  void _startPlayer(String title) {
+    if (Platform.isLinux) {
+      // execute on linux desktop
+      // open mpv player
+      Process.run("mpv", [generateFileUrlByTitle(title)]).then((result) {
+        log("mpv exited with code ${result.exitCode}");
+      });
+    } else {
+      platform.invokeMethod("startVideo", {
+        "videoUrl": generateFileUrlByTitle(title),
+        "coverUrl": "",
+      });
+    }
+  }
+
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => VideoPlayerApp(
-                  videoUrl: generateFileUrlByTitle(title),
-                  coverUrl: "",
-                )),
-      );
+      _startPlayer(title);
+      // Navigator.push(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (context) => VideoPlayerApp(
+      //             videoUrl: generateFileUrlByTitle(title),
+      //             coverUrl: "",
+      //           )),
+      // );
     } else if (title.endsWith(".png") ||
         title.endsWith(".jpg") ||
         title.endsWith(".PNG") ||
