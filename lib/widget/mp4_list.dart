@@ -10,7 +10,6 @@ import '../dir_item.dart';
 import '../global.dart';
 import '../image_viewer.dart';
 import '../main.dart';
-import '../video_player.dart';
 
 class Mp4ListPage extends StatefulWidget {
   const Mp4ListPage({super.key, required this.title});
