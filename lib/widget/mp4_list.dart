@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -22,12 +23,16 @@ class Mp4ListPage extends StatefulWidget {
 
 class Mp4ListPageState extends State<Mp4ListPage> {
   Future<List<String>> fetchSubDirs(String subDir) async {
-    final response = await http.get(Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
+    final response = await http.get(
+      Uri.parse(
+        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir",
+      ),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<String> dataList =
-          jsonArray.map((dynamic e) => e as String).toList();
+      List<String> dataList = jsonArray
+          .map((dynamic e) => e as String)
+          .toList();
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -86,19 +91,19 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         title.endsWith(".PNG") ||
         title.endsWith(".JPG")) {
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                ImageViewer(imageUrl: generateFileUrlByTitle(title)),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              ImageViewer(imageUrl: generateFileUrlByTitle(title)),
+        ),
+      );
     } else {
       parent.add(title);
       Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => Mp4ListPage(
-                  title: widget.title,
-                )),
+          builder: (context) => Mp4ListPage(title: widget.title),
+        ),
       );
     }
   }
@@ -117,27 +122,29 @@ class Mp4ListPageState extends State<Mp4ListPage> {
   Widget build(BuildContext context) {
     Widget body;
     body = FutureBuilder<List<String>>(
-        future: futureDataList,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-                itemCount: snapshot.data!.length,
-                prototypeItem: DirItem(
-                  index: 0,
-                  title: snapshot.data!.first,
-                  tapCallback: itemTapCallback,
-                ),
-                itemBuilder: (context, index) {
-                  return DirItem(
-                    index: index,
-                    title: snapshot.data![index],
-                    tapCallback: itemTapCallback,
-                  );
-                });
-          } else {
-            return const Text("");
-          }
-        });
+      future: futureDataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            prototypeItem: DirItem(
+              index: 0,
+              title: snapshot.data!.first,
+              tapCallback: itemTapCallback,
+            ),
+            itemBuilder: (context, index) {
+              return DirItem(
+                index: index,
+                title: snapshot.data![index],
+                tapCallback: itemTapCallback,
+              );
+            },
+          );
+        } else {
+          return const Text("");
+        }
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
