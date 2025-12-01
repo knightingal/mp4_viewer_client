@@ -12,6 +12,8 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 
 class VideoActivity : AppCompatActivity() {
+    lateinit var player: ExoPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -23,7 +25,7 @@ class VideoActivity : AppCompatActivity() {
             insets
         }
 
-        val player = ExoPlayer.Builder(this).build()
+        player = ExoPlayer.Builder(this).build()
         val playerView = findViewById<PlayerView>(R.id.player_view)
         playerView.player = player
 
@@ -49,5 +51,10 @@ class VideoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        player.release()
     }
 }
