@@ -19,12 +19,29 @@
         android:id="@+id/image_view_logo"
         android:layout_marginTop="72dp" />
 
+    <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/download_progress"
+            android:layout_below="@+id/image_view_logo"
+            android:layout_marginTop="16dp"
+            style="@style/Widget.Material3Expressive.LinearProgressIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:progress="45"
+            android:visibility="gone"
+            tools:visibility="visible"
+            tools:max="100"
+            app:trackStopIndicatorSize="8dp"
+            app:trackCornerRadius="4dp"
+            app:trackThickness="8dp"
+            android:layout_centerHorizontal="true"
+            android:indeterminate="false" />
+
     <TextView
         android:id="@+id/version_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="20230101"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         android:layout_below="@+id/image_view_logo"
         android:layout_centerHorizontal="true"
         />
