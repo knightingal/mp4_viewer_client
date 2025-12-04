@@ -31,6 +31,17 @@ class Mp4GridPage extends StatefulWidget {
   State<Mp4GridPage> createState() => Mp4GridPageState();
 }
 
+int rateEnumToGridOrder(Rate? rate) {
+  return switch (rate) {
+    Rate.good => 0,
+    Rate.normal => 1,
+    Rate.none => 2,
+    null => 2,
+    Rate.bad => 3,
+    Rate.deleted => 4,
+  };
+}
+
 int rateToGridOrder(int? rate) {
   return switch (rate) {
     1 => 0,
