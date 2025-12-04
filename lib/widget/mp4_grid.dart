@@ -107,7 +107,10 @@ class Mp4GridPageState extends State<Mp4GridPage> {
           }).toList()..sort((info1, info2) {
             int rate1 = rateToGridOrder(info1.rate);
             int rate2 = rateToGridOrder(info2.rate);
-            return rate1.compareTo(rate2);
+            if (rate2 != rate1) {
+              return rate1.compareTo(rate2);
+            }
+            return info1.id.compareTo(info2.id);
           });
 
       return dataList;
