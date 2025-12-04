@@ -91,12 +91,13 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
-          jsonArray.map((e) => VideoInfo.fromJson(e)).toList()
-            ..sort((info1, info2) {
-              int rate1 = rateToGridOrder(info1.rate);
-              int rate2 = rateToGridOrder(info2.rate);
-              return rate1.compareTo(rate2);
-            });
+          jsonArray.map((e) => VideoInfo.fromJson(e)).where((info) {
+            return info.rate != 4;
+          }).toList()..sort((info1, info2) {
+            int rate1 = rateToGridOrder(info1.rate);
+            int rate2 = rateToGridOrder(info2.rate);
+            return rate1.compareTo(rate2);
+          });
 
       return dataList;
     } else {
