@@ -25,7 +25,7 @@ class VideoInfo {
   final int id;
   final String coverFileName;
   final String videoFileName;
-  final int? rate;
+  final Rate? rate;
   final int baseIndex;
   final String dirPath;
 
@@ -63,7 +63,7 @@ class VideoInfo {
       id: json["id"],
       coverFileName: json["coverFileName"],
       videoFileName: json["videoFileName"],
-      rate: json["rate"],
+      rate: Rate.values[json["rate"] ?? 0],
       baseIndex: json["baseIndex"],
       dirPath: json["dirPath"],
 
@@ -130,3 +130,5 @@ class DuplicateVideo {
     );
   }
 }
+
+enum Rate { none, good, normal, bad, deleted }

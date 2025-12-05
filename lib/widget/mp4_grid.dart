@@ -62,8 +62,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       List<VideoInfo> dataList =
           jsonArray.map((e) => VideoInfo.fromJson(e)).toList()
             ..sort((info1, info2) {
-              int rate1 = rateToGridOrder(info1.rate);
-              int rate2 = rateToGridOrder(info2.rate);
+              int rate1 = rateEnumToGridOrder(info1.rate);
+              int rate2 = rateEnumToGridOrder(info2.rate);
               return rate1.compareTo(rate2);
             });
 
@@ -103,10 +103,10 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
           jsonArray.map((e) => VideoInfo.fromJson(e)).where((info) {
-            return info.rate != 4;
+            return info.rate != Rate.deleted;
           }).toList()..sort((info1, info2) {
-            int rate1 = rateToGridOrder(info1.rate);
-            int rate2 = rateToGridOrder(info2.rate);
+            int rate1 = rateEnumToGridOrder(info1.rate);
+            int rate2 = rateEnumToGridOrder(info2.rate);
             if (rate2 != rate1) {
               return rate1.compareTo(rate2);
             }
@@ -245,7 +245,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 class GridItem extends StatefulWidget {
   final String title;
   final String coverUrl;
-  final int? rate;
+  final Rate? rate;
 
   final int index;
   final int videoId;
@@ -350,12 +350,13 @@ class GridState extends State<GridItem> {
   Widget build(BuildContext context) {
     late Rate selectedItem;
     if (widget.rate != null) {
-      selectedItem = Rate.values[widget.rate as int];
+      selectedItem = widget.rate!;
     } else {
       selectedItem = Rate.none;
     }
 
-    Color color = selectedItem.toColor(
+    Color color = rateToColor(
+      selectedItem,
       Theme.of(context).colorScheme.inversePrimary,
     );
     if (!exist) {
@@ -404,7 +405,7 @@ class GridState extends State<GridItem> {
 class GridTitleBar extends StatelessWidget {
   final String title;
   final int videoId;
-  final int? rate;
+  final Rate? rate;
   final void Function() refreshCallback;
   final String? designationChar;
   final String? designationNum;
@@ -544,22 +545,14 @@ class GridTitleBar extends StatelessWidget {
   }
 }
 
-enum Rate {
-  none,
-  good,
-  normal,
-  bad,
-  deleted;
-
-  Color toColor(Color defaultColor) {
-    return switch (this) {
-      bad => Colors.red[900] as Color,
-      normal => Colors.blue[900] as Color,
-      good => Colors.green[900] as Color,
-      deleted => Colors.grey[900] as Color,
-      _ => defaultColor,
-    };
-  }
+Color rateToColor(Rate rate, Color defaultColor) {
+  return switch (rate) {
+    Rate.bad => Colors.red[900] as Color,
+    Rate.normal => Colors.blue[900] as Color,
+    Rate.good => Colors.green[900] as Color,
+    Rate.deleted => Colors.grey[900] as Color,
+    _ => defaultColor,
+  };
 }
 
 enum GridItemMenuItem {
