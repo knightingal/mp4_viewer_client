@@ -527,7 +527,7 @@ class GridTitleBar extends StatelessWidget {
                     child: Text("Duplicate"),
                   ),
                 ];
-                if (rate != null && rate == 3) {
+                if (rate == Rate.bad) {
                   items.add(
                     const PopupMenuItem<GridItemMenuItem>(
                       value: GridItemMenuItem.delete,
