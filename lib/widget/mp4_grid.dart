@@ -456,6 +456,82 @@ class GridTitleBar extends StatelessWidget {
     );
   }
 
+  PopupMenuButton<GridItemMenuItem> generatePopupMenuItems(
+    BuildContext context,
+  ) {
+    void onMenuItemSelected(GridItemMenuItem item) {
+      // Handle menu item selection
+      switch (item) {
+        case GridItemMenuItem.bad ||
+            GridItemMenuItem.good ||
+            GridItemMenuItem.normal:
+          postRate(item);
+        case GridItemMenuItem.tag:
+          nav2TagHome(context, videoId);
+        case GridItemMenuItem.detail:
+          nav2DetailPage(context, videoId);
+        case GridItemMenuItem.duplicate:
+          if (designationChar != null && designationNum != null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => Mp4GridPage(
+                  title: "Duplicate of ${designationChar!}-${designationNum!}",
+                  searchWord: "${designationChar!}-${designationNum!}",
+                ),
+              ),
+            );
+          }
+        case GridItemMenuItem.delete:
+          deleteVideo();
+        default:
+        // do nothing
+      }
+    }
+
+    return PopupMenuButton<GridItemMenuItem>(
+      onSelected: onMenuItemSelected,
+      itemBuilder: (BuildContext context) {
+        var items = <PopupMenuEntry<GridItemMenuItem>>[
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.good,
+            child: Text('Good'),
+          ),
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.normal,
+            child: Text('Normal'),
+          ),
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.bad,
+            child: Text('Bad'),
+          ),
+          const PopupMenuDivider(),
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.tag,
+            child: Text("Tag"),
+          ),
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.detail,
+            child: Text("Meta Detail"),
+          ),
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.duplicate,
+            child: Text("Duplicate"),
+          ),
+        ];
+        if (rate == Rate.bad) {
+          items.add(
+            const PopupMenuItem<GridItemMenuItem>(
+              value: GridItemMenuItem.delete,
+              child: Text('Delete'),
+            ),
+          );
+        }
+        return items;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -466,79 +542,7 @@ class GridTitleBar extends StatelessWidget {
       child: Row(
         children: [
           Expanded(flex: 1, child: Text(title)),
-          Expanded(
-            flex: 0,
-            child: PopupMenuButton<GridItemMenuItem>(
-              onSelected: (GridItemMenuItem item) {
-                switch (item) {
-                  case GridItemMenuItem.bad ||
-                      GridItemMenuItem.good ||
-                      GridItemMenuItem.normal:
-                    postRate(item);
-                  case GridItemMenuItem.tag:
-                    nav2TagHome(context, videoId);
-                  case GridItemMenuItem.detail:
-                    nav2DetailPage(context, videoId);
-                  case GridItemMenuItem.duplicate:
-                    if (designationChar != null && designationNum != null) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Mp4GridPage(
-                            title:
-                                "Duplicate of ${designationChar!}-${designationNum!}",
-                            searchWord:
-                                "${designationChar!}-${designationNum!}",
-                          ),
-                        ),
-                      );
-                    }
-                  case GridItemMenuItem.delete:
-                    deleteVideo();
-                  default:
-                  // do nothing
-                }
-              },
-              itemBuilder: (BuildContext context) {
-                var items = <PopupMenuEntry<GridItemMenuItem>>[
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.good,
-                    child: Text('Good'),
-                  ),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.normal,
-                    child: Text('Normal'),
-                  ),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.bad,
-                    child: Text('Bad'),
-                  ),
-                  const PopupMenuDivider(),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.tag,
-                    child: Text("Tag"),
-                  ),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.detail,
-                    child: Text("Meta Detail"),
-                  ),
-                  const PopupMenuItem<GridItemMenuItem>(
-                    value: GridItemMenuItem.duplicate,
-                    child: Text("Duplicate"),
-                  ),
-                ];
-                if (rate == Rate.bad) {
-                  items.add(
-                    const PopupMenuItem<GridItemMenuItem>(
-                      value: GridItemMenuItem.delete,
-                      child: Text('Delete'),
-                    ),
-                  );
-                }
-                return items;
-              },
-            ),
-          ),
+          Expanded(flex: 0, child: generatePopupMenuItems(context)),
         ],
       ),
     );
