@@ -31,10 +31,11 @@ class VideoActivity : AppCompatActivity() {
         player = ExoPlayer.Builder(this).build()
         val playerView = findViewById<PlayerView>(R.id.player_view)
         playerView.player = player
+        playerView.useController = false
 
-        playerView.controllerShowTimeoutMs = 0
-        playerView.controllerHideOnTouch = true
-        playerView.controllerAutoShow = false
+//        playerView.controllerShowTimeoutMs = 0
+//        playerView.controllerHideOnTouch = true
+//        playerView.controllerAutoShow = false
 
         val mediaItem = MediaItem.fromUri(videoUrl!!)
         // Set the media item to be played.
