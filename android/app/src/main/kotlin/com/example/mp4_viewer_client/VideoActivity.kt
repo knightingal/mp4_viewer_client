@@ -31,7 +31,7 @@ class VideoActivity : AppCompatActivity() {
         player = ExoPlayer.Builder(this).build()
         val playerView = findViewById<PlayerView>(R.id.player_view)
         playerView.player = player
-        playerView.useController = false
+        playerView.useController = true
 
 //        playerView.controllerShowTimeoutMs = 0
 //        playerView.controllerHideOnTouch = true
