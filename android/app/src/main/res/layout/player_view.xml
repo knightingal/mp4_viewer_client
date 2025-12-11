@@ -13,7 +13,9 @@
      See the License for the specific language governing permissions and
      limitations under the License.
 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       xmlns:app="http://schemas.android.com/apk/res-auto"
+>
 
     <androidx.media3.ui.AspectRatioFrameLayout android:id="@id/exo_content_frame"
                                                android:layout_width="match_parent"
@@ -83,6 +85,12 @@
     <View android:id="@id/exo_controller_placeholder"
           android:layout_width="match_parent"
           android:layout_height="match_parent"/>
+
+    <androidx.media3.ui.PlayerControlView
+        android:id="@+id/exo_controller"
+        app:controller_layout_id="@layout/cust_player_control_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </merge>
 
