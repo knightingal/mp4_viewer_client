@@ -86,7 +86,7 @@
           android:layout_width="match_parent"
           android:layout_height="match_parent"/>
 
-    <androidx.media3.ui.PlayerControlView
+    <com.example.mp4_viewer_client.CustPlayerControlView
         android:id="@+id/exo_controller"
         app:controller_layout_id="@layout/cust_player_control_view"
         android:layout_width="match_parent"
