@@ -33,9 +33,9 @@ class VideoActivity : AppCompatActivity() {
         playerView.player = player
         playerView.useController = true
 
-//        playerView.controllerShowTimeoutMs = 0
-//        playerView.controllerHideOnTouch = true
-//        playerView.controllerAutoShow = false
+        playerView.controllerShowTimeoutMs = 0
+        playerView.controllerHideOnTouch = false
+        playerView.controllerAutoShow = true
 
         val mediaItem = MediaItem.fromUri(videoUrl!!)
         // Set the media item to be played.
