@@ -2,13 +2,12 @@ package com.example.mp4_viewer_client
 
 import android.content.Context
 import android.util.AttributeSet
-import android.view.DragEvent
+import android.view.MotionEvent
 import android.view.View
 import androidx.annotation.OptIn
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerControlView
-import org.xml.sax.Attributes
 
 @OptIn(UnstableApi::class)
 class CustPlayerControlView (context: Context, attrs: AttributeSet?, defStyleAttr: Int, playbackAttrs: AttributeSet?)
@@ -29,24 +28,27 @@ class CustPlayerControlView (context: Context, attrs: AttributeSet?, defStyleAtt
     override fun setPlayer(player: Player?) {
         super.setPlayer(player)
 
-        setOnDragListener(object : OnDragListener {
-            override fun onDrag(v: View?, event: DragEvent?): Boolean {
-                if (event!!.action == DragEvent.ACTION_DRAG_STARTED) {
+        findViewById<View>(R.id.cust_move_background).setOnTouchListener { v, event ->
+            v.performClick()
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
                     getPlayer()!!.pause()
                     dragStartPos = event.x
                     lastPosition = getPlayer()!!.currentPosition
-                } else if (event.action == DragEvent.ACTION_DROP) {
+                }
+                MotionEvent.ACTION_UP -> {
                     val xOffset = event.x - dragStartPos
                     val positionOffset = (getPlayer()!!.duration.toFloat() * xOffset / width.toFloat()).toLong()
                     getPlayer()!!.seekTo(lastPosition + positionOffset)
                     getPlayer()!!.play()
-                } else {
+                }
+                MotionEvent.ACTION_MOVE -> {
                     val xOffset = event.x - dragStartPos
                     val positionOffset = (getPlayer()!!.duration.toFloat() * xOffset / width.toFloat()).toLong()
                     getPlayer()!!.seekTo(lastPosition + positionOffset)
                 }
-                return true;
             }
-        })
+            true
+        }
     }
 }
