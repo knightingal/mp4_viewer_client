@@ -230,13 +230,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          platform.invokeMethod("aboutPage");
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.arrow_back_sharp),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
       body: Center(child: body),
     );
   }
