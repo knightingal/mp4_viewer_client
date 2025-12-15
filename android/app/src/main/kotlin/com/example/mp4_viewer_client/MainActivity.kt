@@ -6,6 +6,7 @@ import android.util.Log
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
+import androidx.core.net.toUri
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "flutter/startWeb"
@@ -17,7 +18,7 @@ class MainActivity: FlutterActivity() {
 
             if (call.method == "startWeb") {
                 val url: String? = call.arguments()
-                startWeb( url)
+                startWeb(url)
             }
             if (call.method == "aboutPage") {
                 val intent = Intent(this, AboutActivity::class.java)
@@ -28,7 +29,6 @@ class MainActivity: FlutterActivity() {
                 val intent = Intent(this, VideoActivity::class.java)
                 intent.putExtra("videoUrl", videoUrl)
                 startActivity(intent)
-
             }
         }
     }
@@ -37,10 +37,8 @@ class MainActivity: FlutterActivity() {
         Log.d("CHANNEL", "" + url)
         val intent = Intent()
         intent.action = "android.intent.action.VIEW"
-        val uri = Uri.parse(url)
+        val uri = url!!.toUri()
         intent.data = uri
         startActivity(intent)
-
-
     }
 }
