@@ -70,12 +70,12 @@ class VideoTagState extends State<VideoTagPage> {
 
   Color colorByTagName(String name) {
     var colorSelect =
-        Theme.of(context).brightness == Brightness.dark ? 900 : 100;
+        Theme.of(context).brightness == Brightness.dark ? 100 : 900;
     List<Color> colorPool = [
       Colors.green[colorSelect] as Color,
       Colors.blue[colorSelect] as Color,
       Colors.red[colorSelect] as Color,
-      Colors.yellow[colorSelect] as Color,
+      // Colors.yellow[colorSelect] as Color,
       Colors.orange[colorSelect] as Color,
       Colors.pink[colorSelect] as Color,
       Colors.purple[colorSelect] as Color
@@ -93,9 +93,10 @@ class VideoTagState extends State<VideoTagPage> {
           if (snapshot.hasData && snapshot.data!.isNotEmpty) {
             List<Widget> children = snapshot.data!.map((e) {
               return FilterChip(
-                  backgroundColor: colorByTagName(e.tag),
-                  selectedColor: colorByTagName(e.tag),
-                  side: const BorderSide(color: Colors.transparent),
+                  backgroundColor: Colors.transparent,
+                  selectedColor: Colors.transparent,
+                  labelStyle: TextStyle(color: colorByTagName(e.tag)),
+                  side: BorderSide(color: colorByTagName(e.tag)),
                   onSelected: (value) {
                     if (widget.videoId != null) {
                       if (!e.checked) {

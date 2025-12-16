@@ -100,7 +100,6 @@ class TagMainState extends State<TagMainPage> {
                                 }
                             });
                       } else {
-                        // TODO: nav to video grid to display all video in this tag
                         Navigator.push(
                           context,
                           MaterialPageRoute(
