@@ -60,13 +60,15 @@ class Mp4ListPageState extends State<Mp4ListPage> {
   //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
 
   void _startPlayer(String title) {
-    if (Platform.isLinux) {
+    // I only support linux, windows, macOS desktop and android now
+    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
       // execute on linux desktop
       // open mpv player
       Process.run("mpv", [generateFileUrlByTitle(title)]).then((result) {
         log("mpv exited with code ${result.exitCode}");
       });
-    } else {
+    } else if (Platform.isAndroid) {
+      // start Android video player activity
       platform.invokeMethod("startVideo", {
         "videoUrl": generateFileUrlByTitle(title),
         "coverUrl": "",
