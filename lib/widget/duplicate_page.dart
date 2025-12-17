@@ -20,8 +20,6 @@ class DuplicatePage extends StatefulWidget {
 }
 
 class DuplicatePageState extends State<DuplicatePage> {
-  late Future<Uint8List> decriptedContentFuture;
-
   late Future<List<DuplicateVideo>> futureDataList;
 
   @override
