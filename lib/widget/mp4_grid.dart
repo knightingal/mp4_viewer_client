@@ -142,6 +142,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       } else if (widget.searchWord != null) {
         futureDataList = fetchSearchWord(widget.searchWord!);
       } else {
+        // TODO: need to figure out why some times getSubDir() returns empty
         futureDataList = fetchSubDirs(getSubDir());
       }
     });
