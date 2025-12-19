@@ -26,12 +26,16 @@ class MountHomeState extends State<MountHome> {
   late Future<List<String>> futureDataList;
 
   Future<List<String>> fetchDirs() async {
-    final response = await http.get(Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/"));
+    final response = await http.get(
+      Uri.parse(
+        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/",
+      ),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
-      List<String> dataList =
-          jsonArray.map((dynamic e) => e as String).toList();
+      List<String> dataList = jsonArray
+          .map((dynamic e) => e as String)
+          .toList();
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -56,18 +60,17 @@ class MountHomeState extends State<MountHome> {
     );
   }
 
-  void gotoGridPage(String title) {
+  void gotoGridPage(String title, String dirPath) {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => Mp4GridPage(
-                title: title,
-              )),
+        builder: (context) => Mp4GridPage(title: title, dirPath: dirPath),
+      ),
     );
   }
 
   void itemTapCallback(int index, String title) {
-    parent.add(title);
+    // parent.add(title);
     if (widget.apiVersion == 1) {
       Navigator.push(
         context,
@@ -77,19 +80,14 @@ class MountHomeState extends State<MountHome> {
                 )),
       );
     } else {
-      final subDir = getSubDir();
-      final response = http.get(Uri.parse(
-          "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
-      response.then((response) {
-        List<dynamic> jsonArray = jsonDecode(response.body);
-        List<VideoInfo> dataList =
-            jsonArray.map((e) => VideoInfo.fromJson(e)).toList();
-        if (dataList.isEmpty) {
-          gotoListPage(title);
-        } else {
-          gotoGridPage(title);
-        }
-      });
+      // final subDir = getSubDir();
+
+      // final response = http.get(Uri.parse(
+      //       "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
+      gotoGridPage(
+        title,
+        "${gMountConfigList[selectedMountConfig!].id}/$title",
+      );
     }
   }
 

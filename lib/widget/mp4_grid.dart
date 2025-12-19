@@ -19,11 +19,14 @@ class Mp4GridPage extends StatefulWidget {
     required this.title,
     this.tagId,
     this.searchWord,
+    this.dirPath,
   });
 
   final String title;
 
   final int? tagId;
+
+  final String? dirPath;
 
   final String? searchWord;
 
@@ -93,12 +96,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     }
   }
 
-  Future<List<VideoInfo>> fetchSubDirs(String subDir) async {
-    final response = await http.get(
-      Uri.parse(
-        "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir",
-      ),
-    );
+  Future<List<VideoInfo>> fetchSubDirs(String path) async {
+    final response = await http.get(Uri.parse("${apiHost()}/video-info/$path"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
@@ -130,8 +129,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       futureDataList = fetchVideoByTagId(widget.tagId!);
     } else if (widget.searchWord != null) {
       futureDataList = fetchSearchWord(widget.searchWord!);
-    } else {
-      futureDataList = fetchSubDirs(getSubDir());
+    } else if (widget.dirPath != null) {
+      futureDataList = fetchSubDirs(widget.dirPath!);
     }
   }
 
@@ -141,9 +140,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
         futureDataList = fetchVideoByTagId(widget.tagId!);
       } else if (widget.searchWord != null) {
         futureDataList = fetchSearchWord(widget.searchWord!);
-      } else {
         // TODO: need to figure out why some times getSubDir() returns empty
-        futureDataList = fetchSubDirs(getSubDir());
+      } else if (widget.dirPath != null) {
+        futureDataList = fetchSubDirs(widget.dirPath!);
       }
     });
   }
@@ -159,9 +158,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
 
-    if (parent.isNotEmpty) {
-      parent.removeLast();
-    }
+    // if (parent.isNotEmpty) {
+    //   parent.removeLast();
+    // }
     super.dispose();
   }
 
