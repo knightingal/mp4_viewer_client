@@ -67,8 +67,8 @@ class MountHomeState extends State<MountHome> {
   }
 
   void itemTapCallback(int index, String title) {
-    // parent.add(title);
     if (widget.apiVersion == 1) {
+      parent.add(title);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => Mp4ListPage(title: title)),
