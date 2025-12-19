@@ -53,10 +53,7 @@ class MountHomeState extends State<MountHome> {
   void gotoListPage(String title) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-          builder: (context) => Mp4ListPage(
-                title: title,
-              )),
+      MaterialPageRoute(builder: (context) => Mp4ListPage(title: title)),
     );
   }
 
@@ -74,10 +71,7 @@ class MountHomeState extends State<MountHome> {
     if (widget.apiVersion == 1) {
       Navigator.push(
         context,
-        MaterialPageRoute(
-            builder: (context) => Mp4ListPage(
-                  title: title,
-                )),
+        MaterialPageRoute(builder: (context) => Mp4ListPage(title: title)),
       );
     } else {
       // final subDir = getSubDir();
@@ -96,27 +90,29 @@ class MountHomeState extends State<MountHome> {
   @override
   Widget build(BuildContext context) {
     Widget body = FutureBuilder<List<String>>(
-        future: futureDataList,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-                itemCount: snapshot.data!.length,
-                prototypeItem: DirItem(
-                  index: 0,
-                  title: snapshot.data!.first,
-                  tapCallback: itemTapCallback,
-                ),
-                itemBuilder: (context, index) {
-                  return DirItem(
-                    index: index,
-                    title: snapshot.data![index],
-                    tapCallback: itemTapCallback,
-                  );
-                });
-          } else {
-            return const Text("");
-          }
-        });
+      future: futureDataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            prototypeItem: DirItem(
+              index: 0,
+              title: snapshot.data!.first,
+              tapCallback: itemTapCallback,
+            ),
+            itemBuilder: (context, index) {
+              return DirItem(
+                index: index,
+                title: snapshot.data![index],
+                tapCallback: itemTapCallback,
+              );
+            },
+          );
+        } else {
+          return const Text("");
+        }
+      },
+    );
 
     return Scaffold(
       appBar: AppBar(
