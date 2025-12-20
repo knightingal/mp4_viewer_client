@@ -140,7 +140,6 @@ class Mp4GridPageState extends State<Mp4GridPage> {
         futureDataList = fetchVideoByTagId(widget.tagId!);
       } else if (widget.searchWord != null) {
         futureDataList = fetchSearchWord(widget.searchWord!);
-        // TODO: need to figure out why some times getSubDir() returns empty
       } else if (widget.dirPath != null) {
         futureDataList = fetchSubDirs(widget.dirPath!);
       }
