@@ -95,16 +95,6 @@ late List<MountConfig> gMountConfigList;
 
 int? selectedMountConfig;
 
-List<String> parent = [];
-
-String getSubDir() {
-  String dir = "";
-  for (var value in parent) {
-    dir += "$value/";
-  }
-  return dir;
-}
-
 class DuplicateVideo {
   final int count;
   final String designationChar;

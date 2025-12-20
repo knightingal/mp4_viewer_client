@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 
 import '../dir_item.dart';
-import '../global.dart';
 import '../image_viewer.dart';
 import '../main.dart';
 
@@ -105,9 +104,6 @@ class Mp4ListPageState extends State<Mp4ListPage> {
   void dispose() {
     // Ensure disposing of the VideoPlayerController to free up resources.
 
-    if (parent.isNotEmpty) {
-      parent.removeLast();
-    }
     super.dispose();
   }
 
