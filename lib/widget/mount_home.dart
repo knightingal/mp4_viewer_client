@@ -50,13 +50,6 @@ class MountHomeState extends State<MountHome> {
     futureDataList = fetchDirs();
   }
 
-  void gotoListPage(String title) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => Mp4ListPage(title: title)),
-    );
-  }
-
   void gotoGridPage(String title, String dirPath) {
     Navigator.push(
       context,
@@ -71,7 +64,12 @@ class MountHomeState extends State<MountHome> {
       parent.add(title);
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Mp4ListPage(title: title)),
+        MaterialPageRoute(
+          builder: (context) => Mp4ListPage(
+            title: title,
+            dirPath: "${gMountConfigList[selectedMountConfig!].id}/$title",
+          ),
+        ),
       );
     } else {
       // final subDir = getSubDir();

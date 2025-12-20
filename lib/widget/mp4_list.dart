@@ -12,20 +12,20 @@ import '../image_viewer.dart';
 import '../main.dart';
 
 class Mp4ListPage extends StatefulWidget {
-  const Mp4ListPage({super.key, required this.title});
+  const Mp4ListPage({super.key, required this.title, required this.dirPath});
 
   final String title;
+
+  final String dirPath;
 
   @override
   State<Mp4ListPage> createState() => Mp4ListPageState();
 }
 
 class Mp4ListPageState extends State<Mp4ListPage> {
-  Future<List<String>> fetchSubDirs(String subDir) async {
+  Future<List<String>> fetchSubDirs() async {
     final response = await http.get(
-      Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/$subDir",
-      ),
+      Uri.parse("${apiHost()}/mp4-dir/${widget.dirPath}"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -45,19 +45,16 @@ class Mp4ListPageState extends State<Mp4ListPage> {
   @override
   void initState() {
     super.initState();
-    futureDataList = fetchSubDirs(getSubDir());
+    futureDataList = fetchSubDirs();
   }
 
   static const platform = MethodChannel('flutter/startWeb');
 
   String generateFileUrlByTitle(String title) {
-    var videoUrl =
-        "${apiHost()}/video-stream/${selectedMountConfig! + 1}/${getSubDir()}$title";
+    var videoUrl = "${apiHost()}/video-stream/${widget.dirPath}/$title";
     log(videoUrl);
     return videoUrl;
   }
-  // String generateFileUrlByTitle(String title) =>
-  //     "${gatewayHost()}/${gMountConfigList[selectedMountConfig!].urlPrefix}/${getSubDir()}$title";
 
   void _startPlayer(String title) {
     // I only support linux, windows, macOS desktop and android now
@@ -79,14 +76,6 @@ class Mp4ListPageState extends State<Mp4ListPage> {
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       _startPlayer(title);
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //       builder: (context) => VideoPlayerApp(
-      //             videoUrl: generateFileUrlByTitle(title),
-      //             coverUrl: "",
-      //           )),
-      // );
     } else if (title.endsWith(".png") ||
         title.endsWith(".jpg") ||
         title.endsWith(".PNG") ||
@@ -99,11 +88,14 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         ),
       );
     } else {
-      parent.add(title);
+      // parent.add(title);
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => Mp4ListPage(title: widget.title),
+          builder: (context) => Mp4ListPage(
+            title: widget.title,
+            dirPath: "${widget.dirPath}/$title",
+          ),
         ),
       );
     }
