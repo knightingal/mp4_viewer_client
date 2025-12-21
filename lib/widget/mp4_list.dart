@@ -140,13 +140,6 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          platform.invokeMethod("aboutPage");
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.arrow_back_sharp),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
       body: Center(child: body),
     );
   }
