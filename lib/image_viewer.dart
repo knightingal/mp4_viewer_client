@@ -14,22 +14,22 @@ class ImageViewer extends StatelessWidget {
       title = 'Web Images';
     }
 
-    return MaterialApp(
-      title: title,
-      home: Scaffold(
-        appBar: AppBar(title: Text(title)),
-        body: Center(
-          child: Hero(
-            tag: "video-cover-$imageUrl",
-            child: Image.network(imageUrl),
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(title),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Center(
+        child: Hero(
+          tag: "video-cover-$imageUrl",
+          child: Image.network(imageUrl),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Icon(Icons.arrow_back_sharp),
-        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Icon(Icons.arrow_back_sharp),
       ),
     );
   }

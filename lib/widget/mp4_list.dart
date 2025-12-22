@@ -141,6 +141,12 @@ class Mp4ListPageState extends State<Mp4ListPage> {
         title: Text(widget.title),
       ),
       body: Center(child: body),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Icon(Icons.arrow_back_sharp),
+      ),
     );
   }
 }
