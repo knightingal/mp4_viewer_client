@@ -1,5 +1,6 @@
 package com.example.mp4_viewer_client
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -43,6 +44,7 @@ class AboutActivity : AppCompatActivity() {
         val versionNameText = findViewById<TextView>(R.id.version_name)
         val imageView = findViewById<ImageView>(R.id.image_view_logo)
         val packageManager = packageManager
+        val downloadProcess = findViewById<TextView>(R.id.download_progress)
 
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
@@ -78,7 +80,11 @@ class AboutActivity : AppCompatActivity() {
                     apkFile = File(directory, apkConfig.apkName)
                     directory.mkdirs()
                     ConcurrencyApkTask.downloadToFile(apkConfig.downloadUrl, apkFile, object : DownloadCounterListener {
+                        @SuppressLint("SetTextI18n")
                         override fun update(current: Long, max: Long) {
+                            runOnUiThread {
+                                downloadProcess.text = "$current/$max"
+                            }
                         }
                     })
 
