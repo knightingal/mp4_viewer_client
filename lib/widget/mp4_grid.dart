@@ -326,15 +326,6 @@ class GridState extends State<GridItem> {
         "videoUrl": widget.generateFileUrlByTitle(),
         "coverUrl": widget.coverUrl,
       });
-      // Navigator.push(
-      //   context,
-      //   MaterialPageRoute(
-      //     builder: (context) => VideoPlayerApp(
-      //       videoUrl: widget.generateFileUrlByTitle(),
-      //       coverUrl: widget.coverUrl,
-      //     ),
-      //   ),
-      // );
     }
   }
 
