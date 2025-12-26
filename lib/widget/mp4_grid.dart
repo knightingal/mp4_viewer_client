@@ -263,7 +263,7 @@ class GridItem extends StatefulWidget {
   });
 
   String generateFileUrlByTitle() {
-    var videoUrl = "${apiHost()}/video-stream/$baseIndex$dirPath/$title";
+    var videoUrl = "${apiHost()}/video-stream-by-id/$videoId";
     log(videoUrl);
     return videoUrl;
   }
