@@ -342,9 +342,7 @@ class GridState extends State<GridItem> {
       selectedItem,
       Theme.of(context).colorScheme.inversePrimary,
     );
-    if (!exist) {
-      color = Colors.grey;
-    }
+
     return Container(
       padding: const EdgeInsets.all(0),
       child: Card(
@@ -376,6 +374,7 @@ class GridState extends State<GridItem> {
                 refreshCallback: widget.refreshCallback,
                 designationChar: widget.designationChar,
                 designationNum: widget.designationNum,
+                exist: exist,
               ),
             ),
           ],
@@ -392,6 +391,7 @@ class GridTitleBar extends StatelessWidget {
   final void Function() refreshCallback;
   final String? designationChar;
   final String? designationNum;
+  final bool exist;
 
   const GridTitleBar({
     super.key,
@@ -401,6 +401,7 @@ class GridTitleBar extends StatelessWidget {
     required this.refreshCallback,
     this.designationChar,
     this.designationNum,
+    this.exist = true,
   });
 
   void postRate(GridItemMenuItem item) async {
@@ -524,7 +525,18 @@ class GridTitleBar extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          Expanded(flex: 1, child: Text(title)),
+          Expanded(
+            flex: 1,
+            child: Text(
+              title,
+              style: TextStyle(
+                decoration: TextDecoration.lineThrough,
+                decorationColor: Colors.black,
+                decorationStyle: TextDecorationStyle.solid,
+                decorationThickness: exist ? 0 : 2,
+              ),
+            ),
+          ),
           Expanded(flex: 0, child: generatePopupMenuItems(context)),
         ],
       ),
