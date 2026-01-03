@@ -201,7 +201,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
             },
           );
         } else {
-          return const Text("");
+          return const SizedBox.shrink();
         }
       },
     );

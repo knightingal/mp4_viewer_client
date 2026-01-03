@@ -59,6 +59,18 @@ class MountHomeState extends State<MountHome> {
     );
   }
 
+  void gotoListPage(String title) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => Mp4ListPage(
+          title: title,
+          dirPath: "${gMountConfigList[selectedMountConfig!].id}/$title",
+        ),
+      ),
+    );
+  }
+
   void itemTapCallback(int index, String title) {
     if (widget.apiVersion == 1) {
       Navigator.push(
@@ -71,14 +83,26 @@ class MountHomeState extends State<MountHome> {
         ),
       );
     } else {
-      // final subDir = getSubDir();
-
-      // final response = http.get(Uri.parse(
-      //       "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$subDir"));
-      gotoGridPage(
-        title,
-        "${gMountConfigList[selectedMountConfig!].id}/$title",
+      final response = http.get(
+        Uri.parse(
+          "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$title",
+        ),
       );
+
+      response.then((resp) {
+        List<dynamic> jsonArray = jsonDecode(resp.body);
+        List<VideoInfo> dataList = jsonArray
+            .map((e) => VideoInfo.fromJson(e))
+            .toList();
+        if (dataList.isEmpty) {
+          gotoListPage(title);
+        } else {
+          gotoGridPage(
+            title,
+            "${gMountConfigList[selectedMountConfig!].id}/$title",
+          );
+        }
+      });
     }
   }
 
