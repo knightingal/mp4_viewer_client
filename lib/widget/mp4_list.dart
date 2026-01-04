@@ -31,6 +31,7 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       List<String> dataList = jsonArray
           .map((dynamic e) => e as String)
           .toList();
+      dataList.sort((str1, str2) => str1.compareTo(str2));
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
