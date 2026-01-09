@@ -26,27 +26,13 @@ class MetaPage extends StatelessWidget {
   }
 }
 
-class VideoMetaInfo extends StatefulWidget {
+class VideoMetaInfo extends StatelessWidget {
   const VideoMetaInfo({super.key, required this.id});
 
   final int id;
 
-  @override
-  State<StatefulWidget> createState() {
-    return VideoMetaInfoState();
-  }
-}
-
-class VideoMetaInfoState extends State<VideoMetaInfo> {
-  @override
-  void initState() {
-    super.initState();
-  }
-
   Future<VideoInfo> fetchMeta() async {
-    final response = await http.get(
-      Uri.parse("${apiHost()}/video-detail/${widget.id}"),
-    );
+    final response = await http.get(Uri.parse("${apiHost()}/video-detail/$id"));
     if (response.statusCode == 200) {
       log("meta: ${response.body}");
       return VideoInfo.fromJson(jsonDecode(response.body));
