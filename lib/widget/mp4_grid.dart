@@ -365,7 +365,7 @@ class GridState extends State<GridItem> {
     return Container(
       padding: const EdgeInsets.all(0),
       child: Card(
-        color: color,
+        color: Colors.white,
         child: Column(
           children: [
             Expanded(
@@ -549,6 +549,10 @@ class GridTitleBar extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
+                color: rateToColor(
+                  rate!,
+                  Theme.of(context).colorScheme.inversePrimary,
+                ),
                 decoration: TextDecoration.lineThrough,
                 decorationColor: Colors.black,
                 decorationStyle: TextDecorationStyle.solid,
@@ -565,10 +569,10 @@ class GridTitleBar extends StatelessWidget {
 
 Color rateToColor(Rate rate, Color defaultColor) {
   return switch (rate) {
-    Rate.bad => Colors.red[900] as Color,
-    Rate.normal => Colors.blue[900] as Color,
-    Rate.good => Colors.green[900] as Color,
-    Rate.deleted => Colors.grey[900] as Color,
+    Rate.bad => Colors.red as Color,
+    Rate.normal => Colors.blue as Color,
+    Rate.good => Colors.green as Color,
+    Rate.deleted => Colors.grey as Color,
     _ => defaultColor,
   };
 }
