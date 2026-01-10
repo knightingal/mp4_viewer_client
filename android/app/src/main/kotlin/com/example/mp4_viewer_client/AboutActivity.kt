@@ -1,6 +1,7 @@
 package com.example.mp4_viewer_client
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
@@ -12,6 +13,8 @@ import android.util.Log
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.annotation.RequiresApi
 import androidx.core.content.FileProvider
 import com.example.mp4_viewer_client.tasks.ConcurrencyApkTask
@@ -24,16 +27,21 @@ import kotlinx.coroutines.launch
 import java.io.File
 import androidx.core.net.toUri
 
-const val SERVER_IP = "192.168.2.12"
-
-const val SERVER_PORT = "3002"
 class AboutActivity : AppCompatActivity() {
+
+    companion object {
+        const val SERVER_IP = "192.168.2.12"
+        const val SERVER_PORT = "3002"
+        const val PROTOCOL_PREFIX = "http:"
+    }
 
     interface DownloadCounterListener {
         fun update(current: Long, max: Long)
     }
 
     private var versionCode: Long = 0
+
+    private lateinit var launcher: ActivityResultLauncher<Intent>
 
     private lateinit var apkFile: File
     @RequiresApi(Build.VERSION_CODES.P)
@@ -46,6 +54,21 @@ class AboutActivity : AppCompatActivity() {
         val packageManager = packageManager
         val downloadProcess = findViewById<TextView>(R.id.download_progress)
 
+        launcher = registerForActivityResult(
+            object: ActivityResultContract<Intent, Boolean>() {
+                override fun createIntent(context: Context, input: Intent) = input
+                override fun parseResult(resultCode: Int, intent: Intent?) = resultCode == RESULT_OK
+            }
+        ) {
+            when (it) {
+                true -> openAPKFile()
+                else -> Toast.makeText(this@AboutActivity,
+                    "you did not grant the permission",
+                    Toast.LENGTH_LONG)
+                    .show()
+            }
+        }
+
         try {
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             val versionName = packageInfo.versionName
@@ -57,7 +80,7 @@ class AboutActivity : AppCompatActivity() {
         }
 
         imageView.setOnClickListener {
-            val pendingUrl = "http://${SERVER_IP}:${SERVER_PORT}/apkConfig/newest/package/${packageName}"
+            val pendingUrl = "${PROTOCOL_PREFIX}//${SERVER_IP}:${SERVER_PORT}/apkConfig/newest/package/${packageName}"
             MainScope().launch {
                 val respBody = ConcurrencyJsonApiTask.makeRequest(pendingUrl)
 
@@ -95,25 +118,12 @@ class AboutActivity : AppCompatActivity() {
                             Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, "package:$packageName".toUri()
                         )
                         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                        startActivityForResult(intent, 101)
-//                        launcher.launch(intent)
+                        launcher.launch(intent)
                     }
                 } else {
                     Toast.makeText(this@AboutActivity, "you are in newest apk", Toast.LENGTH_LONG).show()
                 }
             }
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 101 && resultCode == RESULT_OK) {
-            openAPKFile()
-        } else {
-            Toast.makeText(this@AboutActivity,
-                "you did not grant the permission",
-                Toast.LENGTH_LONG)
-                .show()
         }
     }
 
