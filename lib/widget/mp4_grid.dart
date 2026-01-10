@@ -155,12 +155,31 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-
-    // if (parent.isNotEmpty) {
-    //   parent.removeLast();
-    // }
     super.dispose();
+  }
+
+  List<Widget> buildActionMenus(bool displayMultiMeta) {
+    List<Widget> menus = [
+      MenuItemButton(
+        child: const Text('Refresh'),
+        onPressed: () {
+          _refresh();
+        },
+      ),
+    ];
+
+    if (widget.searchWord != null && displayMultiMeta) {
+      menus.add(
+        MenuItemButton(
+          child: const Text('Multi Meta Info'),
+          onPressed: () {
+            // TODD: implement multi meta info page
+          },
+        ),
+      );
+    }
+
+    return menus;
   }
 
   @override
@@ -206,28 +225,28 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       },
     );
 
+    Widget actionMenus = FutureBuilder<List<VideoInfo>>(
+      future: futureDataList,
+      builder: (context, snapshot) {
+        return MenuAnchor(
+          builder: (context, controller, child) => IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              controller.open();
+            },
+          ),
+          menuChildren: buildActionMenus(
+            snapshot.hasData && snapshot.data!.length > 1,
+          ),
+        );
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
-        actions: [
-          MenuAnchor(
-            builder: (context, controller, child) => IconButton(
-              icon: const Icon(Icons.more_vert),
-              onPressed: () {
-                controller.open();
-              },
-            ),
-            menuChildren: [
-              MenuItemButton(
-                child: const Text('Refresh'),
-                onPressed: () {
-                  _refresh();
-                },
-              ),
-            ],
-          ),
-        ],
+        actions: [actionMenus],
       ),
       body: Center(child: body),
     );
