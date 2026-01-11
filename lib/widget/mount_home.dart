@@ -25,6 +25,8 @@ class MountHome extends StatefulWidget {
 class MountHomeState extends State<MountHome> {
   late Future<List<String>> futureDataList;
 
+  bool sortByName = false;
+
   Future<List<String>> fetchDirs() async {
     final response = await http.get(
       Uri.parse(
@@ -36,7 +38,9 @@ class MountHomeState extends State<MountHome> {
       List<String> dataList = jsonArray
           .map((dynamic e) => e as String)
           .toList();
-      dataList.sort((str1, str2) => str1.compareTo(str2));
+      if (sortByName) {
+        dataList.sort((str1, str2) => str1.compareTo(str2));
+      }
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -140,6 +144,39 @@ class MountHomeState extends State<MountHome> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+
+        actions: [
+          MenuAnchor(
+            builder: (context, controller, child) => IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                controller.open();
+              },
+            ),
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () {
+                  //
+                  sortByName = false;
+                  setState(() {
+                    futureDataList = fetchDirs();
+                  });
+                },
+                child: const Text('Default Order'),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  //
+                  sortByName = true;
+                  setState(() {
+                    futureDataList = fetchDirs();
+                  });
+                },
+                child: const Text('Name Order'),
+              ),
+            ],
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {

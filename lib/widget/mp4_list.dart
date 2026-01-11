@@ -22,6 +22,8 @@ class Mp4ListPage extends StatefulWidget {
 }
 
 class Mp4ListPageState extends State<Mp4ListPage> {
+  bool sortByName = false;
+
   Future<List<String>> fetchSubDirs() async {
     final response = await http.get(
       Uri.parse("${apiHost()}/mp4-dir/${widget.dirPath}"),
@@ -31,7 +33,9 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       List<String> dataList = jsonArray
           .map((dynamic e) => e as String)
           .toList();
-      dataList.sort((str1, str2) => str1.compareTo(str2));
+      if (sortByName) {
+        dataList.sort((str1, str2) => str1.compareTo(str2));
+      }
       return dataList;
     } else {
       // If the server did not return a 200 OK response,
@@ -140,6 +144,38 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        actions: [
+          MenuAnchor(
+            builder: (context, controller, child) => IconButton(
+              icon: const Icon(Icons.menu),
+              onPressed: () {
+                controller.open();
+              },
+            ),
+            menuChildren: [
+              MenuItemButton(
+                onPressed: () {
+                  //
+                  sortByName = false;
+                  setState(() {
+                    futureDataList = fetchSubDirs();
+                  });
+                },
+                child: const Text('Default Order'),
+              ),
+              MenuItemButton(
+                onPressed: () {
+                  //
+                  sortByName = true;
+                  setState(() {
+                    futureDataList = fetchSubDirs();
+                  });
+                },
+                child: const Text('Name Order'),
+              ),
+            ],
+          ),
+        ],
       ),
       body: Center(child: body),
       floatingActionButton: FloatingActionButton(
