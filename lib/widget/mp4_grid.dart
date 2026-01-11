@@ -365,7 +365,11 @@ class GridState extends State<GridItem> {
     return Container(
       padding: const EdgeInsets.all(0),
       child: Card(
-        color: Colors.white,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
         child: Column(
           children: [
             Expanded(
