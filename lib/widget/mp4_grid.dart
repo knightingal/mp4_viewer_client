@@ -350,18 +350,6 @@ class GridState extends State<GridItem> {
 
   @override
   Widget build(BuildContext context) {
-    late Rate selectedItem;
-    if (widget.rate != null) {
-      selectedItem = widget.rate!;
-    } else {
-      selectedItem = Rate.none;
-    }
-
-    Color color = rateToColor(
-      selectedItem,
-      Theme.of(context).colorScheme.inversePrimary,
-    );
-
     return Container(
       padding: const EdgeInsets.all(0),
       child: Card(
@@ -541,6 +529,8 @@ class GridTitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Rate selectedItem = rate ?? Rate.none;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
@@ -554,7 +544,7 @@ class GridTitleBar extends StatelessWidget {
               title,
               style: TextStyle(
                 color: rateToColor(
-                  rate!,
+                  selectedItem,
                   Theme.of(context).colorScheme.inversePrimary,
                 ),
                 decoration: TextDecoration.lineThrough,
