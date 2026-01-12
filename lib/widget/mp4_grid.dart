@@ -350,12 +350,24 @@ class GridState extends State<GridItem> {
 
   @override
   Widget build(BuildContext context) {
+    late Rate selectedItem;
+    if (widget.rate != null) {
+      selectedItem = widget.rate!;
+    } else {
+      selectedItem = Rate.none;
+    }
+
+    Color color = rateToColor(
+      selectedItem,
+      Theme.of(context).colorScheme.inversePrimary,
+    );
     return Container(
       padding: const EdgeInsets.all(0),
       child: Card(
-        color: Theme.of(context).colorScheme.surfaceContainerHighest,
-        elevation: 4,
+        color: Theme.of(context).colorScheme.surface,
+        elevation: 2,
         shape: RoundedRectangleBorder(
+          side: BorderSide(color: color, width: 1),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
