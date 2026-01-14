@@ -367,7 +367,7 @@ class GridState extends State<GridItem> {
         color: Theme.of(context).colorScheme.surface,
         elevation: 2,
         shape: RoundedRectangleBorder(
-          side: BorderSide(color: color, width: 1),
+          side: BorderSide(color: color, width: 2),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
