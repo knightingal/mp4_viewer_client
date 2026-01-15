@@ -17,17 +17,6 @@ import java.io.FileOutputStream
 object ConcurrencyApkTask {
     private const val TAG = "DLImageTask"
 
-//    private fun makeClient(listener: AboutActivity.DownloadCounterListener) : HttpClient = HttpClient(OkHttp) {
-//        engine {
-//            addNetworkInterceptor { chain ->
-//                val originalResponse: Response = chain.proceed(chain.request())
-//                val body = originalResponse.body
-//                val wrappedBody = ResponseBodyListener(body!!, listener)
-//                originalResponse.newBuilder().body(wrappedBody).build()
-//            }
-//        }
-//    }
-
     private fun makeClient(listener: AboutActivity.DownloadCounterListener): OkHttpClient {
         return OkHttpClient.Builder().addNetworkInterceptor { chain ->
             val originalResponse: Response = chain.proceed(chain.request())
@@ -46,21 +35,6 @@ object ConcurrencyApkTask {
             val fileOutputStream = FileOutputStream(dest, false)
             fileOutputStream.write(bytes)
             fileOutputStream.close()
-
-//            val client = makeClient(listener)
-//            while (true) {
-//                try {
-//                    val bytes: ByteArray = client.get(src).body()
-//                    val fileOutputStream = FileOutputStream(dest, false)
-//                    fileOutputStream.write(bytes)
-//                    fileOutputStream.close()
-//                    break
-//                } catch (e: IOException) {
-//                    e.printStackTrace()
-//                    Log.e(TAG, "download $src error")
-//                }
-//            }
-
         }
 
     }
@@ -108,5 +82,4 @@ class ResponseBodyListener(val origin: okhttp3.ResponseBody, listener: AboutActi
             }
         }
     }
-
 }
