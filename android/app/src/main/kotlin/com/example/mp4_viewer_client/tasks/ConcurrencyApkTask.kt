@@ -32,9 +32,7 @@ object ConcurrencyApkTask {
             val client = makeClient(listener)
             val request = Request.Builder().url(src).build()
             val bytes: ByteArray = client.newCall(request).execute().body.bytes()
-            val fileOutputStream = FileOutputStream(dest, false)
-            fileOutputStream.write(bytes)
-            fileOutputStream.close()
+            FileOutputStream(dest).use { it.write(bytes) }
         }
 
     }
