@@ -26,7 +26,7 @@ class VideoActivity : AppCompatActivity() {
     fun initializePlayer(videoUrl: String): Boolean {
         if (player == null) {
             mediaItem = MediaItem.fromUri(videoUrl)
-            val builder = ExoPlayer.Builder(this)
+            val builder = ExoPlayer.Builder(this).setSeekForwardIncrementMs(10 * 1000)
             player = builder.build()
             playerView.player = player
         }
@@ -53,7 +53,9 @@ class VideoActivity : AppCompatActivity() {
             insets
         }
 
-        player = ExoPlayer.Builder(this).build()
+        player = ExoPlayer.Builder(this)
+            .setSeekForwardIncrementMs(10 * 1000)
+            .build()
         playerView = findViewById(R.id.player_view)
         playerView.player = player
         playerView.useController = true
