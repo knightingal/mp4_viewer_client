@@ -158,7 +158,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     super.dispose();
   }
 
-  List<Widget> buildActionMenus(bool displayMultiMeta) {
+  List<Widget> buildActionMenus(List<int> ids) {
     List<Widget> menus = [
       MenuItemButton(
         child: const Text('Refresh'),
@@ -168,12 +168,15 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       ),
     ];
 
-    if (widget.searchWord != null && displayMultiMeta) {
+    if (widget.searchWord != null && ids.length > 1) {
       menus.add(
         MenuItemButton(
           child: const Text('Multi Meta Info'),
           onPressed: () {
-            // TODD: implement multi meta info page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MetaListPage(ids: ids)),
+            );
           },
         ),
       );
@@ -228,6 +231,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     Widget actionMenus = FutureBuilder<List<VideoInfo>>(
       future: futureDataList,
       builder: (context, snapshot) {
+        List<int> ids = snapshot.hasData
+            ? snapshot.data!.map((e) => e.id).toList()
+            : [];
         return MenuAnchor(
           builder: (context, controller, child) => IconButton(
             icon: const Icon(Icons.more_vert),
@@ -235,9 +241,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
               controller.open();
             },
           ),
-          menuChildren: buildActionMenus(
-            snapshot.hasData && snapshot.data!.length > 1,
-          ),
+          menuChildren: buildActionMenus(ids),
         );
       },
     );
