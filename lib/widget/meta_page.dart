@@ -26,6 +26,35 @@ class MetaPage extends StatelessWidget {
   }
 }
 
+class MetaListPage extends StatelessWidget {
+  const MetaListPage({super.key, required this.ids});
+
+  final List<int> ids;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text("Meta List Info")),
+      body: ListView.builder(
+        itemCount: ids.length,
+        itemBuilder: (context, index) {
+          return Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Text("Video ID: ${ids[index]}"),
+                  VideoMetaInfo(id: ids[index]),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class VideoMetaInfo extends StatelessWidget {
   const VideoMetaInfo({super.key, required this.id});
 
