@@ -217,6 +217,8 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                     dirPath: snapshot.data![index].dirPath,
                     designationChar: snapshot.data![index].designationChar,
                     designationNum: snapshot.data![index].designationNum,
+                    showDuplicateDelMenu:
+                        widget.searchWord != null && snapshot.data!.length > 1,
                   );
                 },
               );
@@ -268,6 +270,8 @@ class GridItem extends StatefulWidget {
   final String dirPath;
   final void Function() refreshCallback;
 
+  final bool showDuplicateDelMenu;
+
   final String? designationChar;
   final String? designationNum;
 
@@ -283,6 +287,7 @@ class GridItem extends StatefulWidget {
     required this.dirPath,
     this.designationChar,
     this.designationNum,
+    this.showDuplicateDelMenu = false,
   });
 
   String generateFileUrlByTitle() {
@@ -402,6 +407,7 @@ class GridState extends State<GridItem> {
                 designationChar: widget.designationChar,
                 designationNum: widget.designationNum,
                 exist: exist,
+                showDuplicateDelMenu: widget.showDuplicateDelMenu,
               ),
             ),
           ],
@@ -419,6 +425,7 @@ class GridTitleBar extends StatelessWidget {
   final String? designationChar;
   final String? designationNum;
   final bool exist;
+  final bool showDuplicateDelMenu;
 
   const GridTitleBar({
     super.key,
@@ -426,6 +433,7 @@ class GridTitleBar extends StatelessWidget {
     required this.videoId,
     required this.rate,
     required this.refreshCallback,
+    required this.showDuplicateDelMenu,
     this.designationChar,
     this.designationNum,
     this.exist = true,
@@ -527,7 +535,7 @@ class GridTitleBar extends StatelessWidget {
           ),
           const PopupMenuItem<GridItemMenuItem>(
             value: GridItemMenuItem.duplicate,
-            child: Text("Duplicate"),
+            child: Text("Find Duplicate"),
           ),
         ];
         if (rate == Rate.bad) {
@@ -535,6 +543,14 @@ class GridTitleBar extends StatelessWidget {
             const PopupMenuItem<GridItemMenuItem>(
               value: GridItemMenuItem.delete,
               child: Text('Delete'),
+            ),
+          );
+        }
+        if (showDuplicateDelMenu) {
+          items.add(
+            const PopupMenuItem<GridItemMenuItem>(
+              value: GridItemMenuItem.duplicateDel,
+              child: Text('Hide from Duplicate Search'),
             ),
           );
         }
@@ -596,4 +612,5 @@ enum GridItemMenuItem {
   detail,
   duplicate,
   delete,
+  duplicateDel,
 }
