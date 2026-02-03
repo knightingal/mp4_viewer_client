@@ -452,7 +452,18 @@ class GridTitleBar extends StatelessWidget {
 
   void deleteVideo() async {
     final response = await http.delete(
-      Uri.parse("${apiHost()}/video/$videoId"),
+      Uri.parse("${apiHost()}/video/$videoId?duplicate_del=false"),
+    );
+    if (response.statusCode == 200) {
+      refreshCallback();
+    } else {
+      log("failed to delete video, ${response.statusCode}", error: response);
+    }
+  }
+
+  void deleteDuplicateVideo() async {
+    final response = await http.delete(
+      Uri.parse("${apiHost()}/video/$videoId?duplicate_del=true"),
     );
     if (response.statusCode == 200) {
       refreshCallback();
@@ -502,6 +513,8 @@ class GridTitleBar extends StatelessWidget {
             );
           }
         case GridItemMenuItem.delete:
+          deleteVideo();
+        case GridItemMenuItem.duplicateDel:
           deleteVideo();
         default:
         // do nothing
