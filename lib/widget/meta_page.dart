@@ -11,6 +11,19 @@ class MetaPage extends StatelessWidget {
 
   final int id;
 
+  Future<void> refreshMeta() async {
+    final response = await http.get(
+      Uri.parse("${apiHost()}/parse-meta-info-by-id/$id"),
+    );
+    if (response.statusCode == 200) {
+      log("refresh meta: ${response.body}");
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to refresh meta');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +32,7 @@ class MetaPage extends StatelessWidget {
         actions: [
           IconButton(
             onPressed: () {
-              // TODO: call meta refresh api
+              refreshMeta();
             },
             icon: const Icon(Icons.refresh),
           ),
