@@ -14,7 +14,17 @@ class MetaPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Meta Info")),
+      appBar: AppBar(
+        title: const Text("Meta Info"),
+        actions: [
+          IconButton(
+            onPressed: () {
+              // TODO: call meta refresh api
+            },
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Expanded(flex: 1, child: Container()),
