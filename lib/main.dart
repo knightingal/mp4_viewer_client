@@ -37,6 +37,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       themeMode: ThemeMode.system,
+      debugShowCheckedModeBanner: false,
       title: 'Flow1000 Player',
       darkTheme: ThemeData(
         pageTransitionsTheme: PageTransitionsTheme(
