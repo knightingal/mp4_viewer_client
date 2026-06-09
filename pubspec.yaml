@@ -38,6 +38,7 @@ dependencies:
   blur: ^4.0.2
   http: ^1.6.0
   js: ^0.7.2
+  flutter_staggered_grid_view: ^0.7.0
 
 dev_dependencies:
   flutter_test:
