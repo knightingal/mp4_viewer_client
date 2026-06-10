@@ -185,13 +185,31 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
 
   @override
   Widget build(BuildContext context) {
-    return MasonryGridView.count(
-      crossAxisCount: 4,
-      mainAxisSpacing: 4,
-      crossAxisSpacing: 4,
-      itemBuilder: (context, index) {
-        return Tile(index: index, extent: (index % 5 + 1) * 100);
+    Widget body;
+    body = FutureBuilder<List<VideoInfo>>(
+      future: futureDataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          List<VideoInfo> dataList = snapshot.data!;
+          return MasonryGridView.count(
+            crossAxisCount: 4,
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 4,
+            itemCount: dataList.length,
+            itemBuilder: (context, index) {
+              return Text(dataList[index].videoFileName);
+            },
+          );
+        } else if (snapshot.hasError) {
+          return Text('${snapshot.error}');
+        }
+        // By default, show a loading spinner.
+        return const CircularProgressIndicator();
       },
+    );
+    return Scaffold(
+      appBar: AppBar(title: Text(widget.title)),
+      body: Center(child: body),
     );
   }
 }
