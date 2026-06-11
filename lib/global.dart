@@ -38,6 +38,8 @@ class VideoInfo {
   final int? videoFrameCount;
   final String? designationChar;
   final String? designationNum;
+  final int? coverWidth;
+  final int? coverHeight;
 
   const VideoInfo({
     required this.id,
@@ -56,6 +58,8 @@ class VideoInfo {
     required this.videoFrameCount,
     required this.designationChar,
     required this.designationNum,
+    required this.coverWidth,
+    required this.coverHeight,
   });
 
   factory VideoInfo.fromJson(Map<String, dynamic> json) {
@@ -76,6 +80,8 @@ class VideoInfo {
       videoFrameCount: json["videoFrameCount"],
       designationChar: json["designationChar"],
       designationNum: json["designationNum"],
+      coverWidth: json["coverWidth"],
+      coverHeight: json["coverHeight"],
     );
   }
 }
