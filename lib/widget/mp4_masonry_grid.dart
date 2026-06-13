@@ -115,6 +115,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
           jsonArray.map((e) => VideoInfo.fromJson(e)).where((info) {
+            calFrameSizeForVideo(info);
             return info.rate != Rate.deleted;
           }).toList()..sort((info1, info2) {
             int rate1 = rateEnumToGridOrder(info1.rate);
