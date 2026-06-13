@@ -38,8 +38,8 @@ class VideoInfo {
   final int? videoFrameCount;
   final String? designationChar;
   final String? designationNum;
-  final int? coverWidth;
-  final int? coverHeight;
+  final int coverWidth;
+  final int coverHeight;
 
   double frameWidth = 0;
 

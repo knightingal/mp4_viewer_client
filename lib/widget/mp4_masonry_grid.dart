@@ -99,6 +99,16 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
     }
   }
 
+  void calFrameSizeForVideo(VideoInfo videoInfo) {
+    var length = 2;
+    int originImgWidth = videoInfo.coverWidth;
+    int originImgHeight = videoInfo.coverHeight;
+    double frameWidth = width / length;
+    double frameHeight = originImgHeight / originImgWidth * frameWidth;
+    videoInfo.frameWidth = frameWidth;
+    videoInfo.frameHeight = frameHeight;
+  }
+
   Future<List<VideoInfo>> fetchSubDirs(String path) async {
     final response = await http.get(Uri.parse("${apiHost()}/video-info/$path"));
     if (response.statusCode == 200) {
@@ -188,8 +198,11 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
     return menus;
   }
 
+  late double width;
+
   @override
   Widget build(BuildContext context) {
+    width = MediaQuery.of(context).size.width;
     Widget body;
     body = FutureBuilder<List<VideoInfo>>(
       future: futureDataList,
@@ -202,7 +215,20 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
             crossAxisSpacing: 4,
             itemCount: dataList.length,
             itemBuilder: (context, index) {
-              return Text(dataList[index].videoFileName);
+              return GridItem(
+                index: index,
+                videoId: snapshot.data![index].id,
+                rate: snapshot.data![index].rate,
+                title: snapshot.data![index].videoFileName,
+                coverUrl: generateImgUrlById(snapshot.data![index].id),
+                refreshCallback: _refresh,
+                baseIndex: snapshot.data![index].baseIndex,
+                dirPath: snapshot.data![index].dirPath,
+                designationChar: snapshot.data![index].designationChar,
+                designationNum: snapshot.data![index].designationNum,
+                showDuplicateDelMenu:
+                    widget.searchWord != null && snapshot.data!.length > 1,
+              );
             },
           );
         } else if (snapshot.hasError) {
@@ -333,43 +359,49 @@ class GridState extends State<GridItem> {
     return Container(
       padding: const EdgeInsets.all(0),
       child: Card(
-        color: Theme.of(context).colorScheme.surface,
-        elevation: 2,
+        color: Theme.of(context).colorScheme.primaryContainer,
         shape: RoundedRectangleBorder(
           side: BorderSide(color: color, width: 2),
           borderRadius: BorderRadius.circular(12.0),
         ),
         child: Column(
           children: [
-            Expanded(
-              flex: 1,
-              child: SizedBox.expand(
-                child: GestureDetector(
-                  onLongPress: () => _startPreview(),
-                  onTapUp: (e) => _startPlayer(),
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12.0),
-                    child: Hero(
-                      tag: "video-cover-${widget.coverUrl}",
-                      child: Image.network(widget.coverUrl, fit: BoxFit.fill),
-                    ),
-                  ),
-                ),
-              ),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              // child: Hero(
+              // tag: "video-cover-${widget.coverUrl}",
+              child: Image.network(widget.coverUrl, fit: BoxFit.fill),
+              // ),
             ),
-            Expanded(
-              flex: 0,
-              child: GridTitleBar(
-                title: widget.title,
-                videoId: widget.videoId,
-                rate: widget.rate,
-                refreshCallback: widget.refreshCallback,
-                designationChar: widget.designationChar,
-                designationNum: widget.designationNum,
-                exist: exist,
-                showDuplicateDelMenu: widget.showDuplicateDelMenu,
-              ),
-            ),
+            // Expanded(
+            //   flex: 1,
+            //   child: SizedBox.expand(
+            //     child: GestureDetector(
+            //       onLongPress: () => _startPreview(),
+            //       onTapUp: (e) => _startPlayer(),
+            //       child: ClipRRect(
+            //         borderRadius: BorderRadius.circular(12.0),
+            //         child: Hero(
+            //           tag: "video-cover-${widget.coverUrl}",
+            //           child: Image.network(widget.coverUrl, fit: BoxFit.fill),
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
+            // Expanded(
+            //   flex: 0,
+            //   child: GridTitleBar(
+            //     title: widget.title,
+            //     videoId: widget.videoId,
+            //     rate: widget.rate,
+            //     refreshCallback: widget.refreshCallback,
+            //     designationChar: widget.designationChar,
+            //     designationNum: widget.designationNum,
+            //     exist: exist,
+            //     showDuplicateDelMenu: widget.showDuplicateDelMenu,
+            //   ),
+            // ),
           ],
         ),
       ),
