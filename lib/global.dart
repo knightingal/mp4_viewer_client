@@ -41,7 +41,11 @@ class VideoInfo {
   final int? coverWidth;
   final int? coverHeight;
 
-  const VideoInfo({
+  double frameWidth = 0;
+
+  double frameHeight = 0;
+
+  VideoInfo({
     required this.id,
     required this.coverFileName,
     required this.videoFileName,
