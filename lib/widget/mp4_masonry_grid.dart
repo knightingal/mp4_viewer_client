@@ -352,17 +352,6 @@ class GridState extends State<GridItem> {
 
   @override
   Widget build(BuildContext context) {
-    late Rate selectedItem;
-    if (widget.rate != null) {
-      selectedItem = widget.rate!;
-    } else {
-      selectedItem = Rate.none;
-    }
-
-    Color color = rateToColor(
-      selectedItem,
-      Theme.of(context).colorScheme.inversePrimary,
-    );
     return Container(
       width: widget.frameWidth,
       height: widget.frameHeight,
