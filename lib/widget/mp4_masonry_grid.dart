@@ -100,7 +100,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
   }
 
   void calFrameSizeForVideo(VideoInfo videoInfo) {
-    var length = 2;
+    var length = 4;
     int originImgWidth = videoInfo.coverWidth;
     int originImgHeight = videoInfo.coverHeight;
     double frameWidth = width / length;
@@ -364,54 +364,16 @@ class GridState extends State<GridItem> {
       Theme.of(context).colorScheme.inversePrimary,
     );
     return Container(
+      width: widget.frameWidth,
+      height: widget.frameHeight,
+      color: [
+        Colors.blueGrey,
+        Colors.brown,
+        Colors.green,
+        Colors.orange,
+        Colors.grey,
+      ][widget.index % 5],
       padding: const EdgeInsets.all(0),
-      child: Card(
-        color: Theme.of(context).colorScheme.primaryContainer,
-        shape: RoundedRectangleBorder(
-          side: BorderSide(color: color, width: 2),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(12.0),
-              // child: Hero(
-              // tag: "video-cover-${widget.coverUrl}",
-              child: Image.network(widget.coverUrl, fit: BoxFit.fill),
-              // ),
-            ),
-            // Expanded(
-            //   flex: 1,
-            //   child: SizedBox.expand(
-            //     child: GestureDetector(
-            //       onLongPress: () => _startPreview(),
-            //       onTapUp: (e) => _startPlayer(),
-            //       child: ClipRRect(
-            //         borderRadius: BorderRadius.circular(12.0),
-            //         child: Hero(
-            //           tag: "video-cover-${widget.coverUrl}",
-            //           child: Image.network(widget.coverUrl, fit: BoxFit.fill),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            // Expanded(
-            //   flex: 0,
-            //   child: GridTitleBar(
-            //     title: widget.title,
-            //     videoId: widget.videoId,
-            //     rate: widget.rate,
-            //     refreshCallback: widget.refreshCallback,
-            //     designationChar: widget.designationChar,
-            //     designationNum: widget.designationNum,
-            //     exist: exist,
-            //     showDuplicateDelMenu: widget.showDuplicateDelMenu,
-            //   ),
-            // ),
-          ],
-        ),
-      ),
     );
   }
 }
