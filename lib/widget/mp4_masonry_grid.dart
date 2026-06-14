@@ -212,8 +212,8 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
           List<VideoInfo> dataList = snapshot.data!;
           return MasonryGridView.count(
             crossAxisCount: 4,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 4,
+            mainAxisSpacing: 0,
+            crossAxisSpacing: 0,
             itemCount: dataList.length,
             itemBuilder: (context, index) {
               return GridItem(
