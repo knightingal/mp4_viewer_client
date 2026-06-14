@@ -227,6 +227,8 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
                 dirPath: snapshot.data![index].dirPath,
                 designationChar: snapshot.data![index].designationChar,
                 designationNum: snapshot.data![index].designationNum,
+                frameWidth: snapshot.data![index].frameWidth,
+                frameHeight: snapshot.data![index].frameHeight,
                 showDuplicateDelMenu:
                     widget.searchWord != null && snapshot.data!.length > 1,
               );
@@ -261,6 +263,8 @@ class GridItem extends StatefulWidget {
 
   final String? designationChar;
   final String? designationNum;
+  final double frameWidth;
+  final double frameHeight;
 
   const GridItem({
     super.key,
@@ -272,6 +276,8 @@ class GridItem extends StatefulWidget {
     required this.refreshCallback,
     required this.baseIndex,
     required this.dirPath,
+    required this.frameWidth,
+    required this.frameHeight,
     this.designationChar,
     this.designationNum,
     this.showDuplicateDelMenu = false,
