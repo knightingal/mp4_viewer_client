@@ -222,6 +222,8 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
                 rate: snapshot.data![index].rate,
                 title: snapshot.data![index].videoFileName,
                 coverUrl: generateImgUrlById(snapshot.data![index].id),
+                coverHeight: snapshot.data![index].coverHeight,
+                coverWidth: snapshot.data![index].coverWidth,
                 refreshCallback: _refresh,
                 baseIndex: snapshot.data![index].baseIndex,
                 dirPath: snapshot.data![index].dirPath,
@@ -266,6 +268,10 @@ class GridItem extends StatefulWidget {
   final double frameWidth;
   final double frameHeight;
 
+  final int coverHeight;
+
+  final int coverWidth;
+
   const GridItem({
     super.key,
     required this.index,
@@ -278,6 +284,8 @@ class GridItem extends StatefulWidget {
     required this.dirPath,
     required this.frameWidth,
     required this.frameHeight,
+    required this.coverHeight,
+    required this.coverWidth,
     this.designationChar,
     this.designationNum,
     this.showDuplicateDelMenu = false,
@@ -352,9 +360,13 @@ class GridState extends State<GridItem> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width / 4;
+
+    int originImgHeight = widget.coverHeight;
+    int originImgWidth = widget.coverWidth;
+    double frameHeight = originImgHeight / originImgWidth * width;
     return Container(
-      width: widget.frameWidth,
-      height: widget.frameHeight,
+      height: frameHeight,
       color: [
         Colors.blueGrey,
         Colors.brown,
