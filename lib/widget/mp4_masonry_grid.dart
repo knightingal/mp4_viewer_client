@@ -365,16 +365,19 @@ class GridState extends State<GridItem> {
     int originImgHeight = widget.coverHeight;
     int originImgWidth = widget.coverWidth;
     double frameHeight = originImgHeight / originImgWidth * width;
-    return Container(
-      height: frameHeight,
-      color: [
-        Colors.blueGrey,
-        Colors.brown,
-        Colors.green,
-        Colors.orange,
-        Colors.grey,
-      ][widget.index % 5],
-      padding: const EdgeInsets.all(0),
+    return AspectRatio(
+      aspectRatio: originImgWidth / originImgHeight,
+      child: Container(
+        height: frameHeight,
+        color: [
+          Colors.blueGrey,
+          Colors.brown,
+          Colors.green,
+          Colors.orange,
+          Colors.grey,
+        ][widget.index % 5],
+        padding: const EdgeInsets.all(0),
+      ),
     );
   }
 }
