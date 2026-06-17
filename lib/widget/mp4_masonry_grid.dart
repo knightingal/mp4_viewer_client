@@ -365,18 +365,24 @@ class GridState extends State<GridItem> {
     int originImgHeight = widget.coverHeight;
     int originImgWidth = widget.coverWidth;
     double frameHeight = originImgHeight / originImgWidth * width;
-    return AspectRatio(
-      aspectRatio: originImgWidth / originImgHeight,
-      child: Container(
-        height: frameHeight,
-        color: [
-          Colors.blueGrey,
-          Colors.brown,
-          Colors.green,
-          Colors.orange,
-          Colors.grey,
-        ][widget.index % 5],
-        padding: const EdgeInsets.all(0),
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+        side: BorderSide(
+          color: [
+            Colors.blueGrey,
+            Colors.brown,
+            Colors.green,
+            Colors.orange,
+            Colors.grey,
+          ][widget.index % 5],
+          width: 2,
+        ),
+      ),
+      color: Theme.of(context).colorScheme.surface,
+      child: AspectRatio(
+        aspectRatio: originImgWidth / originImgHeight,
+        child: Container(height: frameHeight),
       ),
     );
   }
