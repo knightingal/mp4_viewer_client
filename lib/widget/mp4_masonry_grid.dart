@@ -360,11 +360,8 @@ class GridState extends State<GridItem> {
 
   @override
   Widget build(BuildContext context) {
-    double width = MediaQuery.of(context).size.width / 4;
-
     int originImgHeight = widget.coverHeight;
     int originImgWidth = widget.coverWidth;
-    double frameHeight = originImgHeight / originImgWidth * width;
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
@@ -380,9 +377,25 @@ class GridState extends State<GridItem> {
         ),
       ),
       color: Theme.of(context).colorScheme.surface,
-      child: AspectRatio(
-        aspectRatio: originImgWidth / originImgHeight,
-        child: Container(height: frameHeight),
+      child: Column(
+        children: [
+          AspectRatio(
+            aspectRatio: originImgWidth / originImgHeight,
+            child: ClipRRect(
+              borderRadius: BorderRadiusGeometry.only(
+                topLeft: Radius.circular(12.0),
+                topRight: Radius.circular(12.0),
+              ),
+
+              child: GestureDetector(
+                onTap: _startPlayer,
+                onLongPress: _startPreview,
+                child: Image.network(widget.coverUrl),
+              ),
+            ),
+          ),
+          Container(padding: EdgeInsets.all(16.0), child: Text(widget.title)),
+        ],
       ),
     );
   }
