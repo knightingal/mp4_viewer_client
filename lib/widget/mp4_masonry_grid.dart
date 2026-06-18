@@ -391,7 +391,22 @@ class GridState extends State<GridItem> {
               ),
             ),
           ),
-          Container(padding: EdgeInsets.all(16.0), child: Text(widget.title)),
+          Container(
+            padding: EdgeInsets.all(16.0),
+            child: Text(
+              widget.title,
+              style: TextStyle(
+                color: rateToColorText(
+                  widget.rate!,
+                  Theme.of(context).colorScheme.onSurface,
+                ),
+                // decoration: TextDecoration.lineThrough,
+                // decorationColor: Colors.black,
+                // decorationStyle: TextDecorationStyle.solid,
+                // decorationThickness: exist ? 0 : 2,
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -593,6 +608,16 @@ Color rateToColor(Rate rate, Color defaultColor) {
     Rate.normal => Colors.blue as Color,
     Rate.good => Colors.green as Color,
     Rate.deleted => Colors.grey as Color,
+    _ => defaultColor,
+  };
+}
+
+Color rateToColorText(Rate rate, Color defaultColor) {
+  return switch (rate) {
+    Rate.bad => Colors.red[900] as Color,
+    Rate.normal => Colors.blue[900] as Color,
+    Rate.good => Colors.green[900] as Color,
+    Rate.deleted => Colors.grey[900] as Color,
     _ => defaultColor,
   };
 }
