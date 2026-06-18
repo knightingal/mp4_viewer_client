@@ -366,13 +366,10 @@ class GridState extends State<GridItem> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
-          color: [
-            Colors.blueGrey,
-            Colors.brown,
-            Colors.green,
-            Colors.orange,
-            Colors.grey,
-          ][widget.index % 5],
+          color: rateToColor(
+            widget.rate!,
+            Theme.of(context).colorScheme.inversePrimary,
+          ),
           width: 2,
         ),
       ),
