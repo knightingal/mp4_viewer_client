@@ -391,22 +391,32 @@ class GridState extends State<GridItem> {
               ),
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(16.0),
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                color: rateToColorText(
-                  widget.rate!,
-                  Theme.of(context).colorScheme.onSurface,
-                ),
-                // decoration: TextDecoration.lineThrough,
-                // decorationColor: Colors.black,
-                // decorationStyle: TextDecorationStyle.solid,
-                // decorationThickness: exist ? 0 : 2,
-              ),
-            ),
+          GridTitleBar(
+            title: widget.title,
+            videoId: widget.videoId,
+            rate: widget.rate,
+            refreshCallback: widget.refreshCallback,
+            designationChar: widget.designationChar,
+            designationNum: widget.designationNum,
+            exist: exist,
+            showDuplicateDelMenu: widget.showDuplicateDelMenu,
           ),
+          // Container(
+          //   padding: EdgeInsets.all(16.0),
+          //   child: Text(
+          //     widget.title,
+          //     style: TextStyle(
+          //       color: rateToColorText(
+          //         widget.rate!,
+          //         Theme.of(context).colorScheme.onSurface,
+          //       ),
+          //       // decoration: TextDecoration.lineThrough,
+          //       // decorationColor: Colors.black,
+          //       // decorationStyle: TextDecorationStyle.solid,
+          //       // decorationThickness: exist ? 0 : 2,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );
