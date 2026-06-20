@@ -564,7 +564,10 @@ class GridTitleBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Rate selectedItem = rate ?? Rate.none;
+    Color textColor = rateToColorText(
+      rate ?? Rate.none,
+      Theme.of(context).colorScheme.inversePrimary,
+    );
 
     return Container(
       padding: const EdgeInsets.fromLTRB(16.0, 6.0, 6.0, 6.0),
@@ -576,15 +579,9 @@ class GridTitleBar extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                color: rateToColorText(
-                  selectedItem,
-                  Theme.of(context).colorScheme.inversePrimary,
-                ),
+                color: textColor,
                 decoration: TextDecoration.lineThrough,
-                decorationColor: rateToColorText(
-                  selectedItem,
-                  Theme.of(context).colorScheme.inversePrimary,
-                ),
+                decorationColor: textColor,
                 decorationStyle: TextDecorationStyle.solid,
                 decorationThickness: exist ? 0 : 2,
               ),
