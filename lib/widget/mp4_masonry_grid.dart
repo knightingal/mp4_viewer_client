@@ -7,12 +7,10 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:mp4_viewer_client/image_viewer.dart';
-import 'package:mp4_viewer_client/widget/common.dart';
 import 'package:mp4_viewer_client/widget/video_tag.dart';
 
 import '../global.dart';
 import '../main.dart';
-// import '../video_player.dart';
 import 'meta_page.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
@@ -159,8 +157,6 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
       }
     });
   }
-
-  static const platform = MethodChannel('flutter/startWeb');
 
   String generateImgUrlById(int videoId) {
     var videoUrl = "${apiHost()}/image-stream-by-id/$videoId";
