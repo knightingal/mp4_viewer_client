@@ -583,9 +583,7 @@ class GridTitleBar extends StatelessWidget {
     Rate selectedItem = rate ?? Rate.none;
 
     return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(8.0, 0, 0, 0),
-      height: 40,
+      padding: const EdgeInsets.fromLTRB(16.0, 6.0, 6.0, 6.0),
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
