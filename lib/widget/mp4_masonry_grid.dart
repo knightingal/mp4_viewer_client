@@ -592,12 +592,15 @@ class GridTitleBar extends StatelessWidget {
             child: Text(
               title,
               style: TextStyle(
-                color: rateToColor(
+                color: rateToColorText(
                   selectedItem,
                   Theme.of(context).colorScheme.inversePrimary,
                 ),
                 decoration: TextDecoration.lineThrough,
-                decorationColor: Colors.black,
+                decorationColor: rateToColorText(
+                  selectedItem,
+                  Theme.of(context).colorScheme.inversePrimary,
+                ),
                 decorationStyle: TextDecorationStyle.solid,
                 decorationThickness: exist ? 0 : 2,
               ),
