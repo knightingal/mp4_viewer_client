@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
+import 'package:mp4_viewer_client/widget/mp4_masonry_grid.dart';
 
 import '../dir_item.dart';
 import '../global.dart';
@@ -59,7 +60,7 @@ class MountHomeState extends State<MountHome> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Mp4GridPage(title: title, dirPath: dirPath),
+        builder: (context) => Mp4MasonryGrid(title: title, dirPath: dirPath),
       ),
     );
   }

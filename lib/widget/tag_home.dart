@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
+import 'package:mp4_viewer_client/widget/mp4_masonry_grid.dart';
 
 import '../global.dart';
 import '../main.dart';
@@ -26,8 +27,9 @@ class TagMainState extends State<TagMainPage> {
     final queryTagsFuture = http.get(Uri.parse("${apiHost()}/query-tags"));
     List<Future<Response>> futures = [queryTagsFuture];
     if (widget.videoId != null) {
-      final queryTagsByVideoFuture = http
-          .get(Uri.parse("${apiHost()}/query-tags-by-video/${widget.videoId}"));
+      final queryTagsByVideoFuture = http.get(
+        Uri.parse("${apiHost()}/query-tags-by-video/${widget.videoId}"),
+      );
       futures.add(queryTagsByVideoFuture);
     }
     var respList = await Future.wait(futures);
@@ -73,78 +75,90 @@ class TagMainState extends State<TagMainPage> {
   Widget build(BuildContext context) {
     Widget body;
     body = FutureBuilder<List<Tag>>(
-        future: futureDataList,
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              prototypeItem: TagItem(
-                  index: 0,
-                  title: snapshot.data!.first.tag,
-                  tapCallback: (int index, String title) {}),
-              itemBuilder: (context, index) {
-                return TagItem(
-                    index: index,
-                    title: snapshot.data![index].tag,
-                    checked: snapshot.data![index].checked,
-                    tapCallback: (int index, String title) {
-                      if (widget.videoId != null) {
-                        var bindTag = http.post(Uri.parse(
-                            "${apiHost()}/bind-tag/${snapshot.data![index].id}/${widget.videoId}"));
-                        bindTag.then((Response resp) => {
-                              if (resp.statusCode == 200)
-                                {
-                                  setState(() {
-                                    futureDataList = fetchSubDirs();
-                                  })
-                                }
-                            });
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Mp4GridPage(
-                                      title: snapshot.data![index].tag,
-                                      tagId: snapshot.data![index].id,
-                                  )),
-                        );
-                      }
-                    });
-              },
-            );
-          } else {
-            return const Text("tag");
-          }
-        });
+      future: futureDataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            prototypeItem: TagItem(
+              index: 0,
+              title: snapshot.data!.first.tag,
+              tapCallback: (int index, String title) {},
+            ),
+            itemBuilder: (context, index) {
+              return TagItem(
+                index: index,
+                title: snapshot.data![index].tag,
+                checked: snapshot.data![index].checked,
+                tapCallback: (int index, String title) {
+                  if (widget.videoId != null) {
+                    var bindTag = http.post(
+                      Uri.parse(
+                        "${apiHost()}/bind-tag/${snapshot.data![index].id}/${widget.videoId}",
+                      ),
+                    );
+                    bindTag.then(
+                      (Response resp) => {
+                        if (resp.statusCode == 200)
+                          {
+                            setState(() {
+                              futureDataList = fetchSubDirs();
+                            }),
+                          },
+                      },
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Mp4MasonryGrid(
+                          title: snapshot.data![index].tag,
+                          tagId: snapshot.data![index].id,
+                        ),
+                      ),
+                    );
+                  }
+                },
+              );
+            },
+          );
+        } else {
+          return const Text("tag");
+        }
+      },
+    );
     return Scaffold(
-      body: Center(
-        child: body,
-      ),
+      body: Center(child: body),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _showAddTagDialog().then((value) {
-            log("return $value, $tagValue");
-            final response =
-                http.post(Uri.parse("${apiHost()}/add-tag/$tagValue"));
-            return response;
-          }).then((resp) {
-            if (widget.videoId != null) {
-              final jsonData = jsonDecode(resp.body);
-              int tagId = jsonData["id"];
+          _showAddTagDialog()
+              .then((value) {
+                log("return $value, $tagValue");
+                final response = http.post(
+                  Uri.parse("${apiHost()}/add-tag/$tagValue"),
+                );
+                return response;
+              })
+              .then((resp) {
+                if (widget.videoId != null) {
+                  final jsonData = jsonDecode(resp.body);
+                  int tagId = jsonData["id"];
 
-              final response = http.post(
-                  Uri.parse("${apiHost()}/bind-tag/$tagId/${widget.videoId}"));
-              return response;
-            } else {
-              return SynchronousFuture(resp);
-            }
-          }).then((resp) {
-            if (resp.statusCode == 200) {
-              setState(() {
-                futureDataList = fetchSubDirs();
+                  final response = http.post(
+                    Uri.parse("${apiHost()}/bind-tag/$tagId/${widget.videoId}"),
+                  );
+                  return response;
+                } else {
+                  return SynchronousFuture(resp);
+                }
+              })
+              .then((resp) {
+                if (resp.statusCode == 200) {
+                  setState(() {
+                    futureDataList = fetchSubDirs();
+                  });
+                }
               });
-            }
-          });
         },
         tooltip: 'Add tag',
         child: const Icon(Icons.add),
@@ -210,10 +224,7 @@ class TagItem extends StatelessWidget {
         tapCallback(index, title);
       },
       title: checked
-          ? Text(
-              title,
-              style: const TextStyle(color: Colors.green),
-            )
+          ? Text(title, style: const TextStyle(color: Colors.green))
           : Text(title),
     );
   }
