@@ -8,7 +8,6 @@ import 'package:mp4_viewer_client/widget/mp4_masonry_grid.dart';
 import '../dir_item.dart';
 import '../global.dart';
 import '../main.dart';
-import 'mp4_grid.dart';
 import 'mp4_list.dart';
 
 class MountHome extends StatefulWidget {
