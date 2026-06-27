@@ -206,29 +206,37 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
       builder: (context, snapshot) {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           List<VideoInfo> dataList = snapshot.data!;
-          return MasonryGridView.count(
-            crossAxisCount: 4,
-            mainAxisSpacing: 0,
-            crossAxisSpacing: 0,
-            itemCount: dataList.length,
-            itemBuilder: (context, index) {
-              return GridItem(
-                index: index,
-                videoId: snapshot.data![index].id,
-                rate: snapshot.data![index].rate,
-                title: snapshot.data![index].videoFileName,
-                coverUrl: generateImgUrlById(snapshot.data![index].id),
-                coverHeight: snapshot.data![index].coverHeight,
-                coverWidth: snapshot.data![index].coverWidth,
-                refreshCallback: _refresh,
-                baseIndex: snapshot.data![index].baseIndex,
-                dirPath: snapshot.data![index].dirPath,
-                designationChar: snapshot.data![index].designationChar,
-                designationNum: snapshot.data![index].designationNum,
-                frameWidth: snapshot.data![index].frameWidth,
-                frameHeight: snapshot.data![index].frameHeight,
-                showDuplicateDelMenu:
-                    widget.searchWord != null && snapshot.data!.length > 1,
+          return LayoutBuilder(
+            builder: (BuildContext context, BoxConstraints constraints) {
+              var crossAxisCount = switch (constraints.maxWidth) {
+                >= 1500 => 4,
+                _ => 2,
+              };
+              return MasonryGridView.count(
+                crossAxisCount: crossAxisCount,
+                mainAxisSpacing: 0,
+                crossAxisSpacing: 0,
+                itemCount: dataList.length,
+                itemBuilder: (context, index) {
+                  return GridItem(
+                    index: index,
+                    videoId: snapshot.data![index].id,
+                    rate: snapshot.data![index].rate,
+                    title: snapshot.data![index].videoFileName,
+                    coverUrl: generateImgUrlById(snapshot.data![index].id),
+                    coverHeight: snapshot.data![index].coverHeight,
+                    coverWidth: snapshot.data![index].coverWidth,
+                    refreshCallback: _refresh,
+                    baseIndex: snapshot.data![index].baseIndex,
+                    dirPath: snapshot.data![index].dirPath,
+                    designationChar: snapshot.data![index].designationChar,
+                    designationNum: snapshot.data![index].designationNum,
+                    frameWidth: snapshot.data![index].frameWidth,
+                    frameHeight: snapshot.data![index].frameHeight,
+                    showDuplicateDelMenu:
+                        widget.searchWord != null && snapshot.data!.length > 1,
+                  );
+                },
               );
             },
           );
