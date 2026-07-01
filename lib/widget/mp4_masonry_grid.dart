@@ -240,7 +240,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
               );
             },
           );
-        } else if (snapshot.data!.isEmpty) {
+        } else if (snapshot.data == null || snapshot.data!.isEmpty) {
           return const SizedBox.shrink();
         }
         // By default, show a loading spinner.
