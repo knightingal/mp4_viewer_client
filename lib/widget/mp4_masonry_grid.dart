@@ -308,11 +308,11 @@ class GridItem extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return GridState();
+    return GridItemState();
   }
 }
 
-class GridState extends State<GridItem> {
+class GridItemState extends State<GridItem> {
   static const platform = MethodChannel('flutter/startWeb');
   Future<bool> checkExist() async {
     final response = await http.get(
