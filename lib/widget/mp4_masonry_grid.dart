@@ -247,8 +247,31 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
         return const CircularProgressIndicator();
       },
     );
+
+    Widget actionMenus = FutureBuilder<List<VideoInfo>>(
+      future: futureDataList,
+      builder: (context, snapshot) {
+        List<int> ids = snapshot.hasData
+            ? snapshot.data!.map((e) => e.id).toList()
+            : [];
+        return MenuAnchor(
+          builder: (context, controller, child) => IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () {
+              controller.open();
+            },
+          ),
+          menuChildren: buildActionMenus(ids),
+        );
+      },
+    );
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+        actions: [actionMenus],
+      ),
       body: Center(child: body),
     );
   }
