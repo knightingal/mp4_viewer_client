@@ -349,6 +349,7 @@ class GridItemState extends State<GridItem> {
   }
 
   bool exist = true;
+  Rate? rate;
 
   @override
   void initState() {
@@ -356,6 +357,7 @@ class GridItemState extends State<GridItem> {
     checkExist().then((exist) {
       setState(() {
         this.exist = exist;
+        rate = widget.rate;
       });
     });
   }
@@ -394,7 +396,7 @@ class GridItemState extends State<GridItem> {
         borderRadius: BorderRadius.circular(12.0),
         side: BorderSide(
           color: rateToColor(
-            widget.rate!,
+            rate,
             Theme.of(context).colorScheme.inversePrimary,
           ),
           width: 2,
@@ -421,7 +423,7 @@ class GridItemState extends State<GridItem> {
           GridTitleBar(
             title: widget.title,
             videoId: widget.videoId,
-            rate: widget.rate,
+            rate: rate,
             refreshCallback: widget.refreshCallback,
             designationChar: widget.designationChar,
             designationNum: widget.designationNum,
