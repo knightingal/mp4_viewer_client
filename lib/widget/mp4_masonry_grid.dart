@@ -632,7 +632,7 @@ class GridTitleBar extends StatelessWidget {
   }
 }
 
-Color rateToColor(Rate rate, Color defaultColor) {
+Color rateToColor(Rate? rate, Color defaultColor) {
   return switch (rate) {
     Rate.bad => Colors.red as Color,
     Rate.normal => Colors.blue as Color,
