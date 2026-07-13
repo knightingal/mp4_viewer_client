@@ -387,6 +387,21 @@ class GridItemState extends State<GridItem> {
     }
   }
 
+  void postRate(int videoId, int rateIndex) async {
+    final response = await http.post(
+      Uri.parse("${apiHost()}/video-rate/$videoId/$rateIndex"),
+    );
+    if (response.statusCode == 200) {
+      // refreshCallback();
+      setState(() {
+        rate = Rate.values[rateIndex];
+      });
+      log("post rate succ");
+    } else {
+      log("failed to post rate, ${response.statusCode}", error: response);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     int originImgHeight = widget.coverHeight;
@@ -425,6 +440,7 @@ class GridItemState extends State<GridItem> {
             videoId: widget.videoId,
             rate: rate,
             refreshCallback: widget.refreshCallback,
+            postRate: postRate,
             designationChar: widget.designationChar,
             designationNum: widget.designationNum,
             exist: exist,
@@ -445,6 +461,7 @@ class GridTitleBar extends StatelessWidget {
   final String? designationNum;
   final bool exist;
   final bool showDuplicateDelMenu;
+  final void Function(int videoId, int rateIndex) postRate;
 
   const GridTitleBar({
     super.key,
@@ -453,21 +470,11 @@ class GridTitleBar extends StatelessWidget {
     required this.rate,
     required this.refreshCallback,
     required this.showDuplicateDelMenu,
+    required this.postRate,
     this.designationChar,
     this.designationNum,
     this.exist = true,
   });
-
-  void postRate(GridItemMenuItem item) async {
-    final response = await http.post(
-      Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"),
-    );
-    if (response.statusCode == 200) {
-      refreshCallback();
-    } else {
-      log("failed to post rate, ${response.statusCode}", error: response);
-    }
-  }
 
   void deleteVideo() async {
     final response = await http.delete(
@@ -525,7 +532,7 @@ class GridTitleBar extends StatelessWidget {
         case GridItemMenuItem.bad ||
             GridItemMenuItem.good ||
             GridItemMenuItem.normal:
-          postRate(item);
+          postRate(videoId, item.index);
         case GridItemMenuItem.tag:
           nav2TagHome(context, videoId);
         case GridItemMenuItem.detail:
