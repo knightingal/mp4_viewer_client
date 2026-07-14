@@ -86,10 +86,19 @@ class VideoActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        // Resume playback when returning to foreground
+        player?.play()
+        // TODO: print a log here
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // Pause playback when going to background (including lock screen)
+        player?.pause()
     }
 
     override fun onStop() {
         super.onStop()
-        player!!.release()
+        player?.release()
     }
 }
