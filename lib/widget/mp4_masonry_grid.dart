@@ -487,6 +487,17 @@ class GridTitleBar extends StatelessWidget {
     }
   }
 
+  void refreshById() async {
+    final response = await http.get(
+      Uri.parse("${apiHost()}/parse-meta-info-by-id/$videoId"),
+    );
+    if (response.statusCode == 200) {
+      refreshCallback();
+    } else {
+      log("failed to refresh by id, ${response.statusCode}", error: response);
+    }
+  }
+
   void duplicateDelVideo() async {
     final response = await http.delete(
       Uri.parse("${apiHost()}/video/$videoId?duplicate_del=true"),
@@ -553,6 +564,8 @@ class GridTitleBar extends StatelessWidget {
           deleteVideo();
         case GridItemMenuItem.duplicateDel:
           duplicateDelVideo();
+        case GridItemMenuItem.refresh:
+          refreshById();
         default:
         // do nothing
       }
@@ -582,6 +595,10 @@ class GridTitleBar extends StatelessWidget {
           const PopupMenuItem<GridItemMenuItem>(
             value: GridItemMenuItem.detail,
             child: Text("Meta Detail"),
+          ),
+          const PopupMenuItem<GridItemMenuItem>(
+            value: GridItemMenuItem.refresh,
+            child: Text("Refresh"),
           ),
           const PopupMenuItem<GridItemMenuItem>(
             value: GridItemMenuItem.duplicate,
@@ -671,4 +688,5 @@ enum GridItemMenuItem {
   duplicate,
   delete,
   duplicateDel,
+  refresh,
 }
