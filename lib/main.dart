@@ -85,6 +85,13 @@ class HomePage extends StatelessWidget {
           title: const Text("Flow1000"),
           actions: <Widget>[
             IconButton(
+              icon: const Icon(Icons.settings_outlined),
+              tooltip: 'Settings',
+              onPressed: () {
+                platform.invokeMethod("aboutPage");
+              },
+            ),
+            IconButton(
               icon: const Icon(Icons.info_outline),
               tooltip: 'About',
               onPressed: () {
