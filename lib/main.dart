@@ -9,7 +9,8 @@ import 'package:flutter/services.dart';
 
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
-import 'package:mp4_viewer_client/widget/mp4_masonry_grid.dart';
+import 'widget/mp4_masonry_grid.dart';
+import 'widget/settings_page.dart';
 import 'widget/duplicate_page.dart';
 import 'widget/tag_home.dart';
 import 'dir_item.dart';
@@ -88,7 +89,10 @@ class HomePage extends StatelessWidget {
               icon: const Icon(Icons.settings_outlined),
               tooltip: 'Settings',
               onPressed: () {
-                platform.invokeMethod("aboutPage");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => SettingsPage()),
+                );
               },
             ),
             IconButton(
