@@ -7,7 +7,18 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Settings")),
-      body: Text("Settings page"),
+      body: Center(
+        child: SizedBox(
+          width: 480,
+          child: TextField(
+            obscureText: false,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(),
+              labelText: 'Server Address',
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
