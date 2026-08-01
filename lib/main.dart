@@ -240,17 +240,14 @@ class MountConfigListState extends State<MountConfigListPage> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Search'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                const Text('Enter your word...'),
-                TextField(
-                  onChanged: (value) {
-                    searchWord = value;
-                  },
-                ),
-              ],
+          content: TextField(
+            decoration: const InputDecoration(
+              labelText: "Key word",
+              hintText: "Enter your word...",
             ),
+            onChanged: (value) {
+              searchWord = value;
+            },
           ),
           actions: <Widget>[
             TextButton(
