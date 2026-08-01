@@ -24,7 +24,11 @@ import 'widget/mount_home.dart';
   For ip bind in fedora40, refer this document to reset mac address
   https://docs.fedoraproject.org/en-US/fedora/latest/release-notes/sysadmin/#stable-mac-for-wifi
  */
-String apiHost() => "http://192.168.2.12:8082";
+
+int apiPort() => 8082;
+String apiAddress = "192.168.2.12";
+
+String apiHost() => "http://$apiAddress:${apiPort()}";
 
 void main() {
   runApp(const MyApp());
