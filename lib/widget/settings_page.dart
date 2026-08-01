@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mp4_viewer_client/main.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -69,6 +70,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
 
     if (context.mounted) {
       setState(() => isLoading = false);
+      apiAddress = controller.text;
 
       if (errorText != null) {
         setState(() {
