@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widget_previews.dart';
 import 'package:mp4_viewer_client/main.dart';
 
 class SettingsPage extends StatelessWidget {
+  @Preview(name: 'Settings Page')
   const SettingsPage({super.key});
 
   @override
