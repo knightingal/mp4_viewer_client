@@ -10,19 +10,19 @@ class SettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Settings")),
-      body: TextFormFieldExample(),
+      body: SettingsWidget(),
     );
   }
 }
 
-class TextFormFieldExample extends StatefulWidget {
-  const TextFormFieldExample({super.key});
+class SettingsWidget extends StatefulWidget {
+  const SettingsWidget({super.key});
 
   @override
-  State<TextFormFieldExample> createState() => _TextFormFieldExampleState();
+  State<SettingsWidget> createState() => _SettingsWidgetState();
 }
 
-class _TextFormFieldExampleState extends State<TextFormFieldExample> {
+class _SettingsWidgetState extends State<SettingsWidget> {
   final TextEditingController controller = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? forceErrorText;
@@ -65,7 +65,7 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
     }
 
     setState(() => isLoading = true);
-    final String? errorText = await validateUsernameFromServer(controller.text);
+    final String? errorText = await validateAddress(controller.text);
 
     if (context.mounted) {
       setState(() => isLoading = false);
@@ -115,16 +115,10 @@ class _TextFormFieldExampleState extends State<TextFormFieldExample> {
   }
 }
 
-const Duration kFakeHttpRequestDuration = Duration(seconds: 3);
-Future<String?> validateUsernameFromServer(String username) async {
-  final Set<String> takenUsernames = <String>{'jack', 'alex'};
+const Duration kFakeHttpRequestDuration = Duration(milliseconds: 500);
 
+Future<String?> validateAddress(String address) async {
   await Future<void>.delayed(kFakeHttpRequestDuration);
 
-  final bool isValid = !takenUsernames.contains(username);
-  if (isValid) {
-    return null;
-  }
-
-  return 'Username $username is already taken';
+  return null;
 }
