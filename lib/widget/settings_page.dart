@@ -39,10 +39,10 @@ class _SettingsWidgetState extends State<SettingsWidget> {
       return 'This field is required';
     }
     if (value.length != value.replaceAll(' ', '').length) {
-      return 'Username must not contain any spaces';
+      return 'Address must not contain any spaces';
     }
     if (value.length <= 2) {
-      return 'Username should be at least 3 characters long';
+      return 'Address should be at least 3 characters long';
     }
     return null;
   }
