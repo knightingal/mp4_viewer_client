@@ -57,7 +57,10 @@ class MetaListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Meta List Info")),
+      appBar: AppBar(
+        title: const Text("Meta List Info"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: ListView.builder(
         itemCount: ids.length,
         itemBuilder: (context, index) {
