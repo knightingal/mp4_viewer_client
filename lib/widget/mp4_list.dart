@@ -82,6 +82,8 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       _startPlayer(title);
     } else if (title.endsWith(".png") ||
         title.endsWith(".jpg") ||
+        title.endsWith(".webp") ||
+        title.endsWith(".WEBP") ||
         title.endsWith(".PNG") ||
         title.endsWith(".JPG")) {
       Navigator.push(
