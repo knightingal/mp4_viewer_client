@@ -97,6 +97,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               mainAxisAlignment: .center,
               children: <Widget>[
                 TextFormField(
+                  initialValue: apiAddress,
                   forceErrorText: forceErrorText,
                   controller: controller,
                   decoration: const InputDecoration(
