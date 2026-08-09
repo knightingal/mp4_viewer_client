@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 
 // import 'package:js/js.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'widget/mp4_masonry_grid.dart';
 import 'widget/settings_page.dart';
 import 'widget/duplicate_page.dart';
@@ -31,47 +32,62 @@ String apiAddress = "192.168.2.12";
 String apiHost() => "http://$apiAddress:${apiPort()}";
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  MyApp({super.key});
+
+  final Future<String> apiAddressFuture = SharedPreferences.getInstance().then((
+    prefs,
+  ) {
+    apiAddress = prefs.getString('apiAddress') ?? "192.168.2.12";
+    return apiAddress;
+  });
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: ThemeMode.system,
-      debugShowCheckedModeBanner: false,
-      title: 'Flow1000 Player',
-      darkTheme: ThemeData(
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
-            TargetPlatform.values,
-            value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+    Widget mainPage = FutureBuilder<String>(
+      future: apiAddressFuture,
+      builder: (context, snapshto) {
+        return MaterialApp(
+          themeMode: ThemeMode.system,
+          debugShowCheckedModeBanner: false,
+          title: 'Flow1000 Player',
+          darkTheme: ThemeData(
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders:
+                  Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+                    TargetPlatform.values,
+                    value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+                  ),
+            ),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.yellow,
+              brightness: Brightness.dark,
+            ),
+            useMaterial3: true,
           ),
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.yellow,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
-      theme: ThemeData(
-        pageTransitionsTheme: PageTransitionsTheme(
-          builders: Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
-            TargetPlatform.values,
-            value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+          theme: ThemeData(
+            pageTransitionsTheme: PageTransitionsTheme(
+              builders:
+                  Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+                    TargetPlatform.values,
+                    value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+                  ),
+            ),
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.yellow,
+              brightness: Brightness.light,
+            ),
+            useMaterial3: true,
           ),
-        ),
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.yellow,
-          brightness: Brightness.light,
-        ),
-        useMaterial3: true,
-      ),
-      home: const HomePage(),
+          home: const HomePage(),
+        );
+      },
     );
+    return mainPage;
   }
 }
 
