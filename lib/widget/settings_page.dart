@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:mp4_viewer_client/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatelessWidget {
   @Preview(name: 'Settings Page')
@@ -73,6 +74,8 @@ class _SettingsWidgetState extends State<SettingsWidget> {
     if (context.mounted) {
       setState(() => isLoading = false);
       apiAddress = controller.text;
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString("apiAddress", apiAddress);
 
       if (errorText != null) {
         setState(() {
