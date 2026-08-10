@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widget_previews.dart';
 import 'package:mp4_viewer_client/main.dart';
@@ -27,7 +29,9 @@ class SettingsWidget extends StatefulWidget {
 }
 
 class _SettingsWidgetState extends State<SettingsWidget> {
-  final TextEditingController controller = TextEditingController();
+  final TextEditingController controller = TextEditingController(
+    text: apiAddress,
+  );
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String? forceErrorText;
   bool isLoading = false;
@@ -87,6 +91,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
 
   @override
   Widget build(BuildContext context) {
+    log("settings page, apiAddres=$apiAddress");
     return Material(
       child: Padding(
         padding: const .symmetric(horizontal: 24.0),
@@ -97,7 +102,6 @@ class _SettingsWidgetState extends State<SettingsWidget> {
               mainAxisAlignment: .center,
               children: <Widget>[
                 TextFormField(
-                  initialValue: apiAddress,
                   forceErrorText: forceErrorText,
                   controller: controller,
                   decoration: const InputDecoration(
