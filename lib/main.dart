@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget mainPage = FutureBuilder<String>(
       future: apiAddressFuture,
-      builder: (context, snapshto) {
+      builder: (context, snapshot) {
         return MaterialApp(
           themeMode: ThemeMode.system,
           debugShowCheckedModeBanner: false,
