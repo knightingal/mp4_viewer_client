@@ -109,10 +109,13 @@ class HomePage extends StatelessWidget {
               icon: const Icon(Icons.settings_outlined),
               tooltip: 'Settings',
               onPressed: () {
-                Navigator.push(
+                final result = Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => SettingsPage()),
                 );
+                result.then((onValue) {
+                  log("Settings page return");
+                });
               },
             ),
             IconButton(
