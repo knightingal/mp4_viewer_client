@@ -29,7 +29,7 @@ class DuplicatePageState extends State<DuplicatePage> {
 
   Future<List<DuplicateVideo>> fetchDuplicateList() async {
     final response = await http.get(
-      Uri.parse("${apiHost()}/all-duplicate-video"),
+      Uri.parse("${await apiHostAsync()}/all-duplicate-video"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);

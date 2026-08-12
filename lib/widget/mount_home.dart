@@ -30,7 +30,7 @@ class MountHomeState extends State<MountHome> {
   Future<List<String>> fetchDirs() async {
     final response = await http.get(
       Uri.parse(
-        "${apiHost()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/",
+        "${await apiHostAsync()}/mp4-dir/${gMountConfigList[selectedMountConfig!].id}/",
       ),
     );
     if (response.statusCode == 200) {
@@ -88,26 +88,28 @@ class MountHomeState extends State<MountHome> {
         ),
       );
     } else {
-      final response = http.get(
-        Uri.parse(
-          "${apiHost()}/video-info/${gMountConfigList[selectedMountConfig!].id}/$title",
-        ),
-      );
-
-      response.then((resp) {
-        List<dynamic> jsonArray = jsonDecode(resp.body);
-        List<VideoInfo> dataList = jsonArray
-            .map((e) => VideoInfo.fromJson(e))
-            .toList();
-        if (dataList.isEmpty) {
-          gotoListPage(title);
-        } else {
-          gotoGridPage(
-            title,
-            "${gMountConfigList[selectedMountConfig!].id}/$title",
-          );
-        }
-      });
+      apiHostAsync()
+          .then((apiHost) {
+            return http.get(
+              Uri.parse(
+                "$apiHost/video-info/${gMountConfigList[selectedMountConfig!].id}/$title",
+              ),
+            );
+          })
+          .then((resp) {
+            List<dynamic> jsonArray = jsonDecode(resp.body);
+            List<VideoInfo> dataList = jsonArray
+                .map((e) => VideoInfo.fromJson(e))
+                .toList();
+            if (dataList.isEmpty) {
+              gotoListPage(title);
+            } else {
+              gotoGridPage(
+                title,
+                "${gMountConfigList[selectedMountConfig!].id}/$title",
+              );
+            }
+          });
     }
   }
 

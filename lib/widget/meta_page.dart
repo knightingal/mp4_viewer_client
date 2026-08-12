@@ -13,7 +13,7 @@ class MetaPage extends StatelessWidget {
 
   Future<void> refreshMeta() async {
     final response = await http.get(
-      Uri.parse("${apiHost()}/parse-meta-info-by-id/$id"),
+      Uri.parse("${await apiHostAsync()}/parse-meta-info-by-id/$id"),
     );
     if (response.statusCode == 200) {
       log("refresh meta: ${response.body}");
@@ -87,7 +87,9 @@ class VideoMetaInfo extends StatelessWidget {
   final int id;
 
   Future<VideoInfo> fetchMeta() async {
-    final response = await http.get(Uri.parse("${apiHost()}/video-detail/$id"));
+    final response = await http.get(
+      Uri.parse("${await apiHostAsync()}/video-detail/$id"),
+    );
     if (response.statusCode == 200) {
       log("meta: ${response.body}");
       return VideoInfo.fromJson(jsonDecode(response.body));
