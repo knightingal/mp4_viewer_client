@@ -31,6 +31,13 @@ String apiAddress = "192.168.2.12";
 
 String apiHost() => "http://$apiAddress:${apiPort()}";
 
+Future<String> apiHostAsync() async {
+  final apiAddress = await SharedPreferences.getInstance().then((prefs) {
+    return prefs.getString('apiAddress') ?? "192.168.2.12";
+  });
+  return "http://$apiAddress:${apiPort()}";
+}
+
 void main() {
   runApp(MyApp());
 }
