@@ -58,7 +58,7 @@ int rateToGridOrder(int? rate) {
 class Mp4GridPageState extends State<Mp4GridPage> {
   Future<List<VideoInfo>> fetchVideoByTagId(int tagId) async {
     final response = await http.get(
-      Uri.parse("${apiHost()}/query-videos-by-tag/$tagId"),
+      Uri.parse("${await apiHostAsync()}/query-videos-by-tag/$tagId"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -80,7 +80,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
 
   Future<List<VideoInfo>> fetchSearchWord(String searchWord) async {
     final response = await http.get(
-      Uri.parse("${apiHost()}/designation-search/$searchWord"),
+      Uri.parse("${await apiHostAsync()}/designation-search/$searchWord"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -97,7 +97,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   }
 
   Future<List<VideoInfo>> fetchSubDirs(String path) async {
-    final response = await http.get(Uri.parse("${apiHost()}/video-info/$path"));
+    final response = await http.get(
+      Uri.parse("${await apiHostAsync()}/video-info/$path"),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
@@ -441,7 +443,7 @@ class GridTitleBar extends StatelessWidget {
 
   void postRate(GridItemMenuItem item) async {
     final response = await http.post(
-      Uri.parse("${apiHost()}/video-rate/$videoId/${item.index}"),
+      Uri.parse("${await apiHostAsync()}/video-rate/$videoId/${item.index}"),
     );
     if (response.statusCode == 200) {
       refreshCallback();
@@ -452,7 +454,7 @@ class GridTitleBar extends StatelessWidget {
 
   void deleteVideo() async {
     final response = await http.delete(
-      Uri.parse("${apiHost()}/video/$videoId?duplicate_del=false"),
+      Uri.parse("${await apiHostAsync()}/video/$videoId?duplicate_del=false"),
     );
     if (response.statusCode == 200) {
       refreshCallback();
@@ -463,7 +465,7 @@ class GridTitleBar extends StatelessWidget {
 
   void deleteDuplicateVideo() async {
     final response = await http.delete(
-      Uri.parse("${apiHost()}/video/$videoId?duplicate_del=true"),
+      Uri.parse("${await apiHostAsync()}/video/$videoId?duplicate_del=true"),
     );
     if (response.statusCode == 200) {
       refreshCallback();

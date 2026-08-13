@@ -26,7 +26,7 @@ class Mp4ListPageState extends State<Mp4ListPage> {
 
   Future<List<String>> fetchSubDirs() async {
     final response = await http.get(
-      Uri.parse("${apiHost()}/mp4-dir/${widget.dirPath}"),
+      Uri.parse("${await apiHostAsync()}/mp4-dir/${widget.dirPath}"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);

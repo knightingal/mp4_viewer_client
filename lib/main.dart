@@ -27,14 +27,15 @@ import 'widget/mount_home.dart';
  */
 
 int apiPort() => 8082;
-String apiAddress = "192.168.2.12";
+String? apiAddress;
 
 String apiHost() => "http://$apiAddress:${apiPort()}";
 
 Future<String> apiHostAsync() async {
-  final apiAddress = await SharedPreferences.getInstance().then((prefs) {
+  apiAddress ??= await SharedPreferences.getInstance().then((prefs) {
     return prefs.getString('apiAddress') ?? "192.168.2.12";
   });
+
   return "http://$apiAddress:${apiPort()}";
 }
 
@@ -49,7 +50,7 @@ class MyApp extends StatelessWidget {
     prefs,
   ) {
     apiAddress = prefs.getString('apiAddress') ?? "192.168.2.12";
-    return apiAddress;
+    return apiAddress!;
   });
 
   // This widget is the root of your application.
@@ -58,40 +59,44 @@ class MyApp extends StatelessWidget {
     Widget mainPage = FutureBuilder<String>(
       future: apiAddressFuture,
       builder: (context, snapshot) {
-        return MaterialApp(
-          themeMode: ThemeMode.system,
-          debugShowCheckedModeBanner: false,
-          title: 'Flow1000 Player',
-          darkTheme: ThemeData(
-            pageTransitionsTheme: PageTransitionsTheme(
-              builders:
-                  Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
-                    TargetPlatform.values,
-                    value: (dynamic _) => const ZoomPageTransitionsBuilder(),
-                  ),
+        if (snapshot.hasData) {
+          return MaterialApp(
+            themeMode: ThemeMode.system,
+            debugShowCheckedModeBanner: false,
+            title: 'Flow1000 Player',
+            darkTheme: ThemeData(
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders:
+                    Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+                      TargetPlatform.values,
+                      value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+                    ),
+              ),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.yellow,
+                brightness: Brightness.dark,
+              ),
+              useMaterial3: true,
             ),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.yellow,
-              brightness: Brightness.dark,
+            theme: ThemeData(
+              pageTransitionsTheme: PageTransitionsTheme(
+                builders:
+                    Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
+                      TargetPlatform.values,
+                      value: (dynamic _) => const ZoomPageTransitionsBuilder(),
+                    ),
+              ),
+              colorScheme: ColorScheme.fromSeed(
+                seedColor: Colors.yellow,
+                brightness: Brightness.light,
+              ),
+              useMaterial3: true,
             ),
-            useMaterial3: true,
-          ),
-          theme: ThemeData(
-            pageTransitionsTheme: PageTransitionsTheme(
-              builders:
-                  Map<TargetPlatform, PageTransitionsBuilder>.fromIterable(
-                    TargetPlatform.values,
-                    value: (dynamic _) => const ZoomPageTransitionsBuilder(),
-                  ),
-            ),
-            colorScheme: ColorScheme.fromSeed(
-              seedColor: Colors.yellow,
-              brightness: Brightness.light,
-            ),
-            useMaterial3: true,
-          ),
-          home: const HomePage(),
-        );
+            home: const HomePage(),
+          );
+        } else {
+          return SizedBox.shrink();
+        }
       },
     );
     return mainPage;
@@ -166,7 +171,9 @@ class MountConfigListPage extends StatefulWidget {
 
 class MountConfigListState extends State<MountConfigListPage> {
   Future<List<MountConfig>> fetchMountConfig() async {
-    final response = await http.get(Uri.parse("${apiHost()}/mount-config"));
+    final response = await http.get(
+      Uri.parse("${await apiHostAsync()}/mount-config"),
+    );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<MountConfig> dataList = jsonArray

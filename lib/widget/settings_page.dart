@@ -79,7 +79,7 @@ class _SettingsWidgetState extends State<SettingsWidget> {
       setState(() => isLoading = false);
       apiAddress = controller.text;
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString("apiAddress", apiAddress);
+      prefs.setString("apiAddress", apiAddress!);
 
       if (errorText != null) {
         setState(() {
