@@ -57,9 +57,11 @@ int rateToGridOrder(int? rate) {
 }
 
 class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
-  Future<List<VideoInfo>> fetchVideoByTagId(int tagId) async {
+  Future<(List<VideoInfo>, String)> fetchVideoByTagId(int tagId) async {
+    final apiHost = await apiHostAsync();
+
     final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/query-videos-by-tag/$tagId"),
+      Uri.parse("$apiHost/query-videos-by-tag/$tagId"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -71,7 +73,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
               return rate1.compareTo(rate2);
             });
 
-      return dataList;
+      return (dataList, apiHost);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -79,9 +81,11 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
     }
   }
 
-  Future<List<VideoInfo>> fetchSearchWord(String searchWord) async {
+  Future<(List<VideoInfo>, String)> fetchSearchWord(String searchWord) async {
+    final apiHost = await apiHostAsync();
+
     final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/designation-search/$searchWord"),
+      Uri.parse("$apiHost/designation-search/$searchWord"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -89,7 +93,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
           .map((e) => VideoInfo.fromJson(e))
           .toList();
 
-      return dataList;
+      return (dataList, apiHost);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -107,10 +111,9 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
     videoInfo.frameHeight = frameHeight;
   }
 
-  Future<List<VideoInfo>> fetchSubDirs(String path) async {
-    final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/video-info/$path"),
-    );
+  Future<(List<VideoInfo>, String)> fetchSubDirs(String path) async {
+    final apiHost = await apiHostAsync();
+    final response = await http.get(Uri.parse("$apiHost/video-info/$path"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
@@ -126,7 +129,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
             return info1.id.compareTo(info2.id);
           });
 
-      return dataList;
+      return (dataList, apiHost);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -134,7 +137,7 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
     }
   }
 
-  late Future<List<VideoInfo>> futureDataList;
+  late Future<(List<VideoInfo>, String)> futureDataList;
 
   @override
   void initState() {
@@ -160,8 +163,8 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
     });
   }
 
-  String generateImgUrlById(int videoId) {
-    var videoUrl = "${apiHost()}/image-stream-by-id/$videoId";
+  String generateImgUrlById(String apiHost, int videoId) {
+    var videoUrl = "$apiHost/image-stream-by-id/$videoId";
     return videoUrl;
   }
 
@@ -203,11 +206,11 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
   Widget build(BuildContext context) {
     width = MediaQuery.of(context).size.width;
     Widget body;
-    body = FutureBuilder<List<VideoInfo>>(
+    body = FutureBuilder<(List<VideoInfo>, String)>(
       future: futureDataList,
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-          List<VideoInfo> dataList = snapshot.data!;
+        if (snapshot.hasData && snapshot.data!.$1.isNotEmpty) {
+          List<VideoInfo> dataList = snapshot.data!.$1;
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               var crossAxisCount = switch (constraints.maxWidth) {
@@ -222,27 +225,30 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
                 itemBuilder: (context, index) {
                   return GridItem(
                     index: index,
-                    videoId: snapshot.data![index].id,
-                    rate: snapshot.data![index].rate,
-                    title: snapshot.data![index].videoFileName,
-                    coverUrl: generateImgUrlById(snapshot.data![index].id),
-                    coverHeight: snapshot.data![index].coverHeight,
-                    coverWidth: snapshot.data![index].coverWidth,
+                    videoId: dataList[index].id,
+                    rate: dataList[index].rate,
+                    title: dataList[index].videoFileName,
+                    coverUrl: generateImgUrlById(
+                      snapshot.data!.$2,
+                      dataList[index].id,
+                    ),
+                    coverHeight: dataList[index].coverHeight,
+                    coverWidth: dataList[index].coverWidth,
                     refreshCallback: _refresh,
-                    baseIndex: snapshot.data![index].baseIndex,
-                    dirPath: snapshot.data![index].dirPath,
-                    designationChar: snapshot.data![index].designationChar,
-                    designationNum: snapshot.data![index].designationNum,
-                    frameWidth: snapshot.data![index].frameWidth,
-                    frameHeight: snapshot.data![index].frameHeight,
+                    baseIndex: dataList[index].baseIndex,
+                    dirPath: dataList[index].dirPath,
+                    designationChar: dataList[index].designationChar,
+                    designationNum: dataList[index].designationNum,
+                    frameWidth: dataList[index].frameWidth,
+                    frameHeight: dataList[index].frameHeight,
                     showDuplicateDelMenu:
-                        widget.searchWord != null && snapshot.data!.length > 1,
+                        widget.searchWord != null && dataList.length > 1,
                   );
                 },
               );
             },
           );
-        } else if (snapshot.data == null || snapshot.data!.isEmpty) {
+        } else if (snapshot.data == null || snapshot.data!.$1.isEmpty) {
           return const SizedBox.shrink();
         }
         // By default, show a loading spinner.
@@ -250,11 +256,11 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
       },
     );
 
-    Widget actionMenus = FutureBuilder<List<VideoInfo>>(
+    Widget actionMenus = FutureBuilder<(List<VideoInfo>, String)>(
       future: futureDataList,
       builder: (context, snapshot) {
         List<int> ids = snapshot.hasData
-            ? snapshot.data!.map((e) => e.id).toList()
+            ? snapshot.data!.$1.map((e) => e.id).toList()
             : [];
         return MenuAnchor(
           builder: (context, controller, child) => IconButton(
@@ -320,14 +326,16 @@ class GridItem extends StatefulWidget {
     this.showDuplicateDelMenu = false,
   });
 
-  String generateFileUrlByTitle() {
-    var videoUrl = "${apiHost()}/video-stream-by-id/$videoId/stream.mp4";
+  Future<String> generateFileUrlByTitle() async {
+    var videoUrl =
+        "${await apiHostAsync()}/video-stream-by-id/$videoId/stream.mp4";
     log(videoUrl);
     return videoUrl;
   }
 
-  String generateVideoExistUrlByTitle() {
-    var videoUrl = "${apiHost()}/video-exist/$baseIndex$dirPath/$title";
+  Future<String> generateVideoExistUrlByTitle() async {
+    var videoUrl =
+        "${await apiHostAsync()}/video-exist/$baseIndex$dirPath/$title";
     return videoUrl;
   }
 
@@ -341,7 +349,7 @@ class GridItemState extends State<GridItem> {
   static const platform = MethodChannel('flutter/startWeb');
   Future<bool> checkExist() async {
     final response = await http.get(
-      Uri.parse(widget.generateVideoExistUrlByTitle()),
+      Uri.parse(await widget.generateVideoExistUrlByTitle()),
     );
     if (response.statusCode == 200) {
       return true;
@@ -374,16 +382,18 @@ class GridItemState extends State<GridItem> {
     );
   }
 
-  void _startPlayer() {
+  void _startPlayer() async {
     if (Platform.isLinux) {
       // execute on linux desktop
       // open mpv player
-      Process.run("mpv", [widget.generateFileUrlByTitle()]).then((result) {
+      Process.run("mpv", [await widget.generateFileUrlByTitle()]).then((
+        result,
+      ) {
         log("mpv exited with code ${result.exitCode}");
       });
     } else {
       platform.invokeMethod("startVideo", {
-        "videoUrl": widget.generateFileUrlByTitle(),
+        "videoUrl": await widget.generateFileUrlByTitle(),
         "coverUrl": widget.coverUrl,
       });
     }
