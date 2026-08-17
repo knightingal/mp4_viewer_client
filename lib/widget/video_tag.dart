@@ -22,15 +22,12 @@ class VideoTagPage extends StatefulWidget {
 
 class VideoTagState extends State<VideoTagPage> {
   Future<List<Tag>> fetchSubDirs() async {
-    final queryTagsFuture = http.get(
-      Uri.parse("${await apiHostAsync()}/query-tags"),
-    );
+    final apiHost = await apiHostAsync();
+    final queryTagsFuture = http.get(Uri.parse("$apiHost/query-tags"));
     List<Future<Response>> futures = [queryTagsFuture];
     if (widget.videoId != null) {
       final queryTagsByVideoFuture = http.get(
-        Uri.parse(
-          "${await apiHostAsync()}/query-tags-by-video/${widget.videoId}",
-        ),
+        Uri.parse("$apiHost/query-tags-by-video/${widget.videoId}"),
       );
       futures.add(queryTagsByVideoFuture);
     }
