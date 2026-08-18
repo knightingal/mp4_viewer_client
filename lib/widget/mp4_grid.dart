@@ -56,9 +56,11 @@ int rateToGridOrder(int? rate) {
 }
 
 class Mp4GridPageState extends State<Mp4GridPage> {
-  Future<List<VideoInfo>> fetchVideoByTagId(int tagId) async {
+  Future<(List<VideoInfo>, String)> fetchVideoByTagId(int tagId) async {
+    final apiHost = await apiHostAsync();
+
     final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/query-videos-by-tag/$tagId"),
+      Uri.parse("$apiHost/query-videos-by-tag/$tagId"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -70,7 +72,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
               return rate1.compareTo(rate2);
             });
 
-      return dataList;
+      return (dataList, apiHost);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -78,9 +80,10 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     }
   }
 
-  Future<List<VideoInfo>> fetchSearchWord(String searchWord) async {
+  Future<(List<VideoInfo>, String)> fetchSearchWord(String searchWord) async {
+    final apiHost = await apiHostAsync();
     final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/designation-search/$searchWord"),
+      Uri.parse("$apiHost/designation-search/$searchWord"),
     );
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
@@ -88,7 +91,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
           .map((e) => VideoInfo.fromJson(e))
           .toList();
 
-      return dataList;
+      return (dataList, apiHost);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -96,10 +99,9 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     }
   }
 
-  Future<List<VideoInfo>> fetchSubDirs(String path) async {
-    final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/video-info/$path"),
-    );
+  Future<(List<VideoInfo>, String)> fetchSubDirs(String path) async {
+    final apiHost = await apiHostAsync();
+    final response = await http.get(Uri.parse("$apiHost/video-info/$path"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<VideoInfo> dataList =
@@ -114,7 +116,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
             return info1.id.compareTo(info2.id);
           });
 
-      return dataList;
+      return (dataList, apiHost);
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -122,7 +124,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
     }
   }
 
-  late Future<List<VideoInfo>> futureDataList;
+  late Future<(List<VideoInfo>, String)> futureDataList;
 
   @override
   void initState() {
@@ -190,10 +192,11 @@ class Mp4GridPageState extends State<Mp4GridPage> {
   @override
   Widget build(BuildContext context) {
     Widget body;
-    body = FutureBuilder<List<VideoInfo>>(
+    body = FutureBuilder<(List<VideoInfo>, String)>(
       future: futureDataList,
       builder: (context, snapshot) {
-        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+        if (snapshot.hasData && snapshot.data!.$1.isNotEmpty) {
+          List<VideoInfo> dataList = snapshot.data!.$1;
           return LayoutBuilder(
             builder: (BuildContext context, BoxConstraints constraints) {
               var crossAxisCount = switch (constraints.maxWidth) {
@@ -201,7 +204,7 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                 _ => 2,
               };
               return GridView.builder(
-                itemCount: snapshot.data!.length,
+                itemCount: dataList.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   childAspectRatio: 4 / 3,
                   crossAxisCount: crossAxisCount,
@@ -209,18 +212,18 @@ class Mp4GridPageState extends State<Mp4GridPage> {
                 itemBuilder: (context, index) {
                   return GridItem(
                     index: index,
-                    videoId: snapshot.data![index].id,
-                    rate: snapshot.data![index].rate,
-                    title: snapshot.data![index].videoFileName,
-                    coverUrl: generateImgUrlById(snapshot.data![index].id),
+                    videoId: dataList[index].id,
+                    rate: dataList[index].rate,
+                    title: dataList[index].videoFileName,
+                    coverUrl: generateImgUrlById(dataList[index].id),
                     // tapCallback: itemTapCallback,
                     refreshCallback: _refresh,
-                    baseIndex: snapshot.data![index].baseIndex,
-                    dirPath: snapshot.data![index].dirPath,
-                    designationChar: snapshot.data![index].designationChar,
-                    designationNum: snapshot.data![index].designationNum,
+                    baseIndex: dataList[index].baseIndex,
+                    dirPath: dataList[index].dirPath,
+                    designationChar: dataList[index].designationChar,
+                    designationNum: dataList[index].designationNum,
                     showDuplicateDelMenu:
-                        widget.searchWord != null && snapshot.data!.length > 1,
+                        widget.searchWord != null && dataList.length > 1,
                   );
                 },
               );
@@ -232,11 +235,11 @@ class Mp4GridPageState extends State<Mp4GridPage> {
       },
     );
 
-    Widget actionMenus = FutureBuilder<List<VideoInfo>>(
+    Widget actionMenus = FutureBuilder<(List<VideoInfo>, String)>(
       future: futureDataList,
       builder: (context, snapshot) {
         List<int> ids = snapshot.hasData
-            ? snapshot.data!.map((e) => e.id).toList()
+            ? snapshot.data!.$1.map((e) => e.id).toList()
             : [];
         return MenuAnchor(
           builder: (context, controller, child) => IconButton(
