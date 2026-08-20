@@ -298,14 +298,16 @@ class GridItem extends StatefulWidget {
     this.showDuplicateDelMenu = false,
   });
 
-  String generateFileUrlByTitle() {
-    var videoUrl = "${apiHost()}/video-stream-by-id/$videoId/stream.mp4";
+  Future<String> generateFileUrlByTitle() async {
+    var videoUrl =
+        "${await apiHostAsync()}/video-stream-by-id/$videoId/stream.mp4";
     log(videoUrl);
     return videoUrl;
   }
 
-  String generateVideoExistUrlByTitle() {
-    var videoUrl = "${apiHost()}/video-exist/$baseIndex$dirPath/$title";
+  Future<String> generateVideoExistUrlByTitle() async {
+    var videoUrl =
+        "${await apiHostAsync()}/video-exist/$baseIndex$dirPath/$title";
     return videoUrl;
   }
 
@@ -319,7 +321,7 @@ class GridState extends State<GridItem> {
   static const platform = MethodChannel('flutter/startWeb');
   Future<bool> checkExist() async {
     final response = await http.get(
-      Uri.parse(widget.generateVideoExistUrlByTitle()),
+      Uri.parse(await widget.generateVideoExistUrlByTitle()),
     );
     if (response.statusCode == 200) {
       return true;
@@ -350,16 +352,18 @@ class GridState extends State<GridItem> {
     );
   }
 
-  void _startPlayer() {
+  void _startPlayer() async {
     if (Platform.isLinux) {
       // execute on linux desktop
       // open mpv player
-      Process.run("mpv", [widget.generateFileUrlByTitle()]).then((result) {
+      Process.run("mpv", [await widget.generateFileUrlByTitle()]).then((
+        result,
+      ) {
         log("mpv exited with code ${result.exitCode}");
       });
     } else {
       platform.invokeMethod("startVideo", {
-        "videoUrl": widget.generateFileUrlByTitle(),
+        "videoUrl": await widget.generateFileUrlByTitle(),
         "coverUrl": widget.coverUrl,
       });
     }
