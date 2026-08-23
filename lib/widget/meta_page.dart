@@ -24,12 +24,31 @@ class MetaPage extends StatelessWidget {
     }
   }
 
+  Future<void> cleanMeta() async {
+    final response = await http.get(
+      Uri.parse("${await apiHostAsync()}/clean-meta-info-by-id/$id"),
+    );
+    if (response.statusCode == 200) {
+      log("refresh meta: ${response.body}");
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to refresh meta');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Meta Info"),
         actions: [
+          IconButton(
+            onPressed: () {
+              cleanMeta();
+            },
+            icon: const Icon(Icons.cleaning_services),
+          ),
           IconButton(
             onPressed: () {
               refreshMeta();
