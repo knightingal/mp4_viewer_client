@@ -46,12 +46,15 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final Future<String> apiAddressFuture = SharedPreferences.getInstance().then((
-    prefs,
-  ) {
-    apiAddress = prefs.getString('apiAddress') ?? "192.168.2.12";
-    return apiAddress!;
-  });
+  // final Future<String> apiAddressFuture = SharedPreferences.getInstance().then((
+  //   prefs,
+  // ) {
+  //   apiAddress = prefs.getString('apiAddress') ?? "192.168.2.12";
+  //   return apiAddress!;
+  // });
+  final Future<String> apiAddressFuture = Future.value(
+    apiAddress ?? "192.168.2.12",
+  );
 
   // This widget is the root of your application.
   @override
@@ -171,9 +174,9 @@ class MountConfigListPage extends StatefulWidget {
 
 class MountConfigListState extends State<MountConfigListPage> {
   Future<List<MountConfig>> fetchMountConfig() async {
-    final response = await http.get(
-      Uri.parse("${await apiHostAsync()}/mount-config"),
-    );
+    final apiHost = await apiHostAsync();
+    log("apiHost=$apiHost");
+    final response = await http.get(Uri.parse("$apiHost/mount-config"));
     if (response.statusCode == 200) {
       List<dynamic> jsonArray = jsonDecode(response.body);
       List<MountConfig> dataList = jsonArray
