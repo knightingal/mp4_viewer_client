@@ -40,21 +40,19 @@ Future<String> apiHostAsync() async {
 }
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  // final Future<String> apiAddressFuture = SharedPreferences.getInstance().then((
-  //   prefs,
-  // ) {
-  //   apiAddress = prefs.getString('apiAddress') ?? "192.168.2.12";
-  //   return apiAddress!;
-  // });
-  final Future<String> apiAddressFuture = Future.value(
-    apiAddress ?? "192.168.2.12",
-  );
+  final Future<String> apiAddressFuture = SharedPreferences.getInstance().then((
+    prefs,
+  ) {
+    apiAddress = prefs.getString('apiAddress') ?? "192.168.2.12";
+    return apiAddress!;
+  });
 
   // This widget is the root of your application.
   @override
