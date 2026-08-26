@@ -3,10 +3,10 @@ package com.example.mp4_viewer_client
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.core.net.toUri
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
-import androidx.core.net.toUri
 
 class MainActivity: FlutterActivity() {
     private val CHANNEL = "flutter/startWeb"
@@ -28,6 +28,12 @@ class MainActivity: FlutterActivity() {
                 val videoUrl = call.argument<String>("videoUrl")
                 val intent = Intent(this, VideoActivity::class.java)
                 intent.putExtra("videoUrl", videoUrl)
+                startActivity(intent)
+            }
+            if (call.method == "viewPdf") {
+                val pdfUrl = call.argument<String>("pdfUrl")
+                val uri = pdfUrl!!.toUri()
+                val intent = Intent(Intent.ACTION_VIEW, uri)
                 startActivity(intent)
             }
         }

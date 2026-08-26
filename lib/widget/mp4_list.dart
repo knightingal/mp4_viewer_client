@@ -77,6 +77,22 @@ class Mp4ListPageState extends State<Mp4ListPage> {
     }
   }
 
+  void _viewPdf(String title) {
+    if (Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+      // execute on linux desktop
+      // open mpv player
+      // Process.run("mpv", [generateFileUrlByTitle(title)]).then((result) {
+      //   log("mpv exited with code ${result.exitCode}");
+      // });
+      // TODO: open pdf viewer
+    } else if (Platform.isAndroid) {
+      // start Android video player activity
+      platform.invokeMethod("viewPdf", {
+        "pdfUrl": generateFileUrlByTitle(title),
+      });
+    }
+  }
+
   void itemTapCallback(int index, String title) {
     if (title.endsWith(".mp4")) {
       _startPlayer(title);
@@ -93,6 +109,8 @@ class Mp4ListPageState extends State<Mp4ListPage> {
               ImageViewer(imageUrl: generateFileUrlByTitle(title)),
         ),
       );
+    } else if (title.endsWith(".pdf")) {
+      _viewPdf(title);
     } else {
       // parent.add(title);
       Navigator.push(
