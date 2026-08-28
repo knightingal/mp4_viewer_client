@@ -85,6 +85,7 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       //   log("mpv exited with code ${result.exitCode}");
       // });
       // TODO: open pdf viewer
+      log("pdfurl:${generateFileUrlByTitle(title)}");
     } else if (Platform.isAndroid) {
       // start Android video player activity
       platform.invokeMethod("viewPdf", {
