@@ -274,10 +274,21 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
       },
     );
 
+    Widget title = FutureBuilder<(List<VideoInfo>, String)>(
+      future: futureDataList,
+      builder: (context, snapshot) {
+        if (snapshot.hasData && snapshot.data!.$1.isNotEmpty) {
+          return Text("${widget.title}(${snapshot.data!.$1.length})");
+        } else {
+          return Text(widget.title);
+        }
+      },
+    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
+        title: title,
         actions: [actionMenus],
       ),
       body: Center(child: body),
