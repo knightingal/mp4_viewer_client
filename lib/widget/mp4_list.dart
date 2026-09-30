@@ -72,6 +72,7 @@ class Mp4ListPageState extends State<Mp4ListPage> {
       // start Android video player activity
       platform.invokeMethod("startVideo", {
         "videoUrl": generateFileUrlByTitle(title),
+        "title": title,
         "coverUrl": "",
       });
     }

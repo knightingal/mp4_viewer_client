@@ -26,8 +26,10 @@ class MainActivity: FlutterActivity() {
             }
             if (call.method == "startVideo") {
                 val videoUrl = call.argument<String>("videoUrl")
+                val title = call.argument<String>("title")
                 val intent = Intent(this, VideoActivity::class.java)
                 intent.putExtra("videoUrl", videoUrl)
+                intent.putExtra("title", title)
                 startActivity(intent)
             }
             if (call.method == "viewPdf") {

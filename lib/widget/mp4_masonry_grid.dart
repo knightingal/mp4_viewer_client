@@ -405,6 +405,7 @@ class GridItemState extends State<GridItem> {
     } else {
       platform.invokeMethod("startVideo", {
         "videoUrl": await widget.generateFileUrlByTitle(),
+        "title": widget.title,
         "coverUrl": widget.coverUrl,
       });
     }
