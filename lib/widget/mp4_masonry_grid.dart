@@ -455,7 +455,10 @@ class GridItemState extends State<GridItem> {
               child: GestureDetector(
                 onTap: _startPlayer,
                 onLongPress: _startPreview,
-                child: Image.network(widget.coverUrl),
+                child: Hero(
+                  tag: "video-cover-${widget.coverUrl}",
+                  child: Image.network(widget.coverUrl),
+                ),
               ),
             ),
           ),
