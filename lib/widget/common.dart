@@ -4,11 +4,11 @@ const _defaultColor = Color(0xFF34568B);
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
-    Key? key,
+    super.key,
     required this.title,
     this.topPadding = 0,
     required this.child,
-  }) : super(key: key);
+  });
 
   final String title;
   final Widget child;
@@ -28,12 +28,12 @@ class AppScaffold extends StatelessWidget {
 
 class Tile extends StatelessWidget {
   const Tile({
-    Key? key,
+    super.key,
     required this.index,
     this.extent,
     this.backgroundColor,
     this.bottomSpace,
-  }) : super(key: key);
+  });
 
   final int index;
   final double? extent;
@@ -71,11 +71,11 @@ class Tile extends StatelessWidget {
 
 class ImageTile extends StatelessWidget {
   const ImageTile({
-    Key? key,
+    super.key,
     required this.index,
     required this.width,
     required this.height,
-  }) : super(key: key);
+  });
 
   final int index;
   final int width;
@@ -94,21 +94,21 @@ class ImageTile extends StatelessWidget {
 
 class InteractiveTile extends StatefulWidget {
   const InteractiveTile({
-    Key? key,
+    super.key,
     required this.index,
     this.extent,
     this.bottomSpace,
-  }) : super(key: key);
+  });
 
   final int index;
   final double? extent;
   final double? bottomSpace;
 
   @override
-  _InteractiveTileState createState() => _InteractiveTileState();
+  InteractiveTileState createState() => InteractiveTileState();
 }
 
-class _InteractiveTileState extends State<InteractiveTile> {
+class InteractiveTileState extends State<InteractiveTile> {
   Color color = _defaultColor;
 
   @override
