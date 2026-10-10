@@ -243,6 +243,9 @@ class _Mp4MasonryGridState extends State<Mp4MasonryGrid> {
                     frameHeight: dataList[index].frameHeight,
                     showDuplicateDelMenu:
                         widget.searchWord != null && dataList.length > 1,
+                    updateRateCallback: (index, rate) {
+                      // dataList[index].rate = rate;
+                    },
                   );
                 },
               );
@@ -332,10 +335,13 @@ class GridItem extends StatefulWidget {
     required this.frameHeight,
     required this.coverHeight,
     required this.coverWidth,
+    required this.updateRateCallback,
     this.designationChar,
     this.designationNum,
     this.showDuplicateDelMenu = false,
   });
+
+  final void Function(int index, Rate rate) updateRateCallback;
 
   Future<String> generateFileUrlByTitle() async {
     var videoUrl =
@@ -416,7 +422,7 @@ class GridItemState extends State<GridItem> {
       Uri.parse("${await apiHostAsync()}/video-rate/$videoId/$rateIndex"),
     );
     if (response.statusCode == 200) {
-      // refreshCallback();
+      widget.updateRateCallback(widget.index, Rate.values[rateIndex]);
       setState(() {
         rate = Rate.values[rateIndex];
       });
